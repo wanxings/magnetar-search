@@ -1,5 +1,5 @@
 # 磁星搜索网页端
-
+演示地址：https://magnetar1.pw
 ## Project setup
 ```
 npm install
