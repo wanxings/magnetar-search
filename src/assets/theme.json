@@ -1,0 +1,8 @@
+{
+	"blue":"background-color: var(--w-alpha-90);--theme-color:  #5CA1FF; --theme-color-hover:  #5390E6; --theme-color-active:  #4578BF; --selection-color:  rgba(92,161,255,0.35);",
+	"indigo": "background-color: var(--w-alpha-90);--theme-color:  #4CB6C2; --theme-color-hover:  #429EA8; --theme-color-active:  #337A82; --selection-color:  rgba(76,182,194,0.35);",
+	"violet": "background-color: var(--w-alpha-90);--theme-color:  #BB8CDD; --theme-color-hover:  #A67CC4; --theme-color-active:  #86649E; --selection-color:  rgba(187,140,221,0.35);",
+	"rose": "background-color: var(--w-alpha-90);--theme-color:  #FF4B68; --theme-color-hover:  #E6435E; --theme-color-active:  #BF374E; --selection-color:  rgba(255,75,104,0.35);",
+	"lime": "background-color: var(--w-alpha-90);--theme-color:  #70C000; --theme-color-hover:  #61A600; --theme-color-active:  #528C00; --selection-color:  rgba(112,192,0,0.35);"
+}
+

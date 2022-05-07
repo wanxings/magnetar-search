@@ -1,0 +1,134 @@
+import { getConfig } from '@/api/app'
+import {
+    getLanguage,
+    getSearchJavlibrary,
+    getSearchDoubanlibrary,
+    getDarkmode,
+    getAutotracker,
+    getVersion,
+    setVersion,
+    setLanguage,
+    setDarkmode,
+    setSearchJavlibrary,
+    setSearchDoubanlibrary,
+    setAutotracker,
+} from '@/utils/app'
+import {
+    logo,
+    title,
+} from '@/config'
+if(!getSearchJavlibrary()) setSearchJavlibrary('on')
+if(!setSearchDoubanlibrary()) setSearchDoubanlibrary('on')
+const state = () => ({
+    logo,
+    title,
+    // notic: '',
+    searchRankingData: [],
+    polyStatusData: [],
+    trackerList: '',
+    version: getVersion() || null,
+    searchJavlibrary: getSearchJavlibrary() || 'on',
+    searchDoubanlibrary: getSearchDoubanlibrary() || 'on',
+    language: getLanguage() || 'zh',
+    darkmode: getDarkmode() || 'off',
+    autotracker: getAutotracker() || 'off',
+})
+// mutations
+const mutations = {
+    // SET_NOTIC: (state, data) => {
+    //     state.notic = data
+    // },
+    SET_SEARCHRANKINGDATA: (state, data) => {
+        state.searchRankingData = data
+    },
+    SET_POLYSTATUSDATA: (state, data) => {
+        state.polyStatusData = data
+    },
+    SET_TRACKERLIST: (state, data) => {
+        state.trackerList = data
+    },
+    SET_VERSION: (state, data) => {
+        state.version = data
+    },
+    SET_LANGUAGE: (state, data) => {
+        state.language = data
+    },
+    SET_DARKMODE: (state, data) => {
+        state.darkmode = data
+    },
+    SET_AUTOTRACKER: (state, data) => {
+        state.autotracker = data
+    },
+    set_searchJavlibrary: (state, data) => {
+        state.searchJavlibrary = data
+    },
+    set_searchDoubanlibrary: (state, data) => {
+        state.searchDoubanlibrary = data
+    },
+}
+// getters
+const getters = {
+    title: (state) => state.title,
+    // notic: (state) => state.notic,
+    searchJavlibrary: (state) => state.searchJavlibrary,
+    searchDoubanlibrary: (state) => state.searchDoubanlibrary,
+    version: (state) => state.version,
+    language: (state) => state.language,
+    darkmode: (state) => state.darkmode,
+    trackerList: (state) => state.trackerList,
+    autotracker: (state) => state.autotracker,
+    polyStatusData: (state) => state.polyStatusData,
+    searchRankingData: (state) => state.searchRankingData,
+
+    // initconfig: (state) => state.initconfig,
+    // initconfig: (state) => state.initconfig,
+}
+
+// actions
+const actions = {
+    // 获取配置信息
+    getConfig({ commit }) {
+        return new Promise((resolve, reject) => {
+            getConfig().then(data => {
+                // commit('SET_NOTIC', response.data.notic)
+                commit('SET_SEARCHRANKINGDATA', data.searchRankingData)
+                commit('SET_POLYSTATUSDATA', data.polyStatusData)
+                commit('SET_TRACKERLIST', data.trackerList)
+                setVersion(data.version)
+                resolve()
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    changeLanguage({ commit }, data) {
+        setLanguage(data)
+        commit("SET_LANGUAGE", data)
+    },
+    changeDarkmode({ commit }, data) {
+        setDarkmode(data)
+        commit("SET_DARKMODE", data)
+    },
+    changeAutotracker({ commit }, data) {
+        setAutotracker(data)
+        commit("SET_AUTOTRACKER", data)
+    },
+    changeSearchJavlibrary({ commit }, data) {
+        setSearchJavlibrary(data)
+        commit("set_searchJavlibrary", data)
+    },
+    changeSearchDoubanlibrary({ commit }, data) {
+        setSearchDoubanlibrary(data)
+        commit("set_searchDoubanlibrary", data)
+    },
+}
+
+
+
+export default {
+    namespaced: true,
+    state,
+    getters,
+    actions,
+    mutations
+}

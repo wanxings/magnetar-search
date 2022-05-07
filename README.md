@@ -1,2 +1,24 @@
-# magnetar-search
-磁星搜索的网页前端，包含磁力搜索、番号库搜索、豆瓣影视搜索
+# cilixing
+
+## Project setup
+```
+npm install
+```
+
+### Compiles and hot-reloads for development
+```
+npm run serve
+```
+
+### Compiles and minifies for production
+```
+npm run build
+```
+
+### Lints and fixes files
+```
+npm run lint
+```
+
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).
