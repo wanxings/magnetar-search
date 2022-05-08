@@ -33,21 +33,32 @@
     <Footer class="footers">
       <span class="footerBox">
         <a href="/" title="Magnetar" target="_blank" class="links"
-          >© 2021 {{title}} {{ version }}</a
+          >© 2021 {{ title }}
+          </a>
+          <a href="https://github.com/wanxings/magnetar-search" title="Github" target="_blank"
+            ><Icon size="16" type="logo-github" /></a
         >
       </span>
       <br />
       <span class="footerBox">
-        <a href="https://support.qq.com/products/261083"  target="_blank">{{translateTitle("建议反馈")}}
-</a>
+        <a href="https://support.qq.com/products/261083" target="_blank"
+          >{{ translateTitle("建议反馈") }}
+        </a>
         -
-        <a href="https://cixing.io"  target="_blank">{{translateTitle("浏览器扩展")}}</a>
+        <a href="https://cixing.io" target="_blank">{{
+          translateTitle("浏览器扩展")
+        }}</a>
         -
-        <a title="1007807225" href="https://jq.qq.com/?_wv=1027&amp;k=5Prj8pt"  target="_blank">{{translateTitle("QQ群")}}</a>
+        <a
+          title="1007807225"
+          href="https://jq.qq.com/?_wv=1027&amp;k=5Prj8pt"
+          target="_blank"
+          >{{ translateTitle("QQ群") }}</a
+        >
         <!-- <a href="/" class="links">{{translateTitle("友情链接")}}:</a> -->
       </span>
     </Footer>
-  </div> 
+  </div>
 </template>
 <script>
 import { translateTitle } from "@/utils/i18n";
