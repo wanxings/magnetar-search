@@ -24,7 +24,9 @@ const state = () => ({
     m: 'correla',
     t: 'all',
     j: 'true',
+    j_R: 3,
     d: 'true',
+    d_R: 3,
     p: 1,
   },
   javQuery: {

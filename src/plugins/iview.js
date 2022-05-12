@@ -47,6 +47,7 @@ import {
     Checkbox,
     CheckboxGroup,
     Circle,
+    InputNumber,
     
 } from 'view-design'
 Vue.component('Divider', Divider)
@@ -93,6 +94,7 @@ Vue.component('RadioGroup', RadioGroup)
 Vue.component('CheckboxGroup', CheckboxGroup)
 Vue.component('Checkbox', Checkbox)
 Vue.component('i-circle', Circle)
+Vue.component('InputNumber', InputNumber)
 
 import 'view-design/dist/styles/iview.css'
 

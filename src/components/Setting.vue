@@ -65,7 +65,7 @@
           </ListItem>
         </List>
       </div>
-      <span style="color: var(--txt-b-pure); font-size: 15px">搜索偏好</span>
+      <span style="color: var(--txt-b-pure); font-size: 15px">番号库</span>
       <div
         style="
           margin: 10px 0;
@@ -76,24 +76,52 @@
       >
         <List :split="false">
           <ListItem>
-            {{ translateTitle("番号库") }}
+            {{ translateTitle("状态") }}
             <i-switch
               true-color="var(--theme-color)"
               :value="searchJavlibrary == 'on' ? true : false"
               style="float: right"
               class="slider"
+              size="large"
               @on-change="SearchJavlibraryChange"
-            />
+            >
+              <span slot="open">开启</span>
+              <span slot="close">关闭</span>
+            </i-switch>
           </ListItem>
           <ListItem>
-            {{ translateTitle("影视库") }}
+            {{ translateTitle("数量") }}
+            <InputNumber @on-change="SearchJavlibraryTotalChange" style="float: right;" :max="10" :min="1" size="small" :value="Number(searchJavlibraryTotal)"></InputNumber>
+          </ListItem>
+        </List>
+      </div>
+      <span style="color: var(--txt-b-pure); font-size: 15px">影视库</span>
+      <div
+        style="
+          margin: 10px 0;
+          padding: 0px 16px;
+          background-color: var(--b-alpha-5);
+          border-radius: 5px;
+        "
+      >
+        <List :split="false">
+          <ListItem>
+            {{ translateTitle("状态") }}
             <i-switch
               :value="searchDoubanlibrary == 'on' ? true : false"
               @on-change="SearchDoubanlibraryChange"
               true-color="var(--theme-color)"
               style="float: right"
+              size="large"
               class="slider"
-            />
+              >
+              <span slot="open">开启</span>
+              <span slot="close">关闭</span>
+            </i-switch>
+          </ListItem>
+          <ListItem>
+            {{ translateTitle("数量") }}
+            <InputNumber @on-change="SearchDoubanlibraryTotalChange" style="float: right;" :max="10" :min="1" size="small" :value="Number(searchDoubanlibraryTotal)"></InputNumber>
           </ListItem>
         </List>
       </div>
@@ -110,6 +138,7 @@ export default {
   data() {
     return {
       settingstatus: false,
+      testdemo1:0,
     };
   },
   computed: {
@@ -118,7 +147,9 @@ export default {
       language: "app/language",
       autotracker: "app/autotracker",
       searchJavlibrary: "app/searchJavlibrary",
+      searchJavlibraryTotal: "app/searchJavlibraryTotal",
       searchDoubanlibrary: "app/searchDoubanlibrary",
+      searchDoubanlibraryTotal: "app/searchDoubanlibraryTotal",
     }),
     ...mapGetters("user", {
       token: "token",
@@ -143,7 +174,9 @@ export default {
       changeAutotracker: "app/changeAutotracker",
       changeDarkmode: "app/changeDarkmode",
       changeSearchJavlibrary: "app/changeSearchJavlibrary",
+      changeSearchJavlibraryTotal: "app/changeSearchJavlibraryTotal",
       changeSearchDoubanlibrary: "app/changeSearchDoubanlibrary",
+      changeSearchDoubanlibraryTotal: "app/changeSearchDoubanlibraryTotal",
     }),
     changeLangFn() {
       let language = localStorage.getItem("language") == "zh" ? "en" : "zh";
@@ -162,8 +195,14 @@ export default {
     SearchJavlibraryChange(status) {
       this.changeSearchJavlibrary(status ? "on" : "off");
     },
+    SearchJavlibraryTotalChange(total) {
+      this.changeSearchJavlibraryTotal(total);
+    },
     SearchDoubanlibraryChange(status) {
       this.changeSearchDoubanlibrary(status ? "on" : "off");
+    },
+    SearchDoubanlibraryTotalChange(total) {
+      this.changeSearchDoubanlibraryTotal(total);
     },
   },
 };

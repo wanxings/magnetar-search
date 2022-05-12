@@ -1,6 +1,8 @@
 const darkmodeKey = 'darkmode'
 const searchJavlibraryKey = 'searchjavlibrary'
+const searchJavlibraryTotalKey = 'searchJavlibraryTotal'
 const searchDoubanlibraryKey = 'searchdoubanlibrary'
+const searchDoubanlibraryTotalKey = 'searchDoubanlibraryTotal'
 const versionKey = 'version'
 const autotrackerKey = 'autotracker'
 const languageKey = 'language'
@@ -15,8 +17,14 @@ export function getDarkmode() {
 export function getSearchJavlibrary() {
     return localStorage.getItem(searchJavlibraryKey)
 }
+export function getSearchJavlibraryTotal() {
+    return localStorage.getItem(searchJavlibraryTotalKey)
+}
 export function getSearchDoubanlibrary() {
     return localStorage.getItem(searchDoubanlibraryKey)
+}
+export function getSearchDoubanlibraryTotal() {
+    return localStorage.getItem(searchDoubanlibraryTotalKey)
 }
 export function getJavSelectFrom() {
     return JSON.parse(localStorage.getItem(javSelectFromKey))
@@ -47,8 +55,14 @@ export function setDarkmode(data) {
 export function setSearchJavlibrary(data) {
     return localStorage.setItem(searchJavlibraryKey, data)
 }
+export function setSearchJavlibraryTotal(data) {
+    return localStorage.setItem(searchJavlibraryTotalKey, data)
+}
 export function setSearchDoubanlibrary(data) {
     return localStorage.setItem(searchDoubanlibraryKey, data)
+}
+export function setSearchDoubanlibraryTotal(data) {
+    return localStorage.setItem(searchDoubanlibraryTotalKey, data)
 }
 export function setJavSelectFrom(data) {
     return localStorage.setItem(javSelectFromKey, JSON.stringify(data));

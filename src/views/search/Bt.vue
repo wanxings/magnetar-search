@@ -86,7 +86,12 @@ import SearchStatistics from "@/components/SearchStatistics.vue";
 // import SearchRank from "@/components/SearchRank.vue";
 import BtSrotSelect from "./components/BtSrotSelect.vue";
 import BtTypeSelect from "./components/BtTypeSelect.vue";
-import { getSearchJavlibrary, getSearchDoubanlibrary } from "@/utils/app";
+import {
+  getSearchJavlibrary,
+  getSearchJavlibraryTotal,
+  getSearchDoubanlibrary,
+  getSearchDoubanlibraryTotal,
+} from "@/utils/app";
 export default {
   name: "Home",
   components: {
@@ -146,7 +151,9 @@ export default {
       m: to.query.m ? to.query.m : "correla",
       t: to.query.t ? to.query.t : "all",
       j: getSearchJavlibrary() == "on" ? true : false,
+      j_R: getSearchJavlibraryTotal() || 3,
       d: getSearchDoubanlibrary() == "on" ? true : false,
+      d_R: getSearchDoubanlibraryTotal() || 3,
       p: Number(to.query.p) ? Number(to.query.p) : 1,
     });
     console.log();

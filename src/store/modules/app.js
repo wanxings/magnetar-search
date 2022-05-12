@@ -2,15 +2,19 @@ import { getConfig } from '@/api/app'
 import {
     getLanguage,
     getSearchJavlibrary,
+    getSearchJavlibraryTotal,
     getSearchDoubanlibrary,
+    getSearchDoubanlibraryTotal,
     getDarkmode,
     getAutotracker,
     getVersion,
     setVersion,
     setLanguage,
-    setDarkmode,
+    setDarkmode, 
     setSearchJavlibrary,
+    setSearchJavlibraryTotal,
     setSearchDoubanlibrary,
+    setSearchDoubanlibraryTotal,
     setAutotracker,
 } from '@/utils/app'
 import {
@@ -28,7 +32,9 @@ const state = () => ({
     trackerList: '',
     version: getVersion() || null,
     searchJavlibrary: getSearchJavlibrary() || 'on',
+    searchJavlibraryTotal: getSearchJavlibraryTotal() || 3,
     searchDoubanlibrary: getSearchDoubanlibrary() || 'on',
+    searchDoubanlibraryTotal: getSearchDoubanlibraryTotal() || 3,
     language: getLanguage() || 'zh',
     darkmode: getDarkmode() || 'off',
     autotracker: getAutotracker() || 'off',
@@ -62,8 +68,14 @@ const mutations = {
     set_searchJavlibrary: (state, data) => {
         state.searchJavlibrary = data
     },
+    set_searchJavlibraryTotal: (state, data) => {
+        state.searchJavlibraryTotal = data
+    },
     set_searchDoubanlibrary: (state, data) => {
         state.searchDoubanlibrary = data
+    },
+    set_searchDoubanlibraryTotal: (state, data) => {
+        state.searchDoubanlibraryTotal = data
     },
 }
 // getters
@@ -71,7 +83,9 @@ const getters = {
     title: (state) => state.title,
     // notic: (state) => state.notic,
     searchJavlibrary: (state) => state.searchJavlibrary,
+    searchJavlibraryTotal: (state) => state.searchJavlibraryTotal,
     searchDoubanlibrary: (state) => state.searchDoubanlibrary,
+    searchDoubanlibraryTotal: (state) => state.searchDoubanlibraryTotal,
     version: (state) => state.version,
     language: (state) => state.language,
     darkmode: (state) => state.darkmode,
@@ -117,9 +131,17 @@ const actions = {
         setSearchJavlibrary(data)
         commit("set_searchJavlibrary", data)
     },
+    changeSearchJavlibraryTotal({ commit }, data) {
+        setSearchJavlibraryTotal(data)
+        commit("set_searchJavlibraryTotal", data)
+    },
     changeSearchDoubanlibrary({ commit }, data) {
         setSearchDoubanlibrary(data)
         commit("set_searchDoubanlibrary", data)
+    },
+    changeSearchDoubanlibraryTotal({ commit }, data) {
+        setSearchDoubanlibraryTotal(data)
+        commit("set_searchDoubanlibraryTotal", data)
     },
 }
 

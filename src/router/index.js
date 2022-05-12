@@ -4,7 +4,9 @@ import Home from '../views/Home.vue'
 import { getToken } from '@/utils/auth'
 import {
 	getSearchJavlibrary,
+	getSearchJavlibraryTotal,
 	getSearchDoubanlibrary,
+	getSearchDoubanlibraryTotal,
 } from '@/utils/app'
 import { LoadingBar } from 'view-design';
 Vue.use(VueRouter)
@@ -38,7 +40,9 @@ const routes = [{
 						m: to.query.m ? to.query.m : "correla",
 						t: to.query.t ? to.query.t : "all",
 						j: getSearchJavlibrary() == 'on' ? true : false,
+						j_R: getSearchJavlibraryTotal() || 3,
 						d: getSearchDoubanlibrary() == 'on' ? true : false,
+						d_R: getSearchDoubanlibraryTotal() || 3,
 						p: Number(to.query.p) ? Number(to.query.p) : 1,
 					})
 					next()
