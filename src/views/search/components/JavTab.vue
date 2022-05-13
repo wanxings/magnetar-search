@@ -5,7 +5,10 @@
         translateTitle(Tagvalue)
       }}</Tag>
       <font v-html="data.code" style="font-size: 14px"></font>
-    </p> 
+      <font style="font-size: 14px"
+        >({{ formatTime(data.rdate, "yyyy") }})</font
+      >
+    </p>
     <a href="#" slot="extra" @click.prevent="goJavsubject(data.id)">
       <Icon type="ios-loop-strong"></Icon>
       {{ translateTitle("详情") }}
@@ -36,50 +39,65 @@
           </div>
         </div>
       </i-col>
-      <i-col :xs="24" :sm="18" :md="18" :lg="18">
-        <List style="padding: 0 10px 10px 10px" :split="false" size="small">
-          <ListItem
-            ><div>
-              <span style="font-weight: 700"
-                >{{ translateTitle("标题") }}: </span
-              ><span v-html="data.title"></span></div
-          ></ListItem>
-          <ListItem
-            ><div>
-              <span style="font-weight: 700"
-                >{{ translateTitle("发布日期") }}:
-              </span>
-              {{ formatTime(data.rdate, "yyyy-MM-dd") }}
-            </div></ListItem
+      <i-col :xs="24" :sm="18" :md="18" :lg="18" class="dbJavinfo">
+        <p>
+          <span
+            style="
+              display: -webkit-box;
+              -webkit-line-clamp: 4;
+              -webkit-box-orient: vertical;
+              text-overflow: ellipsis;
+              overflow: hidden;
+              cursor: pointer;
+            "
           >
+            <i-circle
+              :size="35"
+              :trail-width="4"
+              :stroke-width="5"
+              :percent="Number(data.score).toFixed(1) * 10"
+              stroke-linecap="square"
+              stroke-color="#f5a623"
+              style="float: left; margin-right: 8px"
+            >
+              <div class="demo-Circle-custom">
+                <span>
+                  {{ Number(data.score).toFixed(1) }}
+                </span>
+              </div>
+            </i-circle>
+            <p style="font-weight: 700" v-html="data.title"></p>
+          </span>
+        </p>
+        <p>
+          <span style="font-weight: 700">{{ translateTitle("演员") }}: </span>
+          <span v-if="data.avactress.length === 0">暂无</span>
+          <Tag
+            v-for="(item, avactressindex) in data.avactress"
+            :key="avactressindex"
+            color="primary"
+            >{{ item.actname }}</Tag
+          >
+        </p>
 
-          <ListItem
-            ><div>
-              <span style="font-weight: 700"
-                >{{ translateTitle("所处分类") }}:
-              </span>
-              <Tag
-                v-for="(item, avgenreindex) in data.avgenre"
-                :key="avgenreindex"
-                color="primary"
-                >{{ item.name }}</Tag
-              >
-            </div></ListItem
+        <p>
+          <span style="font-weight: 700"
+            >{{ translateTitle("所处分类") }}:
+          </span>
+          <span v-if="data.avgenre.length === 0">暂无</span>
+          <Tag
+            v-for="(item, avgenreindex) in data.avgenre"
+            :key="avgenreindex"
+            color="primary"
+            >{{ item.name }}</Tag
           >
-          <ListItem
-            ><div>
-              <span style="font-weight: 700"
-                >{{ translateTitle("相关演员") }}:
-              </span>
-              <Tag
-                v-for="(item, avactressindex) in data.avactress"
-                :key="avactressindex"
-                color="primary"
-                >{{ item.actname }}</Tag
-              >
-            </div></ListItem
-          >
-        </List>
+        </p>
+        <p>
+          <span style="font-weight: 700"
+            >{{ translateTitle("上映日期") }}:
+          </span>
+          <span>{{ formatTime(data.rdate, "yyyy-MM-dd") }}</span>
+        </p>
       </i-col>
     </Row>
     <PlayVideo ref="playVideo" />
@@ -127,4 +145,12 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.dbJavinfo {
+  padding-left: 10px;
+  margin-top: 12px;
+}
+.dbJavinfo p {
+  padding-top: 5px;
+}
+</style>

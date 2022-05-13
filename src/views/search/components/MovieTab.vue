@@ -7,27 +7,6 @@
       <font v-html="data.subject_title" style="font-size: 14px"></font>
       <font style="font-size: 14px">({{ data.year }})</font>
     </p>
-        <a
-      slot="extra"
-      target="_blank"
-      :href="'https://www.douyin.com/search/' + data.subject_title_source + '?publish_time=0&sort_type=0&source=switch_tab&type=video'"
-    >
-      {{ translateTitle("抖音") }}
-    </a>
-    <a
-      slot="extra"
-      target="_blank"
-      :href="'https://movie.douban.com/subject/' + data.id + '/'"
-    >
-      {{ translateTitle("豆瓣") }}
-    </a>
-    <a
-      slot="extra"
-      target="_blank"
-      :href="'https://www.imdb.com/title/' + data.imdb.trim() + '/'"
-    >
-      {{ translateTitle("IMDB") }}
-    </a>
 
     <Row
       type="flex"
@@ -51,6 +30,28 @@
       <i-col :xs="24" :sm="18" :md="18" :lg="18" class="dbmovieinfo" style="">
         <p>
           <span>{{ data.year }}</span> | <span>{{ data.style }}</span>
+          <a
+            target="_blank"
+            :href="
+              'https://www.douyin.com/search/' +
+              data.subject_title_source +
+              '?publish_time=0&sort_type=0&source=switch_tab&type=video'
+            "
+          >
+            {{ translateTitle("抖音") }}
+          </a>
+          <a
+            target="_blank"
+            :href="'https://movie.douban.com/subject/' + data.id + '/'"
+          >
+            {{ translateTitle("豆瓣") }}
+          </a>
+          <a
+            target="_blank"
+            :href="'https://www.imdb.com/title/' + data.imdb.trim() + '/'"
+          >
+            {{ translateTitle("IMDB") }}
+          </a>
         </p>
         <p v-if="data.episode">
           <span>集数:{{ data.episode }}</span
@@ -86,11 +87,14 @@
                 </span>
               </div>
             </i-circle>
+            
+            <p v-if="!data.synopsis">暂无简介</p>
             <p v-html="data.synopsis"></p>
           </span>
         </p>
         <p>
           <span style="font-weight: 700">{{ translateTitle("导演") }}: </span>
+          <span v-if="!data.directors">暂无</span>
           <span v-html="data.directors"></span>
         </p>
         <Tooltip max-width="300" :content="data.actors">
@@ -105,7 +109,7 @@
             "
           >
             <span style="font-weight: 700">{{ translateTitle("演员") }}: </span>
-
+            <span v-if="!data.actors">暂无</span>
             <span v-html="data.actors"></span>
           </p>
         </Tooltip>
@@ -225,5 +229,9 @@ export default {
 }
 .dbmovieinfo p {
   padding-top: 5px;
+}
+.dbmovieinfo p a {
+  float: right;
+  padding: 0 4px;
 }
 </style>
