@@ -32,3 +32,13 @@ export function register(email, username,password) {
         })
     })
 }
+export function resetPassword(email, password) {
+    return request({
+        url: `/user/${version}/auth/resetPassword`,
+        method: 'post',
+        data: stringify({
+            email,
+            password
+        })
+    })
+}

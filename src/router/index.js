@@ -136,9 +136,19 @@ const routes = [{
 	meta: {
 		requireAuth: false,
 		islogin: true,
-		title: 'Reg'
+		title: 'registe'
 	},
 	component: resolve => require(['@/views/user/Register.vue'], resolve)
+},
+{
+	path: '/user/resetpwd',
+	name: 'User_Reset_Password',
+	meta: {
+		requireAuth: false,
+		islogin: true,
+		title: 'Reset Your Password'
+	},
+	component: resolve => require(['@/views/user/ResetPassword.vue'], resolve)
 }
 ]
 const router = new VueRouter({// 网页配置路由

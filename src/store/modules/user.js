@@ -1,7 +1,7 @@
 // import API from '@/api/api_list'
 // import axios from "axios";
 import { getInfo } from '@/api/user'
-import { login, logout, register } from '@/api/auth'
+import { login, logout, register,resetPassword } from '@/api/auth'
 import { saveUser, setPassword } from '@/api/user'
 import {
     getToken,
@@ -59,9 +59,9 @@ const getters = {
 // actions
 const actions = {
     // 登录
-    Login({ dispatch }, userInfo) {
-        const email = userInfo.email.trim()
-        const password = md5(userInfo.password)
+    Login({ dispatch }, formdata) {
+        const email = formdata.email.trim()
+        const password = md5(formdata.password)
         return new Promise((resolve, reject) => {
             login(email, password).then( data=> {
                 dispatch('SetUserData', data)
@@ -80,6 +80,16 @@ const actions = {
                 resolve()
             }).catch(error => {
                 reject(error)
+            })
+        })
+    },
+    //重置密码
+    ResetPassword(context, formdata) {
+        const email = formdata.email.trim()
+        const password = formdata.password
+        return new Promise((resolve) => {
+            resetPassword(email, password).then(()=> {
+                resolve()
             })
         })
     },
