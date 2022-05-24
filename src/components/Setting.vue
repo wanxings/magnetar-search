@@ -91,7 +91,20 @@
           </ListItem>
           <ListItem>
             {{ translateTitle("数量") }}
-            <InputNumber @on-change="SearchJavlibraryTotalChange" style="float: right;" :max="10" :min="1" size="small" :value="Number(searchJavlibraryTotal)"></InputNumber>
+            <Select
+              style="float: right; width: auto"
+              @on-change="SearchJavlibraryTotalChange"
+              size="small"
+              :value="Number(searchJavlibraryTotal)"
+              class="slider"
+            >
+              <Option
+                v-for="value in SearchJavlibraryTotalList"
+                :value="value"
+                :key="value"
+                >{{ value }}</Option
+              >
+            </Select>
           </ListItem>
         </List>
       </div>
@@ -121,7 +134,20 @@
           </ListItem>
           <ListItem>
             {{ translateTitle("数量") }}
-            <InputNumber @on-change="SearchDoubanlibraryTotalChange" style="float: right;" :max="10" :min="1" size="small" :value="Number(searchDoubanlibraryTotal)"></InputNumber>
+            <Select
+              style="float: right; width: auto"
+              @on-change="SearchDoubanlibraryTotalChange"
+              size="small"
+              :value="Number(searchDoubanlibraryTotal)"
+              class="slider"
+            >
+              <Option
+                v-for="value in SearchDoubanlibraryTotalList"
+                :value="value"
+                :key="value"
+                >{{ value }}</Option
+              >
+            </Select>
           </ListItem>
         </List>
       </div>
@@ -139,6 +165,8 @@ export default {
     return {
       settingstatus: false,
       testdemo1:0,
+      SearchJavlibraryTotalList:[1,2,3,4,5,6,7,8,9,10],
+      SearchDoubanlibraryTotalList:[1,2,3,4,5,6,7,8,9,10],
     };
   },
   computed: {
@@ -196,6 +224,7 @@ export default {
       this.changeSearchJavlibrary(status ? "on" : "off");
     },
     SearchJavlibraryTotalChange(total) {
+      console.log(total)
       this.changeSearchJavlibraryTotal(total);
     },
     SearchDoubanlibraryChange(status) {
