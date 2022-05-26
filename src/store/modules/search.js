@@ -49,6 +49,7 @@ const state = () => ({
   btSearchData: [],
   btPolySearchData: [],
   javSearchData: [],
+  relatedKeywordData: [],
   movieSearchData: [],
   acSearchData: [],
   polyLicenseId: null,
@@ -91,6 +92,10 @@ const mutations = {
     console.log("set_btPolySearchData:%o", data);
     state.btPolySearchData = data;
   },
+  set_relatedKeywordData(state, data) {
+    console.log("set_relatedKeywordData:%o", data);
+    state.relatedKeywordData = data;
+  },
   set_polyLicenseId(state, data) {
     console.log("set_polyLicenseId:%o", data);
     state.polyLicenseId = data;
@@ -116,6 +121,7 @@ const mutations = {
     state.movieSearchData = [];
     state.acSearchData = [];
     state.btPolySearchData = [];
+    state.relatedKeywordData = [];
     state.polyLicenseId = null;
   },
   set_uploadImageModalStatus(state, data) {
@@ -139,6 +145,7 @@ const getters = {
   movieSearchData: (state) => state.movieSearchData,
   polyLicenseId: (state) => state.polyLicenseId,
   btPolySearchData: (state) => state.btPolySearchData,
+  relatedKeywordData: (state) => state.relatedKeywordData,
   uploadImageModalStatus: (state) => state.uploadImageModalStatus,
 }
 
@@ -151,6 +158,7 @@ const actions = {
         commit("set_time", data.time)
         commit("set_polyLicenseId", data.polyLicenseId)
         commit("set_btSearchData", data.btSearchData)
+        commit("set_relatedKeywordData", data.relatedKeywordData)
         commit("set_javSearchData", data.javSearchData)
         commit("set_movieSearchData", data.movieSearchData)
         resolve()

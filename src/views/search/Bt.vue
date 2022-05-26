@@ -59,6 +59,7 @@
       <i-col id="right-panl" :xs="{ span: 24 }" :lg="{ span: 6 }">
         <!-- <Notice /> -->
         <Polytab v-if="token" />
+        <RelatedKeywords :keywordList="relatedKeywordData"  />
         <!-- <SearchRank v-if="token" /> -->
       </i-col>
     </Row>
@@ -73,7 +74,7 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
 import { translateTitle } from "@/utils/i18n";
 import { Message } from "view-design";
 import BtTab from "./components/BtTab.vue";
-
+import RelatedKeywords from "./components/RelatedKeywords.vue";
 import JavTab from "./components/JavTab.vue";
 import MovieTab from "./components/MovieTab.vue";
 import BtPolyTab from "./components/BtPolyTab.vue";
@@ -96,7 +97,7 @@ export default {
   name: "Home",
   components: {
     BtTab,
-
+    RelatedKeywords,
     JavTab,
     MovieTab,
     BtPolyTab,
@@ -134,6 +135,7 @@ export default {
       javSearchData: "javSearchData",
       movieSearchData: "movieSearchData",
       btPolySearchData: "btPolySearchData",
+      relatedKeywordData:"relatedKeywordData",
       total: "total",
       polyLicenseId: "polyLicenseId",
     }),
