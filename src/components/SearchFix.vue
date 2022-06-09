@@ -36,25 +36,25 @@
   font: 21px arial, sans-serif;
   line-height: inherit;
 }
-.minidiv .gsfi{
-    height: 34px !important;
-    margin: 10px 0 0 !important;
-    box-shadow: none !important;
-    border: 1px solid var(--search-input-border-color) !important;
-    border-radius: 16px !important;
+.minidiv .gsfi {
+  height: 34px !important;
+  margin: 10px 0 0 !important;
+  box-shadow: none !important;
+  border: 1px solid var(--search-input-border-color) !important;
+  border-radius: 16px !important;
 }
-.minidiv .gLFyf input{
-    height: 32px !important;
-    border-radius: 16px !important;
-    font-size: 14px !important;
+.minidiv .gLFyf input {
+  height: 32px !important;
+  border-radius: 16px !important;
+  font-size: 14px !important;
 }
-.minidiv  i{
-    font-size: 20px !important;
-    height: 34px !important;
-    line-height: 34px !important;
+.minidiv i {
+  font-size: 20px !important;
+  height: 34px !important;
+  line-height: 34px !important;
 }
 .minidiv .slogo img {
-    margin: 12px auto !important;
+  margin: 12px auto !important;
 }
 </style>
 <template>
@@ -186,7 +186,7 @@ export default {
       },
       set(val) {
         // this.$route.name == "image" ? true : this.set_keyword(val);
-        this.set_keyword(val);
+        this.set_keyword(val.replace(/['$|'$|`$|@$]/g,' '));
       },
     },
   },

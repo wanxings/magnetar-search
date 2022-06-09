@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Message, Notice,Spin } from 'view-design';
+import { Message, Notice, Spin } from 'view-design';
 import store from '../store/index.js';
 import { getToken } from '@/utils/auth'
 import {
@@ -37,15 +37,7 @@ service.interceptors.response.use(
         if (res.code === 301) {
             window.location.href = res.href;
         }
-        Spin.hide();
-        Message.destroy();
-        Message.error(res[store.getters['app/language']])
-        return Promise.reject(res)
-    },
-    error => {
-        Spin.hide();
-        Message.destroy();
-        if (error.response && error.response.status == 401) {
+        if (res.code === 401) {
             console.log("token过期或不合法")
             Notice.warning({
                 title: '温馨提示',
@@ -57,14 +49,34 @@ service.interceptors.response.use(
                     location.reload() // 为了重新实例化vue-router对象 避免bug
                 })
             }, 3000)
-
-        }else{
+        }
+        if (res.code === 403) {
+            Message.warning({
+                content: "请求参数含非法字符"
+            })
+        }
+        Spin.hide();
+        Message.destroy();
+        Message.error(res[store.getters['app/language']])
+        return Promise.reject(res)
+    },
+    error => {
+        Spin.hide();
+        Message.destroy();
+        console.log("error");
+        console.log(error);
+        console.log(error.response);
+        if (error.response && error.response.status == 403) {
+            Message.warning({
+                content: "请求参数含非法字符"
+            })
+        } else {
             console.log('interceptorsERROR:%o', error) // for debug
             Message.warning({
                 content: "接口异常"
             })
         }
-        
+
         return Promise.reject(error)
 
     }
