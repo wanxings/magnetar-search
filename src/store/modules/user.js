@@ -73,7 +73,7 @@ const actions = {
     },
     // 注册
     Register(context, formdata) {
-        const email = formdata.email.trim()
+        const email = formdata.email.trim().toLowerCase()
         const username = formdata.username.trim()
         return new Promise((resolve, reject) => {
             register(email, username, formdata.password).then(() => {

@@ -60,6 +60,7 @@
 <template>
   <div id="searchfix">
     <i-input
+      ref="searchInput"
       size="large"
       class="gLFyf gsfi"
       v-model="inputKeyword"
@@ -172,7 +173,7 @@ export default {
       return { token: this.token };
     },
     imageEngine() {
-      return this.$route.name == "image" ? true : false;
+      return this.$route.meta.parentPath == "image" ? true : false;
     },
     imageSearchTip() {
       return !this.imageQuery.id && this.$route.name == "image"
@@ -186,11 +187,14 @@ export default {
       },
       set(val) {
         // this.$route.name == "image" ? true : this.set_keyword(val);
-        this.set_keyword(val.replace(/['$|'$|`$|@$]/g,' '));
+        this.set_keyword(val);
       },
     },
   },
   mounted() {
+    this.$refs.searchInput.focus({
+      cursor: "end",
+    });
     window.addEventListener("scroll", this.handleScroll);
   },
   methods: {

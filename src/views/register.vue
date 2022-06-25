@@ -19,14 +19,14 @@
             >
               <FormItem prop="username"
                 ><i-input
-                  :placeholder="translateTitle('用户名')"
+                  :placeholder="translateTitle('你的用户名')"
                   v-model="regItem.username"
                   prefix="ios-contact-outline"
                 ></i-input
               ></FormItem>
               <FormItem prop="email"
                 ><i-input
-                  :placeholder="translateTitle('邮箱')"
+                  :placeholder="translateTitle('接收验证邮件的邮箱')"
                   v-model="regItem.email"
                   prefix="ios-mail-outline"
                 ></i-input
@@ -49,7 +49,7 @@
                 <p>
                   {{ translateTitle("已经拥有账户？") }}
 
-                  <router-link :to="{ path: '/user/login' }">
+                  <router-link :to="{ path: '/login' }">
                     {{ translateTitle("登录") }}
                   </router-link>
                 </p>

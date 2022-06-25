@@ -19,6 +19,22 @@ export function createFavorites(params) {
         // data: stringify(parameter)
     })
 }
+export function getFavoritesJavList(params) {
+    return request({
+        url: `/search/${version}/jav/FavoritesJavList`,
+        method: 'get',
+        params
+        // data: stringify(parameter)
+    })
+}
+export function getActressJavList(params) {
+    return request({
+        url: `/search/${version}/jav/ActressJavList`,
+        method: 'get',
+        params
+        // data: stringify(parameter)
+    })
+}
 export function getAvData(params) {
     return request({
         url: `/video/${version}/index/Getvideo`,

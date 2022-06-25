@@ -72,14 +72,14 @@
 
               <router-link
                 :to="{
-                  path: '/user/register',
+                  path: '/register',
                   query: { redirect: this.$route.query.redirect || '/' },
                 }"
                 >{{ translateTitle("注册") }}
               </router-link> / 
               <router-link
                 :to="{
-                  path: '/user/resetpwd',
+                  path: '/resetpwd',
                   query: { redirect: this.$route.query.redirect || '/' },
                 }"
                 >{{ translateTitle("找回密码") }}

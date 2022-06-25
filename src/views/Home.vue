@@ -38,6 +38,22 @@
               <SearchFix @search="search" @searchImage="searchImage" />
             </i-col>
           </Row>
+          <Row type="flex" justify="center">
+            <i-col
+              :xs="22"
+              :sm="22"
+              :md="12"
+              :lg="12"
+              :xl="8"
+              :xxl="8"
+              style="text-align: center;padding-top: 29px;"
+            >
+              <ButtonGroup>
+                <Button to="/jav" type="text">番号库</Button>
+                <Button to="/user" type="text" style="margin-left:10px;">个人中心</Button>
+              </ButtonGroup>
+            </i-col>
+          </Row>
         </div>
       </Content>
     </Layout>
@@ -65,14 +81,14 @@ export default {
     ...mapMutations({}),
     search() {
       this.$router.push({
-        path: `/search/bt`,
+        path: `/search`,
         query: { q: this.keyword },
       });
     },
     searchImage() {
       console.log("Home-searchImage-id:%o", this.imageQuery.id);
       this.$router.push({
-        path: "/search/image",
+        path: "/image/search",
         query: { id: this.imageQuery.id },
       });
     },

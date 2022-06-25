@@ -3,21 +3,13 @@
     <Row>
       <i-col :xs="{ span: 24 }" :lg="{ span: 12 }" class="marleft" id="dhtcard">
         <Row>
+          <ActressTab :data="actressInfo" Tagvalue="女优信息" />
+        </Row>
+        <Row>
           <RadioGroup
             @on-change="changeSelectFrom"
             style="padding: 10px"
-            v-model="selectFrom.category"
-            size="small"
-          >
-            <Radio label="censored">有码</Radio>
-            <Radio label="uncensored">无码</Radio>
-            <Radio label="fc2">FC2</Radio>
-          </RadioGroup>
-          <br />
-          <RadioGroup
-            @on-change="changeSelectFrom"
-            style="padding: 10px"
-            v-model="selectFrom.sort"
+            v-model="queryForm.sort"
             size="small"
           >
             <Radio label="magnetic">磁链更新时间</Radio>
@@ -27,7 +19,7 @@
           </RadioGroup>
           <CheckboxGroup
             style="padding: 10px"
-            v-model="selectFrom.include"
+            v-model="queryForm.include"
             @on-change="changeSelectFrom"
             size="small"
           >
@@ -74,7 +66,7 @@
             style="text-align: center; max-width: 652px"
             ><Page
               v-if="total > 0"
-              :page="selectFrom.page"
+              :page="queryForm.pageNo"
               :total="total"
               @nextpage="nextpage"
             />
@@ -93,34 +85,32 @@
 </template>
 <script>
 // @ is an alias to /src
-import { mapActions, mapGetters } from "vuex";
+import { mapGetters } from "vuex";
+import { getActressJavList } from "@/api/jav";
 import { translateTitle } from "@/utils/i18n";
 import { Message } from "view-design";
 import Page from "@/components/Page.vue";
-import { setJavSelectFrom, getJavSelectFrom } from "@/utils/app";
-// import Polytab from "@/components/Polytab.vue";
-// import Page from "@/components/Page.vue";
-// import SearchStatistics from "@/components/SearchStatistics.vue";
-// import SearchRank from "@/components/SearchRank.vue";
+import ActressTab from "@/components/ActressTab.vue";
 import { formatTime } from "@/utils/format";
 
 export default {
-  name: "Home",
+  name: "JavActerss",
   components: {
     Page,
-    // Polytab,
-    // Page,
-    // SearchStatistics,
-    // SearchRank,
+    ActressTab,
   },
   data() {
     return {
-      selectFrom: {},
-      searchDone: false,
+      queryForm: {
+        id: "",
+        pageNo: 1,
+        sort: "rdate",
+        include: ["magnetic"],
+      },
       loadingtext: this.translateTitle("加载中"),
       loadingmsg: {},
-      noKeyword: "",
       list: [],
+      actressInfo: {},
       total: 0,
     };
   },
@@ -133,98 +123,49 @@ export default {
       token: "token",
     }),
   },
-  watch: {
-    moviedetailstatus(val) {
-      if (val) {
-        console.log("添加回退监听");
-        history.pushState(null, null, document.URL);
-        window.addEventListener("popstate", () => {
-          this.closemoviedetail();
-        });
-      } else {
-        console.log("移除回退监听");
-        window.removeEventListener("popstate", () => {
-          this.closemoviedetail();
-        });
-      }
-    },
-  },
+  watch: {},
   created() {
-    if (!getJavSelectFrom())
-      setJavSelectFrom({
-        category: "censored",
-        sort: "rdate",
-        include: ["magnetic"],
-        page: 1,
+    if (this.$route.query.id) {
+      this.queryForm.id = this.$route.query.id;
+    } else {
+      this.$router.push({
+        path: `/`,
       });
-    this.selectFrom = getJavSelectFrom();
-    this.selectFrom.page = 1;
+    }
+    this.queryForm.pageNo = 1;
     this.fetchData();
   },
-  // beforeRouteEnter(to, from, next) {
-  //   console.log(to.query);
-  //   if (JSON.stringify(to.query) !== "{}") {
-  //     setJavSelectFrom(to.query);
-  //   } else {
-  //     if (!getJavSelectFrom())
-  //       setJavSelectFrom({
-  //         category: "censored",
-  //         sort: "rdate",
-  //         include: ["magnetic"],
-  //         page: 1,
-  //       });
-  //   }
-  //   next();
-  // },
-  // beforeRouteUpdate(to, from, next) {
-  //   console.log("JAV-beforeRouteUpdate");
-  //   this.$store.commit("search/set_javQuery", {
-  //     p: Number(to.query.p) ? Number(to.query.p) : 1,
-  //   });
-  //   // this.$store.commit("search/set_javQuery", to.query);
-  //   next();
-  // },
   methods: {
     translateTitle,
     formatTime,
-    ...mapActions("search", {
-      getJav: "getJav",
-    }),
     goJavsubject(id) {
       let routeData = this.$router.resolve({
-        path: `/search/javsubject`,
+        path: `/jav/subject`,
         query: { id },
       });
       window.open(routeData.href, "_blank"); //打开新标签
     },
     nextpage(val) {
-      this.selectFrom.page = val;
+      this.queryForm.pageNo = val;
       this.fetchData();
     },
     changeSelectFrom() {
-      this.selectFrom.page = 1;
+      this.queryForm.pageNo = 1;
       this.fetchData();
     },
-    // nextpage(val){
-    //   this.set_javQuery({
-    //     p: val,
-    //   });
-    //   this.$router.push({
-    //     path: "/search/jav",
-    //     query: {q:this.keyword,...this.javQuery},
-    //   });
-    // },
     async fetchData() {
       scrollTo(0, 0);
-      setJavSelectFrom(this.selectFrom); //保存条件
       Message.destroy(); //清空全部提示
       const loadingMsg = Message.loading({
         content: this.loadingtext,
         duration: 0,
       });
-      const { list, total } = await this.getJav(this.selectFrom);
+      const { actressInfo, list, total } = await getActressJavList(
+        this.queryForm
+      );
       this.list = list;
       this.total = total;
+      this.actressInfo = actressInfo;
       loadingMsg();
     },
   },

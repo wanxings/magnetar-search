@@ -7,6 +7,7 @@
 import Vue from 'vue'
 import { 
     Button,
+    ButtonGroup,
     Row,
     Col,
     Layout,
@@ -14,7 +15,7 @@ import {
     Content, 
     Footer,
     Alert,
-    // Menu,
+    Table,
     Modal,
     Icon,
     MenuItem,
@@ -70,6 +71,7 @@ Vue.component('Tooltip', Tooltip)
 Vue.component('Dropdown', Dropdown)
 Vue.component('DropdownMenu', DropdownMenu)
 Vue.component('Button', Button)
+Vue.component('ButtonGroup', ButtonGroup)
 Vue.component('Tabs', Tabs)
 Vue.component('TabPane', TabPane)
 Vue.component('Row', Row)
@@ -79,7 +81,7 @@ Vue.component('Layout', Layout)
 Vue.component('Header', Header)
 Vue.component('Content', Content)
 Vue.component('Footer', Footer)
-// Vue.component('Menu', Menu)
+Vue.component('Table', Table)
 Vue.component('MenuItem', MenuItem)
 Vue.component('Modal', Modal)
 Vue.component('Icon', Icon)

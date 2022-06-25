@@ -57,6 +57,7 @@ const state = () => ({
 // mutations
 const mutations = {
   set_keyword(state, data) {
+    data = data.replace(/['$|'$|`$|@$]/g,' ')
     console.log("set_keyword:%o", data);
     state.keyword = data;
   },

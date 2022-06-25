@@ -9,6 +9,20 @@ export function getInfo() {
     method: 'get',
   })
 }
+export function getSearchHistory(params) {
+  return request({
+    url: `/user/${version}/manage/SearchHistory`,
+    method: 'get',
+    params,
+  })
+}
+export function getJavFavorites(params) {
+  return request({
+    url: `/user/${version}/manage/JavFavorites`,
+    method: 'get',
+    params,
+  })
+}
 export function getProxyInfo() {
   return request({
     url: `/user/${version}/user/proxyinfo`,

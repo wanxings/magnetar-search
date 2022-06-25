@@ -47,6 +47,7 @@
             {{ translateTitle("豆瓣") }}
           </a>
           <a
+            v-if="data.imdb"
             target="_blank"
             :href="'https://www.imdb.com/title/' + data.imdb.trim() + '/'"
           >
@@ -87,7 +88,7 @@
                 </span>
               </div>
             </i-circle>
-            
+
             <p v-if="!data.synopsis">暂无简介</p>
             <p v-html="data.synopsis"></p>
           </span>
@@ -148,7 +149,7 @@
 
 <script>
 import { translateTitle } from "@/utils/i18n";
-import NetdiskTab from "./NetdiskTab.vue";
+import NetdiskTab from "@/components/NetdiskTab.vue";
 import PlayVideo from "@/components/PlayVideo.vue";
 import JavDetail from "@/components/JavDetail.vue";
 import { formatTime } from "@/utils/format";

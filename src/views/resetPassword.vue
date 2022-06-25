@@ -29,7 +29,7 @@
           ></FormItem>
           <FormItem prop="password"
             ><i-input
-              :placeholder="translateTitle('密码')"
+              :placeholder="translateTitle('新密码')"
               v-model="ResetItem.password"
               prefix="ios-lock-outline"
               type="password"
@@ -112,7 +112,7 @@ export default {
           await this.ResetPassword(this.ResetItem);
           logInMsg();
           Message.success(this.translateTitle("前往邮箱查看密码重置链接"));
-          this.$router.push({ path: "/user/login" });
+          this.$router.push({ path: "/login" });
         } else {
           Message.error({
             background: true,

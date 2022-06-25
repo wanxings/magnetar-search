@@ -72,12 +72,13 @@
         <p>
           <span style="font-weight: 700">{{ translateTitle("演员") }}: </span>
           <span v-if="data.avactress.length === 0">暂无</span>
-          <Tag
-            v-for="(item, avactressindex) in data.avactress"
-            :key="avactressindex"
-            color="primary"
-            >{{ item.actname }}</Tag
-          >
+          <a v-for="(item, avactressindex) in data.avactress" :key="avactressindex">
+            <Tag
+              @click.native="goActress(item.id)"
+              color="primary"
+              >{{ item.actname }}</Tag
+            >
+          </a>
         </p>
 
         <p>
@@ -128,7 +129,14 @@ export default {
     formatTime,
     goJavsubject(id) {
       let routeData = this.$router.resolve({
-        path: `/search/javsubject`,
+        path: `/jav/subject`,
+        query: { id },
+      });
+      window.open(routeData.href, "_blank"); //打开新标签
+    },
+    goActress(id) {
+      let routeData = this.$router.resolve({
+        path: `/jav/actress`,
         query: { id },
       });
       window.open(routeData.href, "_blank"); //打开新标签

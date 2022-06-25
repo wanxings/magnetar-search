@@ -32,19 +32,18 @@
   <div id="indexfooter">
     <Footer class="footers">
       <span class="footerBox">
-        <a href="/" title="Magnetar" target="_blank" class="links"
-          >© 2021 {{ title }}
-          </a>
-          <a href="https://github.com/wanxings/magnetar-search" title="Github" target="_blank"
-            ><Icon size="16" type="logo-github" /></a
-        >
+        <a href="/" :title="title" target="_blank" class="links"
+          >© 2019-2022 {{ title }}
+        </a>
+        <a
+          href="https://github.com/wanxings/magnetar-search"
+          title="Github"
+          target="_blank"
+          ><Icon size="16" type="logo-github"
+        /></a>
       </span>
       <br />
-      <span class="footerBox">
-        <a href="https://support.qq.com/products/261083" target="_blank"
-          >{{ translateTitle("建议反馈") }}
-        </a>
-        -
+      <span v-if="token" class="footerBox">
         <a href="https://cixing.io" target="_blank">{{
           translateTitle("浏览器扩展")
         }}</a>
@@ -68,6 +67,9 @@ export default {
     ...mapGetters({
       version: "app/version",
       title: "app/title",
+    }),
+    ...mapGetters("user", {
+      token: "token",
     }),
   },
   methods: {

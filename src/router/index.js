@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import Layout from "@/components/layouts.vue";
 import Home from '../views/Home.vue'
 import { getToken } from '@/utils/auth'
 import {
@@ -21,16 +22,17 @@ const routes = [{
 },
 {
 	path: '/search',
-	name: 'Search',
-	component: resolve => require(['@/views/search/Index.vue'], resolve),
+	component: Layout,
 	children: [
 		{
-			path: 'bt',
-			name: "bt",
+			path: '',
+			name: "searchIndex",
 			meta: {
-				title: 'Bt Search',
+				title: '磁力搜索 - Magnetar Search',
+				parentPath: 'search',
+				requireAuth: false,
 			},
-			component: resolve => require(['@/views/search/Bt.vue'], resolve),
+			component: () => import('@/views/search/index'),
 			beforeEnter: (to, from, next) => {
 				if (to.query.q) {
 					router.app.$options.store.commit("search/set_keyword", to.query.q);
@@ -53,27 +55,35 @@ const routes = [{
 
 			}
 		},
-
+	],
+},
+{
+	path: '/jav',
+	component: Layout,
+	redirect: '/jav/list',
+	children: [
 		{
-			path: 'jav',
-			name: "jav",
+			path: 'list',
+			name: "javList",
 			meta: {
-				title: '番号库',
+				title: '番号库 - Magnetar Search',
+				parentPath: 'jav',
 				requireAuth: true,
 			},
-			component: resolve => require(['@/views/search/Jav.vue'], resolve),
+			component: () => import('@/views/jav/list'),
 			beforeEnter: (to, from, next) => {
 				next()
 			}
 		},
 		{
-			path: 'javsubject',
-			name: "javsubject",
+			path: 'subject',
+			name: "javSubject",
 			meta: {
-				title: '番号详情',
+				title: '作品详情 - Magnetar Search',
+				parentPath: 'jav',
 				requireAuth: true,
 			},
-			component: resolve => require(['@/views/search/JavSubject.vue'], resolve),
+			component: () => import('@/views/jav/subject'),
 			beforeEnter: (to, from, next) => {
 				if (to.query.id) {
 					next()
@@ -84,13 +94,56 @@ const routes = [{
 			}
 		},
 		{
-			path: 'image',
-			name: "image",
+			path: 'favorites',
+			name: "javFavorites",
 			meta: {
-				title: 'Image Search',
+				title: '番号收藏夹 - Magnetar Search',
+				parentPath: 'jav',
 				requireAuth: true,
 			},
-			component: resolve => require(['@/views/search/Image.vue'], resolve),
+			component: () => import('@/views/jav/favorites'),
+			beforeEnter: (to, from, next) => {
+				if (to.query.id) {
+					next()
+				} else {
+					router.push('/')
+					next()
+				}
+			}
+		},
+		{
+			path: 'actress',
+			name: "javActress",
+			meta: {
+				title: '女优作品 - Magnetar Search',
+				parentPath: 'jav',
+				requireAuth: true,
+			},
+			component: () => import('@/views/jav/actress'),
+			beforeEnter: (to, from, next) => {
+				if (to.query.id) {
+					next()
+				} else {
+					router.push('/')
+					next()
+				}
+			}
+		},
+	],
+},
+{
+	path: '/image',
+	component: Layout,
+	children: [
+		{
+			path: 'search',
+			name: "imageIndex",
+			meta: {
+				title: '图像搜索 - Magnetar Search',
+				parentPath: 'image',
+				requireAuth: true,
+			},
+			component: () => import('@/views/image/index'),
 			beforeEnter: (to, from, next) => {
 				if (to.query.id) {
 					router.app.$options.store.commit("search/set_imageQuery", {
@@ -104,52 +157,100 @@ const routes = [{
 
 			}
 		},
-		// {
-		// 	path: 'history',
-		// 	name: "history",
-		// 	meta: {
-		// 		title: 'Search history',
-		// 		requireAuth: true,
-		// 	},
-		// 	component: resolve => require(['@/views/search/History.vue'], resolve),
-		// 	beforeEnter: (to, from, next) => {
-		// 		next()
-
-
-		// 	}
-		// },
 	],
 },
 {
-	path: '/user/login',
-	name: 'User_login',
-	meta: {
-		requireAuth: false,
-		islogin: true,
-		title: 'Login'
-	},
-	component: resolve => require(['@/views/user/Login.vue'], resolve)
+	path: '/user',
+	component: Layout,
+	redirect: '/user/search',
+	children: [
+		{
+			path: 'search',
+			name: "Search",
+			meta: {
+				title: '搜索历史 - Magnetar Search',
+				parentPath: 'user',
+				requireAuth: true,
+			},
+			component: () => import('@/views/user/search'),
+			beforeEnter: (to, from, next) => {
+				next()
+			}
+		},
+		{
+			path: 'favorites',
+			name: "Favorites",
+			meta: {
+				title: '我的收藏 - Magnetar Search',
+				parentPath: 'user',
+				requireAuth: true,
+			},
+			component: () => import('@/views/user/favorites'),
+			beforeEnter: (to, from, next) => {
+				next()
+			}
+		},
+		{
+			path: 'material',
+			name: "Material",
+			meta: {
+				title: '个人资料 - Magnetar Search',
+				parentPath: 'user',
+				requireAuth: true,
+			},
+			component: () => import('@/views/user/search'),
+			beforeEnter: (to, from, next) => {
+				next()
+			}
+		},
+	],
 },
 {
-	path: '/user/register',
-	name: 'User_registe',
+	path: '/login',
+	name: 'Login',
 	meta: {
 		requireAuth: false,
 		islogin: true,
-		title: 'registe'
+		title: '登录 - Magnetar Search'
 	},
-	component: resolve => require(['@/views/user/Register.vue'], resolve)
+	component: resolve => require(['@/views/login.vue'], resolve)
 },
 {
-	path: '/user/resetpwd',
-	name: 'User_Reset_Password',
+	path: '/register',
+	name: 'Registe',
 	meta: {
 		requireAuth: false,
 		islogin: true,
-		title: 'Reset Your Password'
+		title: '注册 - Magnetar Search'
 	},
-	component: resolve => require(['@/views/user/ResetPassword.vue'], resolve)
-}
+	component: resolve => require(['@/views/register.vue'], resolve)
+},
+{
+	path: '/resetpwd',
+	name: 'ResetPassword',
+	meta: {
+		requireAuth: false,
+		islogin: true,
+		title: '重置密码 - Magnetar Search'
+	},
+	component: resolve => require(['@/views/resetPassword.vue'], resolve)
+},
+{
+	path: '/404',
+	name: '404',
+	component: () => import('@/views/404'),
+	meta: {
+		requireAuth: false,
+		title: '找不到页面 - Magnetar Search'
+	},
+},
+{
+	path: '*',
+	redirect: '/404',
+	meta: {
+		requireAuth: false,
+	},
+},
 ]
 const router = new VueRouter({// 网页配置路由
 	mode: 'history',
@@ -175,16 +276,17 @@ router.beforeEach((to, from, next) => {
 			path: '/'//已经登录就跳转到首页
 		})
 	}
-	if (to.meta.requireAuth == true) {             // 需要登录权限进入的路由
+	if (to.meta.requireAuth === false) {             // 不需要登录权限直接下一步
+		return next();
+	} else {                                       // 需要登录权限的路由
 		if (!token) {                               // 获取不到登录信息
 			next({
-				path: '/user/login',
+				path: '/login',
 				query: { redirect: to.fullPath } //登录后再跳回此页面时要做的配置
 			})
 		} else {                                   // 获取到登录信息，进行下一步
 			return next();
 		}
-	} else {                                       // 不需要登录权限的路由直接进行下一步
 		return next();
 	}
 

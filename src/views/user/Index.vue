@@ -1,61 +1,53 @@
 <template>
-  <Layout>
-    <Header>Header</Header>
-    <Layout>
-      <Sider hide-trigger>
-        <Menu :theme="theme2">
-          <MenuItem name="1">
-            <Icon type="ios-paper" />
-            内容管理
-          </MenuItem>
-          <MenuItem name="2">
-            <Icon type="ios-people" />
-            用户管理
-          </MenuItem>
-        </Menu>
-      </Sider>
-      <Content><div id="home">
-    <router-link :to="{ path: '/user/edit' }">
-      <span id="btnBox">
-        <span id="btnSettings" title="资料设置"
-          ><Icon type="md-settings"
-        /></span>
-      </span>
-    </router-link>
-
-    <div style="padding: 20px">
-      <div style="position: relative; text-align: center">
-        <img
-          style="border-radius: 50%; cursor: pointer"
-          title="修改头像"
-          @click="showuploadheadimg"
-          :src="userinfo.userheadimg"
-        />
-        <h3 style="">{{ userinfo.username }}</h3>
-        <p style="font-size: 12px; padding-bottom: 10px">
-          {{ userinfo.signature }}
-        </p>
-      </div>
-    </div>
-
-    <router-view></router-view>
-
-    <Uploadheadimg ref="uploadheadimgmodal" />
-  </div></Content>
-    </Layout>
-    <Footer>Footer</Footer>
-  </Layout>
-  
+  <div id="userIndex">
+    <Row style="padding-top: 10px;">
+      <i-col :xs="{ span: 24 }" :lg="{ span: 20 }" class="marleft">
+        <Card>
+          <div style="text-align: center">
+            <img
+              src="https://api.cixing.io/uploads/20210727/a7461c33694b683b60c8b54e2a8a1669.png"
+            />
+            <h3>Admin</h3>
+            <p>积分：14123</p>
+          </div>
+        </Card>
+      </i-col>
+    </Row>
+    <Row style="padding-top: 10px;">
+      <i-col :xs="{ span: 24 }" :lg="{ span: 20 }" class="marleft">
+        <Card>
+          <div style="">
+            <Tabs size="small">
+              <TabPane label="搜索历史">
+                <SearchHistory />
+              </TabPane>
+              <TabPane label="我的收藏">
+                <MyCollection />
+              </TabPane>
+              <TabPane label="个人资料">
+                <Material />
+              </TabPane>
+            </Tabs>
+            <div style="height:200px;"></div>
+          </div>
+        </Card>
+      </i-col>
+    </Row>
+  </div>
 </template>
 
 <script>
 /* eslint-disable */
 import { mapState } from "vuex";
-import Uploadheadimg from "@/components/Uploadheadimg.vue";
+import SearchHistory from "./components/SearchHistory.vue";
+import MyCollection from "./components/MyCollection.vue";
+import Material from "./components/Material.vue";
 export default {
-  name: "user",
+  name: "userIndex",
   components: {
-    Uploadheadimg,
+    SearchHistory,
+    MyCollection,
+    Material,
   },
   data() {
     return {
@@ -74,20 +66,8 @@ export default {
       userinfo: (state) => state.userinfo,
     }),
   },
-  filters: {
-    proxymodetotype: function (value) {
-      if (value) {
-        return "info";
-      } else {
-        return "default";
-      }
-    },
-  },
-  methods: {
-    showuploadheadimg() {
-      this.$refs.uploadheadimgmodal.show(this.userinfo.userheadimg);
-    },
-  },
+  filters: {},
+  methods: {},
   mounted: function () {
     // this.$store.dispatch('inituserconfig');
   },
@@ -95,26 +75,4 @@ export default {
 </script>
 
 <style>
-#home {
-  height: 600px;
-  width: 375px;
-  margin: 0 auto;
-}
-#btnSettings {
-  right: 0;
-  position: relative;
-  background-color: transparent;
-  font-size: 22px;
-  cursor: pointer;
-}
-#btnBox {
-  position: fixed;
-  top: calc(var(--body-top) + 20px);
-  right: 10px;
-  padding: 10px;
-  z-index: 8;
-}
-#fsearchinput .ivu-input-group-prepend {
-  background-color: transparent;
-}
 </style>

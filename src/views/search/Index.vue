@@ -1,84 +1,236 @@
-<style scoped>
-.ivu-divider-horizontal {
-  margin: 2px 0;
-}
-.ma-ivu-divider-horizontal {
-  margin: 17px 0 0 0;
-}
-</style>
 <template>
-  <div class="Search" id="Search" style="">
-    <Layout>
-      <div id="searchTop" class="searchmini">
-        <div class="slogo">
-          <a href="/" title="Magnetar" data-hveid="8">
-            <img src="/logo.png" alt="Magnetar" data-atf="1" data-frt="0" />
-          </a>
+  <div>
+    <Row>
+      <i-col :xs="{ span: 24 }" :lg="{ span: 12 }" class="marleft">
+        <SearchStatistics v-if="searchDone" />
+        <div style="float: right; color: var(--txt-b-tip)">
+          <BtSrotSelect @change="changeSort"></BtSrotSelect>
         </div>
-        <i-col :xs="24" :lg="9" :xl="9" class="search-col">
-          <SearchFix
-            @search="search"
-            @searchImage="searchImage"
-            ref="SearchFix"
-          />
-        </i-col>
-        <HeaderTool />
-      </div>
-      <div class="tabs" id="sort">
-        <Row>
-          <i-col :xs="{ span: 24 }" :lg="{ span: 20 }" class="marleft">
-            <SearchEngine v-if="token" />
+        <div style="float: right; color: var(--txt-b-tip)">
+          <BtTypeSelect @change="changeType"></BtTypeSelect>
+        </div>
+      </i-col>
+    </Row>
+
+    <Row>
+      <i-col :xs="{ span: 24 }" :lg="{ span: 12 }" class="marleft" id="dhtcard">
+        <Alert v-if="searchDone && polyLicenseId" show-icon
+          ><a @click.prevent="activationPoly">{{
+            translateTitle("获取聚合搜索结果")
+          }}</a></Alert
+        >
+        <Alert v-if="searchDone && !token" type="warning" show-icon>
+          <Tooltip
+            placement="top"
+            max-width="200"
+            :content="translateTitle('已滤除含露骨内容的搜索结果')"
+            >{{ translateTitle("部分搜索结果未予显示") }}
+          </Tooltip></Alert
+        >
+        <div v-for="item in movieSearchData" :key="item.id">
+          <MovieTab :data="item" />
+        </div>
+        <div v-for="item in javSearchData" :key="item.id">
+          <JavTab :data="item" />
+        </div>
+        <Noresult v-if="searchDone && total == 0" :keyword="noKeyword" />
+        <div v-for="item in btSearchData" :key="item.hash">
+          <BtTab :infodata="item" />
+        </div>
+        <div v-for="(item, index) in btPolySearchData" :key="index">
+          <BtPolyTab :infodata="item" />
+        </div>
+        <Row class="code-row-bg">
+          <i-col
+            v-if="searchDone && total > 20 && !ispoly"
+            :xs="{ span: 24 }"
+            :lg="{ span: 12 }"
+            class="marleft"
+            style="text-align: center; max-width: 652px"
+            ><Page
+              :page="Number(btQuery.p)"
+              :total="total"
+              @nextpage="nextpage"
+            />
           </i-col>
         </Row>
-      </div>
-      <Divider :class="{ 'ma-ivu-divider-horizontal': !token }" />
-      <router-view></router-view>
-      <Backtop />
-    </Layout>
+        <div style="width: 100%; height: 10px"></div>
+      </i-col>
+      <i-col id="right-panl" :xs="{ span: 24 }" :lg="{ span: 6 }">
+        <!-- <Notice /> -->
+        <Polytab v-if="token" />
+        <RelatedKeywords v-if="token" :keywordList="relatedKeywordData"  />
+        <!-- <SearchRank v-if="token" /> -->
+      </i-col>
+    </Row>
+
+    <div style="width: 100%; height: 150px" />
+    <Backtop />
   </div>
 </template>
 <script>
 // @ is an alias to /src
-
-import SearchFix from "@/components/SearchFix.vue";
-import HeaderTool from "@/components/HeaderTool.vue";
+import { mapActions, mapGetters, mapMutations } from "vuex";
+import { translateTitle } from "@/utils/i18n";
+import { Message } from "view-design";
+import BtTab from "@/components/BtTab.vue";
+import RelatedKeywords from "./components/RelatedKeywords.vue";
+import JavTab from "@/components/JavTab.vue";
+import MovieTab from "@/components/MovieTab.vue";
+import BtPolyTab from "@/components/BtPolyTab.vue";
+// import Notice from "@/components/Notice.vue";
+import Polytab from "@/components/Polytab.vue";
+import Page from "@/components/Page.vue";
 import Backtop from "@/components/Backtop.vue";
-import SearchEngine from "./components/SearchEngine.vue";
-import { mapGetters, mapMutations } from "vuex";
+import Noresult from "@/components/Noresult.vue";
+import SearchStatistics from "@/components/SearchStatistics.vue";
+// import SearchRank from "@/components/SearchRank.vue";
+import BtSrotSelect from "./components/BtSrotSelect.vue";
+import BtTypeSelect from "./components/BtTypeSelect.vue";
+import {
+  getSearchJavlibrary,
+  getSearchJavlibraryTotal,
+  getSearchDoubanlibrary,
+  getSearchDoubanlibraryTotal,
+} from "@/utils/app";
 export default {
   name: "Home",
   components: {
-    SearchFix,
-    HeaderTool,
+    BtTab,
+    RelatedKeywords,
+    JavTab,
+    MovieTab,
+    BtPolyTab,
+    Polytab,
+    Page,
     Backtop,
-    SearchEngine,
+    BtSrotSelect,
+    BtTypeSelect,
+    SearchStatistics,
+    // SearchRank,
+    Noresult,
   },
   data() {
-    return {};
+    return {
+      searchDone: false,
+      ispoly: false,
+      loadingtext: this.translateTitle("加载中"),
+      noKeyword: "",
+      avInfo: {},
+      loadingmsg: {},
+    };
   },
   computed: {
-    ...mapGetters("search", {
-      keyword: "keyword",
-      imageQuery: "imageQuery",
+    ...mapGetters("app", {
+      title: "title",
+      language: "language",
     }),
     ...mapGetters("user", {
       token: "token",
     }),
+    ...mapGetters("search", {
+      keyword: "keyword",
+      btQuery: "btQuery",
+      btSearchData: "btSearchData",
+      javSearchData: "javSearchData",
+      movieSearchData: "movieSearchData",
+      btPolySearchData: "btPolySearchData",
+      relatedKeywordData:"relatedKeywordData",
+      total: "total",
+      polyLicenseId: "polyLicenseId",
+    }),
+  },
+  // mounted: function () {
+  //   this.getdata();
+  // },
+  created() {
+    this.getdata();
+  },
+  beforeRouteUpdate(to, from, next) {
+    console.log("BT-beforeRouteUpdate");
+    this.$store.commit("search/set_btQuery", {
+      q: to.query.q ? to.query.q : "",
+      m: to.query.m ? to.query.m : "correla",
+      t: to.query.t ? to.query.t : "all",
+      j: getSearchJavlibrary() == "on" ? true : false,
+      j_R: getSearchJavlibraryTotal() || 3,
+      d: getSearchDoubanlibrary() == "on" ? true : false,
+      d_R: getSearchDoubanlibraryTotal() || 3,
+      p: Number(to.query.p) ? Number(to.query.p) : 1,
+    });
+    console.log();
+    next();
   },
   methods: {
-    ...mapMutations({}),
-    search() {
-      console.log("Index-search-router.name:%o", this.$route.name);
+    translateTitle,
+    ...mapActions("search", {
+      btSearch: "btSearch",
+      submitPolyTask: "submitPolyTask",
+      getPolySearchData: "getPolySearchData",
+    }),
+    ...mapMutations("search", {
+      set_btQuery: "set_btQuery",
+      init_searchdata: "init_searchdata",
+    }),
+    nextpage(val) {
+      this.set_btQuery({
+        p: val,
+      });
       this.$router.push({
-        path: `/search/bt`,
-        query: { q: this.keyword },
+        path: "/search",
+        query: { q: this.keyword, ...this.btQuery },
       });
     },
-    searchImage() {
-      console.log("Index-searchImage-id:%o", this.imageQuery.id);
+    async getdata() {
+      scrollTo(0, 0);
+      Message.destroy(); //清空全部提示
+      this.searchDone = false; //初始化搜索进度
+      this.ispoly = false; //初始化是否聚合搜索
+      this.noKeyword = this.keyword; //初始化无结果组件关键词
+      this.init_searchdata(); //初始化搜索数据（time,total,btSearchData,javSearchData,polyLicenseId）
+      document.title = `${this.keyword} - ${this.title} Search`;
+      const searchMsg = Message.loading({
+        content: this.translateTitle("搜索中"),
+        duration: 0,
+      });
+      await this.btSearch();
+      searchMsg();
+      this.searchDone = true;
+    },
+    async activationPoly() {
+      //提交聚合任务
+      this.searchDone = false; //初始化搜索进度
+      let pid = this.polyLicenseId;
+      this.init_searchdata(); //初始化搜索数据（time,total,btSearchData,javSearchData,polyLicenseId）
+      const polySearchMsg = Message.loading({
+        content: this.translateTitle("聚合搜索耗时较长,12秒内返回结果"),
+        duration: 0,
+      });
+      await this.getPolySearchData(pid);
+      this.ispoly = true;
+      this.searchDone = true;
+      polySearchMsg();
+    },
+    changeSort(val) {
+      //切换排序方式
+      this.set_btQuery({
+        m: val,
+        p: 1,
+      });
       this.$router.push({
-        path: "/search/image",
-        query: { id: this.imageQuery.id },
+        path: "/search/bt",
+        query: { q: this.keyword, ...this.btQuery },
+      });
+    },
+    changeType(val) {
+      //切换文件类型
+      this.set_btQuery({
+        t: val,
+        p: 1,
+      });
+      this.$router.push({
+        path: "/search/bt",
+        query: { q: this.keyword, ...this.btQuery },
       });
     },
   },
@@ -107,26 +259,11 @@ export default {
 #Search .ivu-card {
   /* background-color: var(--b-alpha-10); */
   background: none;
-  border-radius: 4px;
+  border: 1px solid var(--theme-divider-color);
+  border-radius: 8px;
   /* border: 1px solid var(--b-alpha-10) !important; */
-  border: none;
+  /* border: none; */
   /* box-shadow: 0 1px 4px var(--b-alpha-10); */
-}
-#Search .ivu-divider {
-  background: var(--theme-divider-color);
-}
-.card-shadow:hover {
-  -webkit-transition: all 0.3s ease;
-  -moz-transition: all 0.3s ease;
-  -ms-transition: all 0.3s ease;
-  -o-transition: all 0.3s ease;
-  transition: all 0.3s ease;
-  -webkit-box-shadow: 0px 5px 30px 0px var(--b-alpha-15);
-  -ms-box-shadow: 0px 5px 30px 0px var(--b-alpha-15);
-  box-shadow: 0px 5px 30px 0px var(--b-alpha-15);
-  transform: translateY(-6px);
-  -webkit-transform: translateY(-6px);
-  -moz-transform: translateY(-6px);
 }
 #right-panl .ivu-card-head {
   border-bottom: 1px solid var(--b-alpha-15);
@@ -134,24 +271,6 @@ export default {
 }
 #right-panl {
   margin-left: 100px;
-}
-/* #Search .ivu-input:focus {
-  box-shadow: 0 2px 8px 1px var(--b-alpha-20);
-  border-color: rgba(223, 225, 229, 0);
-}
-
-#Search .ivu-input:hover {
-  box-shadow: 0 2px 8px 1px var(--b-alpha-20);
-  border-color: rgba(223, 225, 229, 0);
-} */
-
-/* #Search .ivu-input {
-  background-color: transparent;
-  box-shadow: 0 2px 5px 1px var(--b-alpha-10);
-  border: 1px solid transparent;
-} */
-#sort {
-  padding-top: 10px;
 }
 .mhide {
   display: flex;
@@ -172,21 +291,6 @@ export default {
 .searchmini {
   margin-top: 20px;
   position: relative;
-}
-.slogo {
-  width: 163px;
-  height: 46px;
-  padding: 0;
-  float: left;
-  line-height: 46px;
-  font-size: 19px;
-  color: var(--theme-color);
-  font-style: unset;
-  font-family: none;
-  text-align: center;
-}
-.slogo img {
-  margin: 8px auto;
 }
 .ivu-modal-footer {
   border: none;
@@ -209,86 +313,5 @@ export default {
   border: none;
   background-color: var(--b-alpha-5);
   color: var(--txt-b-tip);
-}
-
-
-@media (min-width: 992px) {
-  .marleft {
-    margin-left: 180px;
-    max-width: 652px;
-  }
-  .slogo {
-    text-align: center;
-  }
-}
-@media screen and (min-width: 992px) and (max-width: 1121px) {
-  .marleft {
-    margin-left: 40px;
-  }
-}
-@media screen and (max-width: 991px) {
-  #Search {
-    min-width: unset !important;
-  }
-  .searchmini {
-    margin-top: 0px !important;
-  }
-  .search-col {
-    max-width: none;
-    padding: 0 16px;
-  }
-  .marleft {
-    padding: 0 15px;
-  }
-  .slogo {
-    width: 100%;
-    height: 64px;
-  }
-  .slogo img {
-    margin: 14px auto !important;
-  }
-  #right-panl {
-    margin-left: unset !important;
-    max-width: unset;
-  }
-}
-</style>
-
-<style>
-.TabCard .ivu-card-head {
-  padding: 7px 10px;
-  border: none;
-}
-.TabCard .ivu-card-body {
-  padding: 0px;
-}
-.TabCard .ivu-card-extra {
-  top: 9px;
-}
-.TabCard .ivu-card-head p,
-.TabCard .ivu-card-head-inner {
-  color: var(--b-alpha-90);
-}
-.TabCard .ivu-collapse-simple {
-  background-color: transparent;
-}
-.TabCard .ivu-collapse > .ivu-collapse-item > .ivu-collapse-header > i {
-  margin-right: 0px;
-  color: var(--theme-color) !important;
-}
-.TabCard .ivu-collapse > .ivu-collapse-item > .ivu-collapse-header {
-  color: var(--b-alpha-90);
-  height: 41px;
-  line-height: 41px;
-  padding-left: 10px;
-}
-.TabCard .ivu-collapse {
-  border: none;
-}
-.TabCard .ivu-collapse-content {
-  background-color: transparent;
-}
-.TabCard .ivu-spin-fix {
-  background-color: transparent;
 }
 </style>

@@ -51,8 +51,8 @@ import Polytab from "@/components/Polytab.vue";
 import Page from "@/components/Page.vue";
 import SearchStatistics from "@/components/SearchStatistics.vue";
 import SearchRank from "@/components/SearchRank.vue";
-import JavTab from "./components/JavTab.vue";
-import ActressTab from "./components/ActressTab.vue";
+import JavTab from "@/components/JavTab.vue";
+import ActressTab from "@/components/ActressTab.vue";
 
 export default {
   name: "Home",

@@ -22,34 +22,34 @@
             </i-col>
             <i-col class="msks" :xs="24" :sm="7" :md="7" :lg="7">
               <List :split="false" size="small" style="margin: 12px">
-                <ListItem
-                  ><div>
+                <ListItem>
+                  <div>
                     <span style="font-weight: 700"
                       >{{ translateTitle("识别码") }}:
                     </span>
-                    <font v-html="javData.code" style="font-size: 14px"
-                      >无</font
-                    >
-                  </div></ListItem
-                >
-                <ListItem
-                  ><div>
+                    <font v-html="javData.code" style="font-size: 14px">
+                      无
+                    </font>
+                  </div>
+                </ListItem>
+                <ListItem>
+                  <div>
                     <span style="font-weight: 700"
                       >{{ translateTitle("发布日期") }}:
                     </span>
                     {{ formatTime(javData.rdate, "yyyy-MM-dd") }}
-                  </div></ListItem
-                >
-                <ListItem
-                  ><div>
+                  </div>
+                </ListItem>
+                <ListItem>
+                  <div>
                     <span style="font-weight: 700"
                       >{{ translateTitle("视频时间") }}:
                     </span>
                     {{ javData.length }} {{ translateTitle("分钟") }}
-                  </div></ListItem
-                >
-                <ListItem
-                  ><div>
+                  </div>
+                </ListItem>
+                <ListItem>
+                  <div>
                     <span style="font-weight: 700"
                       >{{ translateTitle("所处分类") }}:
                     </span>
@@ -57,25 +57,28 @@
                       v-for="(item, genreindex) in javData.avgenre"
                       :key="genreindex"
                       color="primary"
-                      >{{ item.name }}</Tag
                     >
-                  </div></ListItem
-                >
-                <ListItem
-                  ><div>
+                      {{ item.name }}
+                    </Tag>
+                  </div>
+                </ListItem>
+                <ListItem>
+                  <div>
                     <span style="font-weight: 700"
                       >{{ translateTitle("相关演员") }}:
                     </span>
-                    <Tag
-                      v-for="(item, actressindex) in javData.avactress"
-                      :key="actressindex"
-                      color="primary"
-                      >{{ item.actname }}</Tag
+                    <a
+                      v-for="(item, avactressindex) in javData.avactress"
+                      :key="avactressindex"
                     >
-                  </div></ListItem
-                >
-                <ListItem
-                  ><div>
+                      <Tag @click.native="goActress(item.id)" color="primary">{{
+                        item.actname
+                      }}</Tag>
+                    </a>
+                  </div>
+                </ListItem>
+                <ListItem>
+                  <div>
                     <span style="font-weight: 700"
                       >{{ translateTitle("修订人员") }}:
                     </span>
@@ -84,12 +87,13 @@
                       v-for="(item, revisedindex) in javData.revised"
                       :key="revisedindex"
                       color="primary"
-                      >{{ item.username }}</Tag
                     >
-                  </div></ListItem
-                >
-                <ListItem
-                  ><Select
+                      {{ item.username }}
+                    </Tag>
+                  </div>
+                </ListItem>
+                <ListItem>
+                  <Select
                     v-model="favoritesselectId"
                     placeholder="选择或输入名字创建收藏夹"
                     filterable
@@ -100,12 +104,12 @@
                       v-for="item in favoritesData"
                       :value="item.value"
                       :key="item.value"
-                      >{{ item.label }}</Option
                     >
+                      {{ item.label }}
+                    </Option>
                   </Select>
                   <Button @click="handleSelectFavorites">加入收藏夹</Button>
-                  </ListItem
-                >
+                </ListItem>
               </List>
             </i-col>
           </Row>
@@ -216,7 +220,7 @@ import { formatTime } from "@/utils/format";
 import { mapActions } from "vuex";
 import { Spin, Message, Modal } from "view-design";
 import { translateTitle } from "@/utils/i18n";
-import BtTab from "./components/BtTab.vue";
+import BtTab from "@/components/BtTab.vue";
 export default {
   name: "MovieDetail",
   components: {
@@ -258,6 +262,13 @@ export default {
       addJavToFavorites: "addJavToFavorites",
       createFavorites: "createFavorites",
     }),
+    goActress(id) {
+      let routeData = this.$router.resolve({
+        path: `/jav/actress`,
+        query: { id },
+      });
+      window.open(routeData.href, "_blank"); //打开新标签
+    },
     async fetchData(id) {
       Spin.show({
         render: (h) => {
@@ -281,7 +292,7 @@ export default {
       this.commentData = commentData;
       this.favoritesData = favoritesData;
       Spin.hide();
-      if(javData)document.title = `${this.javData.code}`;
+      if (javData) document.title = `${this.javData.code}`;
     },
     commentSubmit(name) {
       this.$refs[name].validate(async (valid) => {
@@ -317,16 +328,16 @@ export default {
         duration: 0,
       });
       console.log("handleCreateFavorites", val);
-      const {favoritesData} = await this.createFavorites(val);
+      const { favoritesData } = await this.createFavorites(val);
       msg();
-      this.favoritesData = favoritesData
-      this.favoritesselectId = null
+      this.favoritesData = favoritesData;
+      this.favoritesselectId = null;
       Message.success(this.translateTitle("创建成功"));
     },
     async handleSelectFavorites() {
       if (!this.favoritesselectId) {
         Message.warning(this.translateTitle("请选择收藏夹"));
-        return
+        return;
       }
       const msg = Message.loading({
         content: "收藏中...",
