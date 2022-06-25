@@ -79,7 +79,7 @@ export default {
     translateTitle,
     toLogin() {
       this.$router.push({
-        path: "/user/login",
+        path: "/login",
         query: { redirect: this.$router.currentRoute.fullPath },
       });
     },

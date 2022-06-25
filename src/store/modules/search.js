@@ -15,7 +15,10 @@ import {
   reportComment,
   likesComment,
 } from '@/api/search'
-
+import {
+  getSearchEngine,
+  getSearchPageComponent,
+} from '@/utils/app'
 const state = () => ({
   keyword: '',
   total: 0,
@@ -23,10 +26,6 @@ const state = () => ({
   btQuery: {
     m: 'correla',
     t: 'all',
-    j: 'true',
-    j_R: 3,
-    d: 'true',
-    d_R: 3,
     p: 1,
   },
   javQuery: {
@@ -57,7 +56,7 @@ const state = () => ({
 // mutations
 const mutations = {
   set_keyword(state, data) {
-    data = data.replace(/['$|'$|`$|@$]/g,' ')
+    data = data.replace(/['$|'$|`$|@$]/g, ' ')
     console.log("set_keyword:%o", data);
     state.keyword = data;
   },
@@ -154,13 +153,16 @@ const getters = {
 const actions = {
   btSearch({ state, commit }) {
     return new Promise((resolve, reject) => {
-      btSearch({ q: state.keyword, ...state.btQuery }).then(data => {
+      let searchEngine = getSearchEngine()
+      let { relatedSearch } = getSearchPageComponent()
+      btSearch({ q: state.keyword, ...state.btQuery, ...searchEngine, relatedSearch }).then(data => {
         commit("set_total", data.total)
         commit("set_time", data.time)
         commit("set_polyLicenseId", data.polyLicenseId)
         commit("set_btSearchData", data.btSearchData)
         commit("set_relatedKeywordData", data.relatedKeywordData)
         commit("set_javSearchData", data.javSearchData)
+        commit("set_acSearchData", data.actresSearchData)
         commit("set_movieSearchData", data.movieSearchData)
         resolve()
       }).catch(error => {

@@ -30,6 +30,9 @@
         <div v-for="item in movieSearchData" :key="item.id">
           <MovieTab :data="item" />
         </div>
+        <div v-for="item in acSearchData" :key="item.id">
+          <ActressTab :data="item" Tagvalue="女优" :Jump="true" />
+        </div>
         <div v-for="item in javSearchData" :key="item.id">
           <JavTab :data="item" />
         </div>
@@ -58,9 +61,9 @@
       </i-col>
       <i-col id="right-panl" :xs="{ span: 24 }" :lg="{ span: 6 }">
         <!-- <Notice /> -->
-        <Polytab v-if="token" />
-        <RelatedKeywords v-if="token" :keywordList="relatedKeywordData"  />
-        <!-- <SearchRank v-if="token" /> -->
+        <Polytab v-if="token && searchPageComponent.polyList === 'on'" />
+        <RelatedKeywords v-if="token && searchPageComponent.relatedSearch === 'on'" :keywordList="relatedKeywordData"  />
+        <SearchRank v-if="token && searchPageComponent.hotSearch === 'on'" />
       </i-col>
     </Row>
 
@@ -70,12 +73,13 @@
 </template>
 <script>
 // @ is an alias to /src
-import { mapActions, mapGetters, mapMutations } from "vuex";
+import { mapActions, mapGetters, mapMutations, mapState } from "vuex";
 import { translateTitle } from "@/utils/i18n";
 import { Message } from "view-design";
 import BtTab from "@/components/BtTab.vue";
 import RelatedKeywords from "./components/RelatedKeywords.vue";
 import JavTab from "@/components/JavTab.vue";
+import ActressTab from "@/components/ActressTab.vue";
 import MovieTab from "@/components/MovieTab.vue";
 import BtPolyTab from "@/components/BtPolyTab.vue";
 // import Notice from "@/components/Notice.vue";
@@ -84,14 +88,10 @@ import Page from "@/components/Page.vue";
 import Backtop from "@/components/Backtop.vue";
 import Noresult from "@/components/Noresult.vue";
 import SearchStatistics from "@/components/SearchStatistics.vue";
-// import SearchRank from "@/components/SearchRank.vue";
+import SearchRank from "./components/SearchRank.vue";
 import BtSrotSelect from "./components/BtSrotSelect.vue";
 import BtTypeSelect from "./components/BtTypeSelect.vue";
 import {
-  getSearchJavlibrary,
-  getSearchJavlibraryTotal,
-  getSearchDoubanlibrary,
-  getSearchDoubanlibraryTotal,
 } from "@/utils/app";
 export default {
   name: "Home",
@@ -99,6 +99,7 @@ export default {
     BtTab,
     RelatedKeywords,
     JavTab,
+    ActressTab,
     MovieTab,
     BtPolyTab,
     Polytab,
@@ -107,7 +108,7 @@ export default {
     BtSrotSelect,
     BtTypeSelect,
     SearchStatistics,
-    // SearchRank,
+    SearchRank,
     Noresult,
   },
   data() {
@@ -125,6 +126,9 @@ export default {
       title: "title",
       language: "language",
     }),
+    ...mapState("app", {
+      searchPageComponent: "searchPageComponent",
+    }),
     ...mapGetters("user", {
       token: "token",
     }),
@@ -133,6 +137,7 @@ export default {
       btQuery: "btQuery",
       btSearchData: "btSearchData",
       javSearchData: "javSearchData",
+      acSearchData: "acSearchData",
       movieSearchData: "movieSearchData",
       btPolySearchData: "btPolySearchData",
       relatedKeywordData:"relatedKeywordData",
@@ -152,10 +157,6 @@ export default {
       q: to.query.q ? to.query.q : "",
       m: to.query.m ? to.query.m : "correla",
       t: to.query.t ? to.query.t : "all",
-      j: getSearchJavlibrary() == "on" ? true : false,
-      j_R: getSearchJavlibraryTotal() || 3,
-      d: getSearchDoubanlibrary() == "on" ? true : false,
-      d_R: getSearchDoubanlibraryTotal() || 3,
       p: Number(to.query.p) ? Number(to.query.p) : 1,
     });
     console.log();
@@ -218,7 +219,7 @@ export default {
         p: 1,
       });
       this.$router.push({
-        path: "/search/bt",
+        path: "/search",
         query: { q: this.keyword, ...this.btQuery },
       });
     },
@@ -229,7 +230,7 @@ export default {
         p: 1,
       });
       this.$router.push({
-        path: "/search/bt",
+        path: "/search",
         query: { q: this.keyword, ...this.btQuery },
       });
     },

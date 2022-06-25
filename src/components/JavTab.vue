@@ -1,5 +1,5 @@
 <template>
-  <Card v-if="data" class="TabCard" style="margin-bottom: 20px">
+  <Card v-if="data" class="TabCard Card-theme-dark" style="margin-bottom: 20px">
     <p slot="title" style="height: 24px">
       <Tag style="background: var(--theme-color)" color="primary">{{
         translateTitle(Tagvalue)
@@ -72,12 +72,13 @@
         <p>
           <span style="font-weight: 700">{{ translateTitle("演员") }}: </span>
           <span v-if="data.avactress.length === 0">暂无</span>
-          <a v-for="(item, avactressindex) in data.avactress" :key="avactressindex">
-            <Tag
-              @click.native="goActress(item.id)"
-              color="primary"
-              >{{ item.actname }}</Tag
-            >
+          <a
+            v-for="(item, avactressindex) in data.avactress"
+            :key="avactressindex"
+          >
+            <Tag @click.native="goActress(item.id)" color="primary">{{
+              item.actname
+            }}</Tag>
           </a>
         </p>
 

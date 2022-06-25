@@ -8,7 +8,7 @@
     <Modal
       v-model="settingstatus"
       width="360"
-      :mask-closable="false"
+      :mask-closable="true"
       id="setting"
     >
       <p slot="header" style="text-align: center">
@@ -65,7 +65,7 @@
           </ListItem>
         </List>
       </div>
-      <span style="color: var(--txt-b-pure); font-size: 15px">番号库</span>
+      <span style="color: var(--txt-b-pure); font-size: 15px">搜索页组件</span>
       <div
         style="
           margin: 10px 0;
@@ -76,39 +76,45 @@
       >
         <List :split="false">
           <ListItem>
-            {{ translateTitle("状态") }}
+            {{ translateTitle("聚合列表") }}
             <i-switch
               true-color="var(--theme-color)"
-              :value="searchJavlibrary == 'on' ? true : false"
+              v-model="searchPageComponent.polyList"
+              true-value="on"
+              false-value="off"
               style="float: right"
               class="slider"
-              size="large"
-              @on-change="SearchJavlibraryChange"
-            >
-              <span slot="open">开启</span>
-              <span slot="close">关闭</span>
-            </i-switch>
+              @on-change="handleSearchComponentChange"
+            />
           </ListItem>
           <ListItem>
-            {{ translateTitle("数量") }}
-            <Select
-              style="float: right; width: auto"
-              @on-change="SearchJavlibraryTotalChange"
-              size="small"
-              :value="Number(searchJavlibraryTotal)"
+            {{ translateTitle("相关搜索") }}
+            <i-switch
+              true-color="var(--theme-color)"
+              v-model="searchPageComponent.relatedSearch"
+              true-value="on"
+              false-value="off"
+              style="float: right"
               class="slider"
-            >
-              <Option
-                v-for="value in SearchJavlibraryTotalList"
-                :value="value"
-                :key="value"
-                >{{ value }}</Option
-              >
-            </Select>
+              @on-change="handleSearchComponentChange"
+            />
+          </ListItem>
+          <ListItem>
+            {{ translateTitle("热门搜索") }}
+            <i-switch
+              v-model="searchPageComponent.hotSearch"
+              true-value="on"
+              false-value="off"
+              @on-change="handleSearchComponentChange"
+              true-color="var(--theme-color)"
+              style="float: right"
+              class="slider"
+            />
           </ListItem>
         </List>
       </div>
-      <span style="color: var(--txt-b-pure); font-size: 15px">影视库</span>
+
+      <span style="color: var(--txt-b-pure); font-size: 15px">搜索引擎</span>
       <div
         style="
           margin: 10px 0;
@@ -119,35 +125,40 @@
       >
         <List :split="false">
           <ListItem>
-            {{ translateTitle("状态") }}
+            {{ translateTitle("女优") }}
             <i-switch
-              :value="searchDoubanlibrary == 'on' ? true : false"
-              @on-change="SearchDoubanlibraryChange"
               true-color="var(--theme-color)"
+              v-model="searchEngine.actress"
+              true-value="on"
+              false-value="off"
               style="float: right"
-              size="large"
               class="slider"
-              >
-              <span slot="open">开启</span>
-              <span slot="close">关闭</span>
-            </i-switch>
+              @on-change="handleSearchEngineChange"
+            />
           </ListItem>
           <ListItem>
-            {{ translateTitle("数量") }}
-            <Select
-              style="float: right; width: auto"
-              @on-change="SearchDoubanlibraryTotalChange"
-              size="small"
-              :value="Number(searchDoubanlibraryTotal)"
+            {{ translateTitle("番号") }}
+            <i-switch
+              true-color="var(--theme-color)"
+              v-model="searchEngine.jav"
+              true-value="on"
+              false-value="off"
+              style="float: right"
               class="slider"
-            >
-              <Option
-                v-for="value in SearchDoubanlibraryTotalList"
-                :value="value"
-                :key="value"
-                >{{ value }}</Option
-              >
-            </Select>
+              @on-change="handleSearchEngineChange"
+            />
+          </ListItem>
+          <ListItem>
+            {{ translateTitle("影视") }}
+            <i-switch
+              v-model="searchEngine.douban"
+              true-value="on"
+              false-value="off"
+              @on-change="handleSearchEngineChange"
+              true-color="var(--theme-color)"
+              style="float: right"
+              class="slider"
+            />
           </ListItem>
         </List>
       </div>
@@ -157,27 +168,22 @@
 </template>
 <script>
 import { translateTitle } from "@/utils/i18n";
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions, mapState } from "vuex";
 export default {
   props: [""],
   components: {},
   data() {
     return {
       settingstatus: false,
-      testdemo1:0,
-      SearchJavlibraryTotalList:[1,2,3,4,5,6,7,8,9,10],
-      SearchDoubanlibraryTotalList:[1,2,3,4,5,6,7,8,9,10],
     };
   },
   computed: {
-    ...mapGetters({
-      darkmode: "app/darkmode",
-      language: "app/language",
-      autotracker: "app/autotracker",
-      searchJavlibrary: "app/searchJavlibrary",
-      searchJavlibraryTotal: "app/searchJavlibraryTotal",
-      searchDoubanlibrary: "app/searchDoubanlibrary",
-      searchDoubanlibraryTotal: "app/searchDoubanlibraryTotal",
+    ...mapState("app", {
+      darkmode: "darkmode",
+      language: "language",
+      autotracker: "autotracker",
+      searchEngine: "searchEngine",
+      searchPageComponent: "searchPageComponent",
     }),
     ...mapGetters("user", {
       token: "token",
@@ -197,15 +203,19 @@ export default {
   },
   methods: {
     translateTitle,
-    ...mapActions({
-      changeLanguage: "app/changeLanguage",
-      changeAutotracker: "app/changeAutotracker",
-      changeDarkmode: "app/changeDarkmode",
-      changeSearchJavlibrary: "app/changeSearchJavlibrary",
-      changeSearchJavlibraryTotal: "app/changeSearchJavlibraryTotal",
-      changeSearchDoubanlibrary: "app/changeSearchDoubanlibrary",
-      changeSearchDoubanlibraryTotal: "app/changeSearchDoubanlibraryTotal",
+    ...mapActions("app", {
+      changeLanguage: "changeLanguage",
+      changeDarkmode: "changeDarkmode",
+      changeAutotracker: "changeAutotracker",
+      changeSearchEngine: "changeSearchEngine",
+      changeSearchPageComponent: "changeSearchPageComponent",
     }),
+    handleSearchComponentChange() {
+      this.changeSearchPageComponent();
+    },
+    handleSearchEngineChange() {
+      this.changeSearchEngine();
+    },
     changeLangFn() {
       let language = localStorage.getItem("language") == "zh" ? "en" : "zh";
       this.changeLanguage(language);
@@ -219,19 +229,6 @@ export default {
     },
     AutoTrackerChange(status) {
       this.changeAutotracker(status ? "on" : "off");
-    },
-    SearchJavlibraryChange(status) {
-      this.changeSearchJavlibrary(status ? "on" : "off");
-    },
-    SearchJavlibraryTotalChange(total) {
-      console.log(total)
-      this.changeSearchJavlibraryTotal(total);
-    },
-    SearchDoubanlibraryChange(status) {
-      this.changeSearchDoubanlibrary(status ? "on" : "off");
-    },
-    SearchDoubanlibraryTotalChange(total) {
-      this.changeSearchDoubanlibraryTotal(total);
     },
   },
 };

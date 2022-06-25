@@ -1,5 +1,5 @@
 <template>
-  <Card>
+  <Card class="TabCard Card-theme-dark">
     <div style="text-align: center">
       <img style="border-radius: 50%;" :src="avatar" />
       <h3>{{ name }}</h3>

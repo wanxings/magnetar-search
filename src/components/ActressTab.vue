@@ -1,13 +1,15 @@
 <template>
-  <Card class="TabCard" style="margin-bottom: 20px">
+  <Card class="TabCard Card-theme-dark" style="margin-bottom: 20px">
     <p slot="title" style="height: 24px">
-      <Tag style="background: var(--theme-color)" color="primary">{{translateTitle(Tagvalue)}}</Tag>
+      <Tag style="background: var(--theme-color)" color="primary">{{
+        translateTitle(Tagvalue)
+      }}</Tag>
       <font v-html="data.name" style="font-size: 14px"></font>
     </p>
-    <!-- <a href="#" slot="extra" @click.prevent="showdetail">
+    <a v-if="Jump" href="#" slot="extra" @click.prevent="goActress(data.id)">
       <Icon type="ios-loop-strong"></Icon>
       {{ translateTitle("详情") }}
-    </a> -->
+    </a>
     <Row
       type="flex"
       justify="start"
@@ -37,8 +39,9 @@
                 v-for="(item, avgenreindex) in data.otherName"
                 :key="avgenreindex"
                 color="primary"
-                >{{ item.name }}</Tag
               >
+                {{ item.name }}
+              </Tag>
             </div></ListItem
           >
           <ListItem
@@ -100,13 +103,20 @@ export default {
       type: String,
       default: "女优",
     },
+    Jump: {
+      type: Boolean,
+      default: false,
+    },
   },
-  computed: {
-  },
+  computed: {},
   methods: {
     translateTitle,
-    showdetail() {
-      this.$emit("showdetail");
+    goActress(id) {
+      let routeData = this.$router.resolve({
+        path: `/jav/actress`,
+        query: { id },
+      });
+      window.open(routeData.href, "_blank"); //打开新标签
     },
   },
   filters: {

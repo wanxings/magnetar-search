@@ -7,7 +7,7 @@
     </Row>
     <Row style="padding-top: 10px">
       <i-col :xs="{ span: 24 }" :lg="{ span: 20 }" class="marleft">
-        <Card>
+        <Card class="TabCard Card-theme-dark">
           <div style="height: auto">
             <UserTab />
             <div style="padding-top: 10px">

@@ -1,28 +1,27 @@
 import { getConfig } from '@/api/app'
 import {
+    getVersion,
     getLanguage,
-    getSearchJavlibrary,
-    getSearchJavlibraryTotal,
-    getSearchDoubanlibrary,
-    getSearchDoubanlibraryTotal,
     getDarkmode,
     getAutotracker,
-    getVersion,
+    getSearchEngine,
+    getSearchPageComponent,
+
     setVersion,
     setLanguage,
-    setDarkmode, 
-    setSearchJavlibrary,
-    setSearchJavlibraryTotal,
-    setSearchDoubanlibrary,
-    setSearchDoubanlibraryTotal,
+    setDarkmode,
     setAutotracker,
+    setSearchEngine,
+    setSearchPageComponent,
 } from '@/utils/app'
 import {
     logo,
     title,
+    searchEngine,
+    searchPageComponent,
 } from '@/config'
-if(!getSearchJavlibrary()) setSearchJavlibrary('on')
-if(!setSearchDoubanlibrary()) setSearchDoubanlibrary('on')
+if (!getSearchEngine()) setSearchEngine(searchEngine)
+if (!getSearchPageComponent()) setSearchPageComponent(searchPageComponent)
 const state = () => ({
     logo,
     title,
@@ -31,13 +30,11 @@ const state = () => ({
     polyStatusData: [],
     trackerList: '',
     version: getVersion() || null,
-    searchJavlibrary: getSearchJavlibrary() || 'on',
-    searchJavlibraryTotal: getSearchJavlibraryTotal() || 3,
-    searchDoubanlibrary: getSearchDoubanlibrary() || 'on',
-    searchDoubanlibraryTotal: getSearchDoubanlibraryTotal() || 3,
     language: getLanguage() || 'zh',
     darkmode: getDarkmode() || 'off',
     autotracker: getAutotracker() || 'off',
+    searchEngine: getSearchEngine(),
+    searchPageComponent: getSearchPageComponent(),
 })
 // mutations
 const mutations = {
@@ -65,27 +62,10 @@ const mutations = {
     SET_AUTOTRACKER: (state, data) => {
         state.autotracker = data
     },
-    set_searchJavlibrary: (state, data) => {
-        state.searchJavlibrary = data
-    },
-    set_searchJavlibraryTotal: (state, data) => {
-        state.searchJavlibraryTotal = data
-    },
-    set_searchDoubanlibrary: (state, data) => {
-        state.searchDoubanlibrary = data
-    },
-    set_searchDoubanlibraryTotal: (state, data) => {
-        state.searchDoubanlibraryTotal = data
-    },
 }
 // getters
 const getters = {
     title: (state) => state.title,
-    // notic: (state) => state.notic,
-    searchJavlibrary: (state) => state.searchJavlibrary,
-    searchJavlibraryTotal: (state) => state.searchJavlibraryTotal,
-    searchDoubanlibrary: (state) => state.searchDoubanlibrary,
-    searchDoubanlibraryTotal: (state) => state.searchDoubanlibraryTotal,
     version: (state) => state.version,
     language: (state) => state.language,
     darkmode: (state) => state.darkmode,
@@ -93,9 +73,6 @@ const getters = {
     autotracker: (state) => state.autotracker,
     polyStatusData: (state) => state.polyStatusData,
     searchRankingData: (state) => state.searchRankingData,
-
-    // initconfig: (state) => state.initconfig,
-    // initconfig: (state) => state.initconfig,
 }
 
 // actions
@@ -127,21 +104,11 @@ const actions = {
         setAutotracker(data)
         commit("SET_AUTOTRACKER", data)
     },
-    changeSearchJavlibrary({ commit }, data) {
-        setSearchJavlibrary(data)
-        commit("set_searchJavlibrary", data)
+    changeSearchEngine({ state }) {
+        setSearchEngine(state.searchEngine)
     },
-    changeSearchJavlibraryTotal({ commit }, data) {
-        setSearchJavlibraryTotal(data)
-        commit("set_searchJavlibraryTotal", data)
-    },
-    changeSearchDoubanlibrary({ commit }, data) {
-        setSearchDoubanlibrary(data)
-        commit("set_searchDoubanlibrary", data)
-    },
-    changeSearchDoubanlibraryTotal({ commit }, data) {
-        setSearchDoubanlibraryTotal(data)
-        commit("set_searchDoubanlibraryTotal", data)
+    changeSearchPageComponent({ state }) {
+        setSearchPageComponent(state.searchPageComponent)
     },
 }
 

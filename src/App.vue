@@ -63,7 +63,6 @@ export default {
         asyncUserMsg();
         await this.GetInfo();
       }
-      
     },
   },
   mounted: function () {
@@ -80,7 +79,6 @@ export default {
     //     });
     //   });
     // console.log(this.$route);
-
     // if (getToken()) {
     //   //有token，获取用户信息
     //   this.GetInfo()
@@ -171,6 +169,48 @@ body {
   --b-alpha-70: rgba(255, 255, 255, 0.7);
   --b-alpha-80: rgba(255, 255, 255, 0.8);
   --b-alpha-90: #bdc1c6;
+}
+.Card-theme-dark {
+  background: none !important;
+  border: 1px solid var(--theme-divider-color) !important;
+  border-radius: 8px !important;
+}
+.TabCard .ivu-card-head p,
+.TabCard .ivu-card-head-inner {
+  color: var(--b-alpha-90);
+}
+.TabCard .ivu-card-head {
+  padding: 7px 10px;
+  border: none;
+}
+.TabCard .ivu-card-body {
+  padding: 0px;
+}
+.TabCard .ivu-card-extra {
+  top: 9px;
+}
+
+.TabCard .ivu-collapse-simple {
+  background-color: transparent;
+}
+.TabCard .ivu-collapse > .ivu-collapse-item > .ivu-collapse-header > i {
+  margin-right: 0px;
+  color: var(--theme-color) !important;
+}
+.TabCard .ivu-collapse > .ivu-collapse-item > .ivu-collapse-header {
+  color: var(--b-alpha-90);
+  height: 41px;
+  line-height: 41px;
+  padding-left: 10px;
+}
+.TabCard .ivu-collapse {
+  border: none;
+}
+.TabCard .ivu-collapse-content {
+  background-color: transparent;
+}
+.TabCard .ivu-spin-fix {
+  background-color: transparent;
 }
 #app .ivu-layout-header {
   background: none;

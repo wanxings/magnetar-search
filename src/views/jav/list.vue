@@ -42,28 +42,7 @@
             v-for="item in list"
             :key="item.id"
           >
-            <Card class="javitem">
-              <div class="previewcard" @click="goJavsubject(item.id)">
-                <div class="cover">
-                  <img v-lazy="item.pic" alt />
-                  <div
-                    style="
-                      position: fixed;
-                      bottom: 80px;
-                      right: 10px;
-                      z-index: 8;
-                    "
-                  ></div>
-                </div>
-                <dl>
-                  <p>
-                    {{ item.code }} <strong>{{ item.score }}</strong>
-                  </p>
-                  <dt>{{ formatTime(item.rdate, "yyyy-MM-dd") }}</dt>
-                  <dt><Tag v-if="item.magnetic" color="blue">磁链</Tag></dt>
-                </dl>
-              </div>
-            </Card>
+          <JavSTab :data="item" />
           </i-col>
         </Row>
         <Row class="code-row-bg">
@@ -96,22 +75,16 @@
 import { mapActions, mapGetters } from "vuex";
 import { translateTitle } from "@/utils/i18n";
 import { Message } from "view-design";
+import JavSTab from "@/components/JavSTab.vue";
 import Page from "@/components/Page.vue";
 import { setJavSelectFrom, getJavSelectFrom } from "@/utils/app";
-// import Polytab from "@/components/Polytab.vue";
-// import Page from "@/components/Page.vue";
-// import SearchStatistics from "@/components/SearchStatistics.vue";
-// import SearchRank from "@/components/SearchRank.vue";
 import { formatTime } from "@/utils/format";
 
 export default {
   name: "Home",
   components: {
     Page,
-    // Polytab,
-    // Page,
-    // SearchStatistics,
-    // SearchRank,
+    JavSTab,
   },
   data() {
     return {
@@ -161,29 +134,6 @@ export default {
     this.selectFrom.page = 1;
     this.fetchData();
   },
-  // beforeRouteEnter(to, from, next) {
-  //   console.log(to.query);
-  //   if (JSON.stringify(to.query) !== "{}") {
-  //     setJavSelectFrom(to.query);
-  //   } else {
-  //     if (!getJavSelectFrom())
-  //       setJavSelectFrom({
-  //         category: "censored",
-  //         sort: "rdate",
-  //         include: ["magnetic"],
-  //         page: 1,
-  //       });
-  //   }
-  //   next();
-  // },
-  // beforeRouteUpdate(to, from, next) {
-  //   console.log("JAV-beforeRouteUpdate");
-  //   this.$store.commit("search/set_javQuery", {
-  //     p: Number(to.query.p) ? Number(to.query.p) : 1,
-  //   });
-  //   // this.$store.commit("search/set_javQuery", to.query);
-  //   next();
-  // },
   methods: {
     translateTitle,
     formatTime,
@@ -230,45 +180,5 @@ export default {
   },
 };
 </script>
-<style >
-.previewcard {
-  text-align: center;
-  height: auto;
-  color: var(--txt-b-pure);
-}
-.previewcard dt {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  font-size: 92%;
-}
-.javitem {
-  cursor: pointer;
-  width: auto;
-  float: left;
-}
-.javitem strong {
-  color: #e09015;
-  font-weight: unset;
-}
-.javitem p {
-  color: #37a;
-}
-.javitem .ivu-card-body {
-  padding: 8px;
-}
-.javitem img {
-  width: 100%;
-  object-fit: contain;
-  height: 100%;
-}
-.javitem dl {
-  padding: 7px 0px;
-}
-.cover {
-  max-width: 147px;
-  height: 200px;
-}
-</style>
 
 

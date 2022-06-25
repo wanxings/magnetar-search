@@ -33,7 +33,7 @@ export default {
     search(val) { 
       this.set_keyword(val)
       this.$router.push({
-        path: `/search/bt`,
+        path: `/search`,
         query: { q: val },
       });
     },

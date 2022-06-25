@@ -1,5 +1,5 @@
 <template>
-  <Card id="javdetail" v-if="javData">
+  <Card id="javdetail" class="TabCard Card-theme-dark" v-if="javData">
     <p slot="title" style="text-align: center">
       <font v-html="javData.title" style="font-size: 14px">无</font>
     </p>

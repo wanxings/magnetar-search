@@ -15,7 +15,7 @@
           :image="true"
         />
         <div v-for="(item, index) in actressData" :key="'actress' + index">
-          <ActressTab :data="item" Tagvalue="相似女优" />
+          <ActressTab :data="item" Tagvalue="相似女优" :Jump="true" />
         </div>
         <div v-for="(item, index) in javMovieData" :key="'javMovie' + index">
           <JavTab :data="item" Tagvalue="相似影片" />
@@ -32,11 +32,6 @@
         </Row>
         <div style="width: 100%; height: 10px"></div>
       </i-col>
-      <i-col id="right-panl" :xs="{ span: 24 }" :lg="{ span: 6 }">
-        <!-- <Notice /> -->
-        <Polytab v-if="token" />
-        <SearchRank v-if="token" />
-      </i-col>
     </Row>
 
     <div style="width: 100%; height: 150px" />
@@ -47,20 +42,16 @@
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import { translateTitle } from "@/utils/i18n";
 import { Message } from "view-design";
-import Polytab from "@/components/Polytab.vue";
 import Page from "@/components/Page.vue";
 import SearchStatistics from "@/components/SearchStatistics.vue";
-import SearchRank from "@/components/SearchRank.vue";
 import JavTab from "@/components/JavTab.vue";
 import ActressTab from "@/components/ActressTab.vue";
 
 export default {
-  name: "Home",
+  name: "imageIndex",
   components: {
-    Polytab,
     Page,
     SearchStatistics,
-    SearchRank,
     JavTab,
     ActressTab,
   },
