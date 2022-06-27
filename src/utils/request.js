@@ -41,13 +41,13 @@ service.interceptors.response.use(
             console.log("token过期或不合法")
             Notice.warning({
                 title: '温馨提示',
-                desc: '登陆状态已过期',
-                duration: 8,
+                desc: '登陆状态已过期,请前往扩展程序或登陆页重新登陆',
+                duration: 10,
             });
             setTimeout(() => {
                 store.dispatch('user/FedLogOut').then(() => {
-                    
-                    location.reload() // 为了重新实例化vue-router对象 避免bug
+                    location.href = '/login'
+                    //location.reload() // 为了重新实例化vue-router对象 避免bug
                 })
             }, 3000)
         }

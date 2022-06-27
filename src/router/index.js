@@ -124,6 +124,7 @@ const routes = [{
 {
 	path: '/image',
 	component: Layout,
+	redirect: '/image/search',
 	children: [
 		{
 			path: 'search',
