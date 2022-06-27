@@ -41,7 +41,7 @@ service.interceptors.response.use(
             console.log("token过期或不合法")
             Notice.warning({
                 title: '温馨提示',
-                desc: '登陆状态已过期,请前往扩展程序或登陆页重新登陆',
+                desc: '登陆状态已过期,请前往扩展程序或登陆页面重新登陆',
                 duration: 10,
             });
             setTimeout(() => {
@@ -49,7 +49,7 @@ service.interceptors.response.use(
                     location.href = '/login'
                     //location.reload() // 为了重新实例化vue-router对象 避免bug
                 })
-            }, 3000)
+            }, 10000)
         }
         if (res.code === 403) {
             Message.warning({
