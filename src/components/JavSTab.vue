@@ -1,7 +1,7 @@
 <template>
   <Card v-if="data" class="javitem TabCard Card-theme-dark">
-    <div class="previewcard" @click="goJavsubject(data.id)">
-      <div class="cover">
+    <div class="previewcard">
+      <div class="cover" @click="goJavsubject(data.id)">
         <img v-lazy="data.pic" alt />
         <div
           style="position: fixed; bottom: 80px; right: 10px; z-index: 8"
@@ -16,6 +16,9 @@
         </dt>
         <dt>{{ formatTime(data.rdate, "yyyy-MM-dd") }}</dt>
         <dt><Tag v-if="data.magnetic" color="blue">磁链</Tag></dt>
+        <dt v-if="isdelete">
+          <Button type="error" @click="deleteAction" ghost long>删除</Button>
+        </dt>
       </dl>
     </div>
   </Card>
@@ -24,9 +27,14 @@
 <script>
 import { translateTitle } from "@/utils/i18n";
 import { formatTime } from "@/utils/format";
+import { Modal } from "view-design";
 export default {
   props: {
     data: Object,
+    isdelete: {
+      type: Boolean,
+      default: false,
+    },
   },
   components: {},
   computed: {},
@@ -39,6 +47,18 @@ export default {
         query: { id },
       });
       window.open(routeData.href, "_blank"); //打开新标签
+    },
+    deleteAction() {
+      Modal.confirm({
+        title: "确认删除",
+        content: "<p>确定从收藏夹移除此番号吗？</p>",
+        onOk: () => {
+          this.$emit("deleteAction");
+        },
+        onCancel: () => {
+          return;
+        },
+      });
     },
   },
 };

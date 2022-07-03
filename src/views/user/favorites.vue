@@ -19,9 +19,16 @@
                   />
                   <template slot="action">
                     <li>
-                      <a href="javascript:;" @click="viewFavorites(item.id)"
-                        >查看列表</a
+                      <a href="javascript:;" @click="viewFavorites(item.id)">
+                        查看列表
+                      </a>
+                      <a
+                        href="javascript:;"
+                        style="color: red"
+                        @click="deleteFavorites(item.id)"
                       >
+                        删除
+                      </a>
                     </li>
                   </template>
                 </ListItem>
@@ -47,8 +54,8 @@
 </template>
 
 <script>
-import { getJavFavorites } from "@/api/user";
-import { Message } from "view-design";
+import { getJavFavorites, deleteFavorites } from "@/api/user";
+import { Message, Modal } from "view-design";
 import { translateTitle } from "@/utils/i18n";
 import UserTab from "./components/UserTab.vue";
 import UserInfo from "./components/UserInfo.vue";
@@ -84,7 +91,24 @@ export default {
       });
       window.open(routeData.href, "_blank"); //打开新标签
     },
-
+    deleteFavorites(fid) {
+      Modal.confirm({
+        title: "确认删除",
+        content: "<p>确定删除此收藏夹以及收藏夹内的番号吗?</p>",
+        onOk: async () => {
+          const loadingMsg = Message.loading({
+            content: "正在删除",
+            duration: 0,
+          });
+          await deleteFavorites({ fid });
+          loadingMsg();
+          this.fetchData();
+        },
+        onCancel: () => {
+          return;
+        },
+      });
+    },
     async fetchData() {
       Message.destroy(); //清空全部提示
       const loadingMsg = Message.loading({

@@ -27,6 +27,13 @@ export function getFavoritesJavList(params) {
         // data: stringify(parameter)
     })
 }
+export function deleteJavFromFavorites(params) {
+    return request({
+        url: `/search/${version}/jav/deleteJavFromFavorites`,
+        method: 'get',
+        params
+    })
+}
 export function getActressJavList(params) {
     return request({
         url: `/search/${version}/jav/ActressJavList`,

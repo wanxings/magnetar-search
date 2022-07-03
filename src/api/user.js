@@ -23,6 +23,13 @@ export function getJavFavorites(params) {
     params,
   })
 }
+export function deleteFavorites(params) {
+  return request({
+    url: `/user/${version}/manage/deleteFavorites`,
+    method: 'get',
+    params,
+  })
+}
 export function getProxyInfo() {
   return request({
     url: `/user/${version}/user/proxyinfo`,

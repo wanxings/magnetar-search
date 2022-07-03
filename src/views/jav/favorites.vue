@@ -10,7 +10,7 @@
             v-for="item in list"
             :key="item.id"
           >
-            <JavSTab :data="item" />
+            <JavSTab :data="item" :isdelete="true" @deleteAction="deleteFromFavorites(item.id)"/>
           </i-col>
         </Row>
         <Row class="code-row-bg">
@@ -42,6 +42,7 @@
 // @ is an alias to /src
 import { mapGetters } from "vuex";
 import { getFavoritesJavList } from "@/api/jav";
+import { deleteJavFromFavorites } from "@/api/jav";
 import { translateTitle } from "@/utils/i18n";
 import { Message } from "view-design";
 import Page from "@/components/Page.vue";
@@ -98,6 +99,21 @@ export default {
         query: { id },
       });
       window.open(routeData.href, "_blank"); //打开新标签
+    },
+    async deleteFromFavorites(javaId) {
+      scrollTo(0, 0);
+      Message.destroy(); //清空全部提示
+      const loadingMsg = Message.loading({
+        content: "正在删除",
+        duration: 0,
+      });
+      let deleteForm = {
+        javid: javaId,
+        fid: this.queryForm.id,
+      };
+      await deleteJavFromFavorites(deleteForm);
+      loadingMsg();
+      this.fetchData();
     },
     nextpage(val) {
       this.queryForm.pageNo = val;
