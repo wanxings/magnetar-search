@@ -38,7 +38,7 @@
               <SearchFix @search="search" @searchImage="searchImage" />
             </i-col>
           </Row>
-          <Row type="flex" justify="center">
+          <Row v-if="token" type="flex" justify="center">
             <i-col
               :xs="22"
               :sm="22"
@@ -70,11 +70,14 @@ export default {
   components: {
     SearchFix,
     HeaderTool,
-  },
+  }, 
   computed: {
     ...mapGetters("search", {
       keyword: "keyword",
       imageQuery: "imageQuery",
+    }),
+    ...mapGetters("user", {
+      token: "token",
     }),
   },
   methods: {

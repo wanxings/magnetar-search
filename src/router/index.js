@@ -48,6 +48,38 @@ const routes = [{
 	],
 },
 {
+	path: '/search',
+	component: Layout,
+	children: [
+		{
+			path: '',
+			name: "searchIndex",
+			meta: {
+				title: '磁力搜索 - Magnetar Search',
+				parentPath: 'search',
+				requireAuth: false,
+			},
+			component: () => import('@/views/search/index'),
+			beforeEnter: (to, from, next) => {
+				if (to.query.q) {
+					router.app.$options.store.commit("search/set_keyword", to.query.q);
+					console.log(to.query)
+					router.app.$options.store.commit("search/set_btQuery", {
+						m: to.query.m ? to.query.m : "correla",
+						t: to.query.t ? to.query.t : "all",
+						p: Number(to.query.p) ? Number(to.query.p) : 1,
+					})
+					next()
+				} else {
+					router.push('/')
+					next()
+				}
+
+			}
+		},
+	],
+},
+{
 	path: '/jav',
 	component: Layout,
 	redirect: '/jav/list',
@@ -110,6 +142,44 @@ const routes = [{
 				requireAuth: true,
 			},
 			component: () => import('@/views/jav/actress'),
+			beforeEnter: (to, from, next) => {
+				if (to.query.id) {
+					next()
+				} else {
+					router.push('/')
+					next()
+				}
+			}
+		},
+	],
+},
+{
+	path: '/pornhub',
+	component: Layout,
+	redirect: '/pornhub/list',
+	children: [
+		{
+			path: 'list',
+			name: "pornhubList",
+			meta: {
+				title: 'Pornhub - Magnetar Search',
+				parentPath: 'pornhub',
+				requireAuth: true,
+			},
+			component: () => import('@/views/pornhub/list'),
+			beforeEnter: (to, from, next) => {
+				next()
+			}
+		},
+		{
+			path: 'subject',
+			name: "pornhubSubject",
+			meta: {
+				title: '视频详情 - Magnetar Search',
+				parentPath: 'pornhub',
+				requireAuth: true,
+			},
+			component: () => import('@/views/pornhub/subject'),
 			beforeEnter: (to, from, next) => {
 				if (to.query.id) {
 					next()

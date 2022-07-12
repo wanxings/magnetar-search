@@ -1,3 +1,8 @@
+<style scoped>
+.ivu-list-item span {
+  font-weight: 700;
+}
+</style>
 <template>
   <Card class="TabCard Card-theme-dark" style="margin-bottom: 20px">
     <p slot="title" style="height: 24px">
@@ -5,6 +10,9 @@
         translateTitle(Tagvalue)
       }}</Tag>
       <font v-html="data.name" style="font-size: 14px"></font>
+      <span v-if="data.name_zh">
+        (<font v-html="data.name_zh" style="font-size: 14px"></font>)</span
+      >
     </p>
     <a v-if="Jump" href="#" slot="extra" @click.prevent="goActress(data.id)">
       <Icon type="ios-loop-strong"></Icon>
@@ -28,12 +36,13 @@
           </div>
         </div>
       </i-col>
+
       <i-col :xs="24" :sm="18" :md="18" :lg="18">
         <List style="padding: 0 10px 10px 10px" :split="false" size="small">
-          <ListItem
-            ><div>
-              <span style="font-weight: 700"
-                >{{ translateTitle("别名") }}:
+          <ListItem v-if="data.otherName.length > 0">
+            <div>
+              <span >
+                {{ translateTitle("别名") }}:
               </span>
               <Tag
                 v-for="(item, avgenreindex) in data.otherName"
@@ -42,51 +51,58 @@
               >
                 {{ item.name }}
               </Tag>
-            </div></ListItem
-          >
-          <ListItem
-            ><div>
-              <span style="font-weight: 700"
-                >{{ translateTitle("出生日期") }}:
-              </span>
+            </div>
+          </ListItem>
+          <ListItem>
+            <div>
+              <span> {{ translateTitle("出生日期") }}: </span>
               {{ data.birthday | formatTime("yyyy-MM-dd") }}
-
-              <span style="font-weight: 700"
-                >{{ translateTitle("出生地") }}:
+            </div>
+          </ListItem>
+          <ListItem>
+            <div>
+              <span >
+                {{ translateTitle("出生地") }}:
               </span>
-              {{ data.birthplace }}
-            </div></ListItem
-          >
-
-          <ListItem
-            ><div>
-              <span style="font-weight: 700"
-                >{{ translateTitle("罩杯") }}:
+              {{ data.birthplace ? data.birthplace : "未知" }}
+            </div>
+          </ListItem>
+          <ListItem>
+            <div>
+              <span >
+                {{ translateTitle("罩杯") }}:
               </span>
-              {{ data.cup }}
-
-              <span style="font-weight: 700"
-                >{{ translateTitle("三围") }}:
+              {{ data.cup ? data.cup : "未知" }}
+            </div>
+          </ListItem>
+          <ListItem>
+            <div>
+              <span >
+                {{ translateTitle("三围") }}:
               </span>
-              {{ data.bust }}/{{ data.waist }}/{{ data.hips }}
-            </div></ListItem
-          >
-          <ListItem
-            ><div>
-              <span style="font-weight: 700"
-                >{{ translateTitle("身高") }}:
+              {{
+                data.bust
+                  ? data.bust + "/" + data.waist + "/" + data.hips
+                  : "未知"
+              }}
+            </div>
+          </ListItem>
+          <ListItem>
+            <div>
+              <span >
+                {{ translateTitle("身高") }}:
               </span>
-              {{ data.height }} {{ translateTitle("厘米") }}
-            </div></ListItem
-          >
-          <ListItem
-            ><div>
-              <span style="font-weight: 700"
-                >{{ translateTitle("爱好") }}:
+              {{ data.height ? data.height + translateTitle("厘米") : "未知" }}
+            </div>
+          </ListItem>
+          <ListItem>
+            <div>
+              <span >
+                {{ translateTitle("爱好") }}:
               </span>
-              {{ data.hobby }}
-            </div></ListItem
-          >
+              {{ data.hobby ? data.hobby : "未知" }}
+            </div>
+          </ListItem>
         </List>
       </i-col>
     </Row>
@@ -121,6 +137,7 @@ export default {
   },
   filters: {
     formatTime: function (dates, fmt) {
+      if (!dates) return "未知";
       var date = new Date(dates);
       if (/(y+)/.test(fmt)) {
         fmt = fmt.replace(
@@ -150,4 +167,4 @@ export default {
 };
 </script>
 
-<style></style>
+

@@ -267,7 +267,7 @@ export default {
     showUploadpane() {
       if (!this.token) {
         Message.error({
-          content: this.translateTitle("无权限"),
+          content: this.translateTitle("请先登录"),
           duration: 5,
         });
       } else {

@@ -12,15 +12,20 @@
         name="search"
       ></TabPane>
       <!-- <TabPane
-        icon="logo-youtube"
-        :label="translateTitle('电影')"
-        name="movie"
+        icon="md-cloud"
+        :label="translateTitle('云盘')"
+        name="cloud"
       ></TabPane> -->
       <TabPane
         icon="logo-youtube"
         :label="translateTitle('番号')"
         name="jav"
       ></TabPane>
+      <!-- <TabPane
+        icon="md-videocam"
+        :label="translateTitle('P站')"
+        name="pornhub"
+      ></TabPane> -->
       <TabPane
         icon="md-images"
         :label="translateTitle('识图')"

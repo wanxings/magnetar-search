@@ -39,23 +39,8 @@ export default class Api {
       });
     })
   }
-  gettracker(url) {
-    return new Promise(function (resolve, reject) {
-      axios.get(url).then(response => {
-        let data = response.data;
-        let trackerlist = data.split(/[\r\n]+/); // 根据换行或者回车进行识别
-        trackerlist.forEach((item, index) => { // 删除空项
-          if (!item) {
-            trackerlist.splice(index, 1);
-          }
-        })
-        trackerlist = Array.from(new Set(trackerlist)); // 去重
-        trackerlist = trackerlist.join('&tr=');
-        resolve("&tr=" + trackerlist);
-      }).catch(error => {
-        reject(error);
-      });
-    })
+  gettracker() {
+    return null;
   }
   getnotic(url) {
     return new Promise(function (resolve, reject) {

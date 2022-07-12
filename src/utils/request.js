@@ -51,13 +51,15 @@ service.interceptors.response.use(
                 })
             }, 10000)
         }
+        Spin.hide();
+        Message.destroy();
         if (res.code === 403) {
             Message.warning({
                 content: "请求参数含非法字符"
             })
+            return Promise.reject(res)
         }
-        Spin.hide();
-        Message.destroy();
+        console.log(store.getters['app/language'])
         Message.error(res[store.getters['app/language']])
         return Promise.reject(res)
     },
