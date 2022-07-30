@@ -1,6 +1,7 @@
 # 磁星的前端页面
-演示地址：https://magnetar1.pw
-功能建议和bug可以提Issues或者在Q群反馈,后端准备用golang重写，重写完后再开源。
+演示地址：https://magnetarso.com/
+演示账号：demo@github.com
+演示密码：demo@github.com
 ## Project setup
 ```
 npm install
