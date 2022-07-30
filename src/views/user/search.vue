@@ -110,7 +110,7 @@ export default {
                     on: {
                       click: () => {
                         let routeData = this.$router.resolve({
-                          path: `/search`,
+                          path: `/bt/search`,
                           query: { q: params.row.keyword },
                         });
                         window.open(routeData.href, "_blank"); //打开新标签
@@ -155,7 +155,7 @@ export default {
                     on: {
                       click: () => {
                         let routeData = this.$router.resolve({
-                          path: `/search`,
+                          path: `/bt/search`,
                           query: { q: params.row.keyword },
                         });
                         window.open(routeData.href, "_blank"); //打开新标签
@@ -201,7 +201,7 @@ export default {
                       click: () => {
                         let routeData = this.$router.resolve({
                           path: `/image/search`,
-                          query: { id: params.row.id },
+                          query: { imageId: params.row.id },
                         });
                         window.open(routeData.href, "_blank"); //打开新标签
                       },

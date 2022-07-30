@@ -9,9 +9,13 @@
             v-model="filterForm.category"
             size="small"
           >
-            <Radio label="censored">有码</Radio>
-            <Radio label="uncensored">无码</Radio>
-            <Radio label="fc2">FC2</Radio>
+            <Radio label="0">全部</Radio>
+            <Radio label="1">电影</Radio>
+            <Radio label="2">电视剧</Radio>
+            <Radio label="3">综艺</Radio>
+            <Radio label="4">动漫</Radio>
+            <Radio label="5">纪录片</Radio>
+            <Radio label="6">短片</Radio>
           </RadioGroup>
           <br />
           <RadioGroup
@@ -21,8 +25,8 @@
             size="small"
           >
             <Radio label="magnetic">磁链更新时间</Radio>
-            <Radio label="rdate">发布日期</Radio>
-            <Radio label="comment">最近评论</Radio>
+            <Radio label="cloud">云盘更新时间</Radio>
+            <Radio label="year">电影年份</Radio>
             <Radio label="score">评分</Radio>
           </RadioGroup>
           <CheckboxGroup
@@ -32,19 +36,12 @@
             size="small"
           >
             <Checkbox label="magnetic"> 含磁力</Checkbox>
-            <Checkbox label="comment"> 含评论</Checkbox>
+            <Checkbox label="cloud"> 含云盘</Checkbox>
           </CheckboxGroup>
         </Row>
-        <Row type="flex" justify="space-between" class="code-row-bg">
-          <i-col
-            :xs="{ span: 12 }"
-            :lg="{ span: 6 }"
-            v-for="item in list"
-            :key="item.id"
-          >
-          <JavSTab :data="item" />
-          </i-col>
-        </Row>
+        <div v-for="item in list" :key="item.id">
+          <MovieTab :data="item" />
+        </div>
         <Row class="code-row-bg">
           <i-col
             :xs="{ span: 24 }"
@@ -75,16 +72,16 @@
 import { mapActions, mapGetters } from "vuex";
 import { translateTitle } from "@/utils/i18n";
 import { Message } from "view-design";
-import JavSTab from "@/components/JavSTab.vue";
+import MovieTab from "@/components/MovieTab.vue";
 import Page from "@/components/Page.vue";
-import { setJavFilterForm, getJavFilterForm } from "@/utils/app";
+import { setMovieListFilterForm, getMovieListFilterForm } from "@/utils/app";
 import { formatTime } from "@/utils/format";
 
 export default {
   name: "Home",
   components: {
     Page,
-    JavSTab,
+    MovieTab,
   },
   data() {
     return {
@@ -107,14 +104,14 @@ export default {
     }),
   },
   created() {
-    if (!getJavFilterForm())
-      setJavFilterForm({
-        category: "censored",
-        sort: "rdate",
-        include: ["magnetic"],
+    if (!getMovieListFilterForm())
+      setMovieListFilterForm({
+        category: "0",
+        sort: "year",
+        include: [],
         page: 1,
       });
-    this.filterForm = getJavFilterForm();
+    this.filterForm = getMovieListFilterForm();
     this.filterForm.page = 1;
     this.fetchData();
   },
@@ -122,7 +119,7 @@ export default {
     translateTitle,
     formatTime,
     ...mapActions("search", {
-      getJav: "getJav",
+      getMovie: "getMovie",
     }),
     goJavsubject(id) {
       let routeData = this.$router.resolve({
@@ -141,13 +138,13 @@ export default {
     },
     async fetchData() {
       scrollTo(0, 0);
-      setJavFilterForm(this.filterForm); //保存条件
+      setMovieListFilterForm(this.filterForm); //保存条件
       Message.destroy(); //清空全部提示
       const loadingMsg = Message.loading({
         content: this.loadingtext,
         duration: 0,
       });
-      const { list, total } = await this.getJav(this.filterForm);
+      const { list, total } = await this.getMovie(this.filterForm);
       this.list = list;
       this.total = total;
       loadingMsg();

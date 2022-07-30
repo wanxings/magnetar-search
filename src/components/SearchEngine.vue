@@ -6,42 +6,27 @@
       size="small"
       :animated="false"
     >
-      <TabPane
-        icon="md-search"
-        :label="translateTitle('磁力')"
-        name="search"
-      ></TabPane>
+      <TabPane :label="translateTitle('磁力')" name="bt"></TabPane>
       <!-- <TabPane
         icon="md-cloud"
         :label="translateTitle('云盘')"
         name="cloud"
       ></TabPane> -->
-      <TabPane
-        icon="logo-youtube"
-        :label="translateTitle('番号')"
-        name="jav"
-      ></TabPane>
+      <TabPane :label="translateTitle('影视')" name="movie"></TabPane>
+      <TabPane :label="translateTitle('番号')" name="jav"></TabPane>
+      <TabPane :label="translateTitle('女优')" name="javActress"></TabPane>
       <!-- <TabPane
         icon="md-videocam"
         :label="translateTitle('P站')"
         name="pornhub"
       ></TabPane> -->
-      <TabPane
-        icon="md-images"
-        :label="translateTitle('识图')"
-        name="image"
-      ></TabPane>
-      <TabPane
-        icon="md-person"
-        :label="translateTitle('个人中心')"
-        name="user"
-      ></TabPane>
+      <TabPane :label="translateTitle('识图')" name="image"></TabPane>
+      <TabPane :label="translateTitle('个人中心')" name="user"></TabPane>
       <!-- <TabPane
         icon="md-analytics"
         :label="translateTitle('搜索历史')"
         name="history"
       ></TabPane> -->
-      
     </Tabs>
   </div>
 </template>
@@ -76,17 +61,20 @@ export default {
     ...mapMutations({}),
     changeSearchEngine(name) {
       console.log("changeSearchEngine:%o", name);
-      var queryData = {};
-      if(name == "search"){
-        queryData = { q: this.keyword };
-      }
-      if(name == "image"){
-        queryData = { id: this.imageQuery.id };
-      }
       this.$router.push({
         path: `/${name}`,
-        query: queryData,
       });
+      // var queryData = {};
+      // if(name == "bt"){
+      //   queryData = { q: this.keyword };
+      // }
+      // if(name == "image"){
+      //   queryData = { id: this.imageQuery.id };
+      // }
+      // this.$router.push({
+      //   path: `/${name}`,
+      //   query: queryData,
+      // });
     },
     serchHistory() {
       console.log(1);

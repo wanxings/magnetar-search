@@ -1,13 +1,13 @@
 <template>
   <Card v-if="data" class="TabCard Card-theme-dark" style="margin-bottom: 20px">
-    <p slot="title" style="height: 24px">
+    <p slot="title" style="height: 24px;font-weight: 700;">
       <Tag style="background: var(--theme-color)" color="primary">{{
         translateTitle(Tagvalue)
       }}</Tag>
       <font v-html="data.code" style="font-size: 14px"></font>
       <font style="font-size: 14px"
-        >({{ formatTime(data.rdate, "yyyy") }})</font
-      >
+        >({{ formatTime(data.rdate, "yyyy") }})
+      </font>
     </p>
     <a href="#" slot="extra" @click.prevent="goJavsubject(data.id)">
       <Icon type="ios-loop-strong"></Icon>
@@ -21,11 +21,20 @@
     >
       <i-col :xs="24" :sm="6" :md="6" :lg="6">
         <div style="overflow: hidden; cursor: pointer; position: relative">
-          <div style="overflow: hidden; text-align: center; margin-top: 12px">
+          <div
+            style="
+              overflow: hidden;
+              max-width: 158px;
+              margin: 0 auto;
+              position: relative;
+              margin-top: 12px;
+            "
+          >
             <img
               v-if="data.headimg"
               style="width: auto; border-radius: 4px; max-width: 158px"
               :src="data.headimg.simg"
+              v-lazy="data.headimg.simg"
             />
             <div
               style="position: absolute; bottom: 10px; right: 10px; z-index: 8"
@@ -40,6 +49,12 @@
         </div>
       </i-col>
       <i-col :xs="24" :sm="18" :md="18" :lg="18" class="dbJavinfo">
+        <p>
+          <span>
+            <Tag color="cyan" v-if="data.magnetic">含磁链</Tag>
+            <Tag color="cyan" v-if="data.ctime">含评论</Tag>
+          </span>
+        </p>
         <p>
           <span
             style="
@@ -76,7 +91,7 @@
             v-for="(item, avactressindex) in data.avactress"
             :key="avactressindex"
           >
-            <Tag @click.native="goActress(item.id)" color="primary">{{
+            <Tag @click.native="goActressWorks(item.id)" color="primary">{{
               item.actname
             }}</Tag>
           </a>
@@ -117,7 +132,7 @@ export default {
     data: Object,
     Tagvalue: {
       type: String,
-      default: "番号",
+      default: "番号库",
     },
   },
   components: {
@@ -135,9 +150,9 @@ export default {
       });
       window.open(routeData.href, "_blank"); //打开新标签
     },
-    goActress(id) {
+    goActressWorks(id) {
       let routeData = this.$router.resolve({
-        path: `/jav/actress`,
+        path: `/javActress/works`,
         query: { id },
       });
       window.open(routeData.href, "_blank"); //打开新标签

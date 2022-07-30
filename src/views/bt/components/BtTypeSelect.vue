@@ -5,7 +5,7 @@
       @on-select="changesort"
       size="small"
       id="BtTypeSelect"
-      :value="btQuery.t"
+      :value="typeValue"
     >
       <Option
         v-for="item in selectType"
@@ -18,8 +18,17 @@
 </template>
 <script>
 import { translateTitle } from "@/utils/i18n";
-import { mapGetters} from "vuex";
 export default {
+  model: {
+    prop: 'typeValue', 
+    event: 'changeValue'
+  },
+  props: {
+    typeValue: {
+      type: String,
+      default: 'all'
+    }
+  },
   data() {
     return {};
   },
@@ -60,14 +69,12 @@ export default {
         },
       ];
     },
-    ...mapGetters("search",{
-      btQuery: "btQuery",
-    }),
   },
 
   methods: {
     translateTitle,
     changesort(val) {
+      this.$emit('changeValue', val.value)
       this.$emit("change",val.value);
     },
   },

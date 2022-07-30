@@ -2,12 +2,22 @@
   <div>
     <Row>
       <i-col :xs="{ span: 24 }" :lg="{ span: 12 }" class="marleft">
-        <SearchStatistics v-if="searchDone" />
+        <SearchStatistics
+          v-if="searchDone"
+          :timeCost="timeCost"
+          :total="total"
+        />
         <div style="float: right; color: var(--txt-b-tip)">
-          <BtSrotSelect @change="changeSort"></BtSrotSelect>
+          <BtSrotSelect
+            v-model="filterForm.m"
+            @change="changeSort"
+          ></BtSrotSelect>
         </div>
         <div style="float: right; color: var(--txt-b-tip)">
-          <BtTypeSelect @change="changeType"></BtTypeSelect>
+          <BtTypeSelect
+            v-model="filterForm.t"
+            @change="changeType"
+          ></BtTypeSelect>
         </div>
       </i-col>
     </Row>
@@ -27,20 +37,17 @@
             >{{ translateTitle("部分搜索结果未予显示") }}
           </Tooltip></Alert
         >
-        <div v-for="item in movieSearchData" :key="item.id">
+        <!-- <div v-for="item in movieSearchData" :key="item.id">
           <MovieTab :data="item" />
-        </div>
-        <div v-for="item in acSearchData" :key="item.id">
+        </div> -->
+        <!-- <div v-for="item in acSearchData" :key="item.id">
           <ActressTab :data="item" Tagvalue="女优" :Jump="true" />
-        </div>
-        <div v-for="item in javSearchData" :key="item.id">
-          <JavTab :data="item" />
-        </div>
+        </div> -->
         <Noresult v-if="searchDone && total == 0" :keyword="noKeyword" />
-        <div v-for="item in btSearchData" :key="item.hash">
+        <div v-for="item in btList" :key="item.hash">
           <BtTab :infodata="item" />
         </div>
-        <div v-for="(item, index) in btPolySearchData" :key="index">
+        <div v-for="(item, index) in btPolyList" :key="index">
           <BtPolyTab :infodata="item" />
         </div>
         <Row class="code-row-bg">
@@ -51,7 +58,7 @@
             class="marleft"
             style="text-align: center; max-width: 652px"
             ><Page
-              :page="Number(btQuery.p)"
+              :page="Number(filterForm.p)"
               :total="total"
               @nextpage="nextpage"
             />
@@ -62,7 +69,10 @@
       <i-col id="right-panl" :xs="{ span: 24 }" :lg="{ span: 6 }">
         <!-- <Notice /> -->
         <Polytab v-if="token && searchPageComponent.polyList === 'on'" />
-        <RelatedKeywords v-if="token && searchPageComponent.relatedSearch === 'on'" :keywordList="relatedKeywordData"  />
+        <RelatedKeywords
+          v-if="token && searchPageComponent.relatedSearch === 'on'"
+          :keywordList="relatedKeywordList"
+        />
         <SearchRank v-if="token && searchPageComponent.hotSearch === 'on'" />
       </i-col>
     </Row>
@@ -73,14 +83,12 @@
 </template>
 <script>
 // @ is an alias to /src
-import { mapActions, mapGetters, mapMutations, mapState } from "vuex";
+import { mapActions, mapGetters, mapState } from "vuex";
 import { translateTitle } from "@/utils/i18n";
 import { Message } from "view-design";
 import BtTab from "@/components/BtTab.vue";
 import RelatedKeywords from "./components/RelatedKeywords.vue";
-import JavTab from "@/components/JavTab.vue";
-import ActressTab from "@/components/ActressTab.vue";
-import MovieTab from "@/components/MovieTab.vue";
+// import MovieTab from "@/components/MovieTab.vue";
 import BtPolyTab from "@/components/BtPolyTab.vue";
 // import Notice from "@/components/Notice.vue";
 import Polytab from "@/components/Polytab.vue";
@@ -91,16 +99,13 @@ import SearchStatistics from "@/components/SearchStatistics.vue";
 import SearchRank from "./components/SearchRank.vue";
 import BtSrotSelect from "./components/BtSrotSelect.vue";
 import BtTypeSelect from "./components/BtTypeSelect.vue";
-import {
-} from "@/utils/app";
+import { setBtSearchFilterForm, getBtSearchFilterForm } from "@/utils/app";
+import {} from "@/utils/app";
 export default {
   name: "Home",
   components: {
     BtTab,
     RelatedKeywords,
-    JavTab,
-    ActressTab,
-    MovieTab,
     BtPolyTab,
     Polytab,
     Page,
@@ -113,12 +118,23 @@ export default {
   },
   data() {
     return {
+      filterForm: {
+        m: "correla",
+        t: "video",
+        p: 1,
+      },
       searchDone: false,
       ispoly: false,
       loadingtext: this.translateTitle("加载中"),
       noKeyword: "",
       avInfo: {},
+      polyLicenseId: null,
+      btList: [],
+      btPolyList: [],
+      relatedKeywordList: [],
       loadingmsg: {},
+      total: 0,
+      timeCost: "0.00",
     };
   },
   computed: {
@@ -134,105 +150,92 @@ export default {
     }),
     ...mapGetters("search", {
       keyword: "keyword",
-      btQuery: "btQuery",
-      btSearchData: "btSearchData",
-      javSearchData: "javSearchData",
-      acSearchData: "acSearchData",
-      movieSearchData: "movieSearchData",
-      btPolySearchData: "btPolySearchData",
-      relatedKeywordData:"relatedKeywordData",
-      total: "total",
-      polyLicenseId: "polyLicenseId",
     }),
   },
-  // mounted: function () {
-  //   this.getdata();
-  // },
   created() {
-    this.getdata();
+    if (!getBtSearchFilterForm())
+      setBtSearchFilterForm({
+        m: "correla",
+        t: "video",
+        p: 1,
+      });
+    this.filterForm = getBtSearchFilterForm();
+    this.filterForm.p = 1;
+    this.fetchData();
   },
   beforeRouteUpdate(to, from, next) {
     console.log("BT-beforeRouteUpdate");
-    this.$store.commit("search/set_btQuery", {
-      q: to.query.q ? to.query.q : "",
-      m: to.query.m ? to.query.m : "correla",
-      t: to.query.t ? to.query.t : "all",
-      p: Number(to.query.p) ? Number(to.query.p) : 1,
-    });
-    console.log();
     next();
   },
   methods: {
     translateTitle,
     ...mapActions("search", {
       btSearch: "btSearch",
-      submitPolyTask: "submitPolyTask",
       getPolySearchData: "getPolySearchData",
     }),
-    ...mapMutations("search", {
-      set_btQuery: "set_btQuery",
-      init_searchdata: "init_searchdata",
-    }),
     nextpage(val) {
-      this.set_btQuery({
-        p: val,
-      });
-      this.$router.push({
-        path: "/search",
-        query: { q: this.keyword, ...this.btQuery },
-      });
+      this.filterForm.p = val;
+      this.fetchData();
     },
-    async getdata() {
+    async fetchData() {
       scrollTo(0, 0);
       Message.destroy(); //清空全部提示
       this.searchDone = false; //初始化搜索进度
       this.ispoly = false; //初始化是否聚合搜索
       this.noKeyword = this.keyword; //初始化无结果组件关键词
-      this.init_searchdata(); //初始化搜索数据（time,total,btSearchData,javSearchData,polyLicenseId）
       document.title = `${this.keyword} - ${this.title} Search`;
       const searchMsg = Message.loading({
         content: this.translateTitle("搜索中"),
         duration: 0,
       });
-      await this.btSearch();
+      const { btList, total, timeCost, polyLicenseId, relatedKeywordList } =
+        await this.btSearch(this.filterForm);
+
+      this.total = total;
+      this.btList = btList;
+      this.timeCost = timeCost;
+      this.polyLicenseId = polyLicenseId;
+      this.relatedKeywordList = relatedKeywordList;
       searchMsg();
       this.searchDone = true;
     },
     async activationPoly() {
       //提交聚合任务
       this.searchDone = false; //初始化搜索进度
+      this.btList = []; //初始化搜索结果
       let pid = this.polyLicenseId;
-      this.init_searchdata(); //初始化搜索数据（time,total,btSearchData,javSearchData,polyLicenseId）
       const polySearchMsg = Message.loading({
         content: this.translateTitle("聚合搜索耗时较长,12秒内返回结果"),
         duration: 0,
       });
-      await this.getPolySearchData(pid);
+      const { btPolyList, total, timeCost } = await this.getPolySearchData(pid);
+      this.polyLicenseId = null; //初始化聚合搜索id
+      this.total = total;
+      this.btPolyList = btPolyList;
+      this.timeCost = timeCost;
       this.ispoly = true;
       this.searchDone = true;
       polySearchMsg();
     },
-    changeSort(val) {
+    changeSort() {
       //切换排序方式
-      this.set_btQuery({
-        m: val,
-        p: 1,
-      });
-      this.$router.push({
-        path: "/search",
-        query: { q: this.keyword, ...this.btQuery },
-      });
+      this.filterForm.p = 1;
+      this.fetchData();
+      // this.filterForm.p = 1;
+      // this.$router.push({
+      //   path: "/bt/search",
+      //   query: { q: this.keyword, ...this.filterForm },
+      // });
     },
-    changeType(val) {
+    changeType() {
       //切换文件类型
-      this.set_btQuery({
-        t: val,
-        p: 1,
-      });
-      this.$router.push({
-        path: "/search",
-        query: { q: this.keyword, ...this.btQuery },
-      });
+      this.filterForm.p = 1;
+      this.fetchData();
+      // this.filterForm.p = 1;
+      // this.$router.push({
+      //   path: "/bt/search",
+      //   query: { q: this.keyword, ...this.filterForm },
+      // });
     },
   },
 };

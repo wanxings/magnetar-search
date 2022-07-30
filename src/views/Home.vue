@@ -35,7 +35,7 @@
               :xxl="8"
               style="max-width: 599px"
             >
-              <SearchFix @search="search" @searchImage="searchImage" />
+              <SearchFix />
             </i-col>
           </Row>
           <Row v-if="token" type="flex" justify="center">
@@ -49,7 +49,10 @@
               style="text-align: center;padding-top: 29px;"
             >
               <ButtonGroup>
-                <Button to="/jav" type="text">番号库</Button>
+                <Button to="/bt" type="text">磁力</Button>
+                <Button to="/jav" type="text">番号</Button>
+                <Button to="/javActress" type="text">女优</Button>
+                <Button to="/movie" type="text">影视</Button>
                 <Button to="/user" type="text" style="margin-left:10px;">个人中心</Button>
               </ButtonGroup>
             </i-col>
@@ -82,19 +85,19 @@ export default {
   },
   methods: {
     ...mapMutations({}),
-    search() {
-      this.$router.push({
-        path: `/search`,
-        query: { q: this.keyword },
-      });
-    },
-    searchImage() {
-      console.log("Home-searchImage-id:%o", this.imageQuery.id);
-      this.$router.push({
-        path: "/image/search",
-        query: { id: this.imageQuery.id },
-      });
-    },
+    // search() {
+    //   this.$router.push({
+    //     path: `/search`,
+    //     query: { q: this.keyword },
+    //   });
+    // }, 
+    // searchImage() {
+    //   console.log("Home-searchImage-id:%o", this.imageQuery.id);
+    //   this.$router.push({
+    //     path: "/image/search",
+    //     query: { id: this.imageQuery.id },
+    //   });
+    // },
   },
 };
 </script>

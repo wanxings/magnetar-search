@@ -17,8 +17,7 @@
         </div>
         <i-col :xs="24" :lg="9" :xl="9" class="search-col">
           <SearchFix
-            @search="search"
-            @searchImage="searchImage"
+ 
             ref="SearchFix"
           />
         </i-col>
@@ -67,20 +66,20 @@ export default {
   },
   methods: {
     ...mapMutations({}),
-    search() {
-      console.log("Index-search-router.name:%o", this.$route.name);
-      this.$router.push({
-        path: `/search`,
-        query: { q: this.keyword },
-      });
-    },
-    searchImage() {
-      console.log("Index-searchImage-id:%o", this.imageQuery.id);
-      this.$router.push({
-        path: "/image/search",
-        query: { id: this.imageQuery.id },
-      });
-    },
+    // search() {
+    //   console.log("Index-search-router.name:%o", this.$route.name);
+    //   this.$router.push({
+    //     path: `/search`,
+    //     query: { q: this.keyword },
+    //   });
+    // },
+    // searchImage() {
+    //   console.log("Index-searchImage-id:%o", this.imageQuery.id);
+    //   this.$router.push({
+    //     path: "/image/search",
+    //     query: { id: this.imageQuery.id },
+    //   });
+    // },
   },
 };
 </script>

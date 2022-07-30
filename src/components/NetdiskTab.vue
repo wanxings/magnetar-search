@@ -1,12 +1,11 @@
+<style scoped>
+.ivu-form-item {
+    margin-bottom: 0px;
+}
+</style>
 <template>
-  <Card v-if="data" id="nd-tab" class="TabCard" style="margin-bottom: 20px">
-    <p slot="title" style="height: 24px">
-      <Tag style="background: var(--theme-color)" color="primary">{{
-        translateTitle(getTypeName(data.type))
-      }}</Tag>
-      <font v-html="data.name" class="btname"></font>
-    </p>
-    <Row
+
+  <Row
       type="flex"
       justify="space-between"
       style="padding: 10px; color: var(--txt-b-tip)"
@@ -37,7 +36,6 @@
         </Form>
       </i-col>
     </Row>
-  </Card>
 </template>
 <script>
 import { mapGetters } from "vuex";

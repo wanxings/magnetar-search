@@ -5,7 +5,14 @@ const autotrackerKey = 'autotracker'
 const searchEngineKey = 'searchEngine'
 const searchPageComponentKey = 'searchPageComponent'
 const tipsKey = 'tipsKey'
-const javSelectFromKey = 'javSelectFrom'
+const javFilterFormKey = 'javFilterForm'
+const javSearchFilterFormKey = 'javSearchFilterForm'
+const javActressSearchFilterFormKey = 'javActressSearchFilterForm'
+const javActressFilterFormKey = 'javActressFilterForm'
+const btSearchFilterFormKey = 'btSearchFilterForm'
+const btListFilterFormKey = 'btListFilterForm'
+const movieSearchFilterFormKey = 'movieSearchFilterForm'
+const movieListFilterFormKey = 'movieListFilterForm'
 
 // const UserIdKey = 'Admin-UserId'
 
@@ -13,8 +20,29 @@ export function getDarkmode() {
     return localStorage.getItem(darkmodeKey)
 }
 
-export function getJavSelectFrom() {
-    return JSON.parse(localStorage.getItem(javSelectFromKey))
+export function getJavFilterForm() {
+    return JSON.parse(localStorage.getItem(javFilterFormKey))
+}
+export function getJavSearchFilterForm() {
+    return JSON.parse(localStorage.getItem(javSearchFilterFormKey))
+}
+export function getJavActressSearchFilterForm() {
+    return JSON.parse(localStorage.getItem(javActressSearchFilterFormKey))
+}
+export function getJavActressFilterForm() {
+    return JSON.parse(localStorage.getItem(javActressFilterFormKey))
+}
+export function getBtSearchFilterForm() {
+    return JSON.parse(localStorage.getItem(btSearchFilterFormKey))
+}
+export function getBtListFilterForm() {
+    return JSON.parse(localStorage.getItem(btListFilterFormKey))
+}
+export function getMovieSearchFilterForm() {
+    return JSON.parse(localStorage.getItem(movieSearchFilterFormKey))
+}
+export function getMovieListFilterForm() {
+    return JSON.parse(localStorage.getItem(movieListFilterFormKey))
 }
 export function getVersion() {
     return localStorage.getItem(versionKey)
@@ -45,14 +73,35 @@ export function getLanguage() {
 export function setDarkmode(data) {
     return localStorage.setItem(darkmodeKey, data)
 }
-export function setJavSelectFrom(data) {
-    return localStorage.setItem(javSelectFromKey, JSON.stringify(data));
+export function setJavFilterForm(data) {
+    return localStorage.setItem(javFilterFormKey, JSON.stringify(data));
+}
+export function setJavSearchFilterForm(data) {
+    return localStorage.setItem(javSearchFilterFormKey, JSON.stringify(data));
+}
+export function setJavActressSearchFilterForm(data) {
+    return localStorage.setItem(javActressSearchFilterFormKey, JSON.stringify(data));
+}
+export function setJavActressFilterForm(data) {
+    return localStorage.setItem(javActressFilterFormKey, JSON.stringify(data));
+}
+export function setBtSearchFilterForm(data) {
+    return localStorage.setItem(btSearchFilterFormKey, JSON.stringify(data));
+}
+export function setBtListFilterForm(data) {
+    return localStorage.setItem(btListFilterFormKey, JSON.stringify(data));
+}
+export function setMovieSearchFilterForm(data) {
+    return localStorage.setItem(movieSearchFilterFormKey, JSON.stringify(data));
+}
+export function setMovieListFilterForm(data) {
+    return localStorage.setItem(movieListFilterFormKey, JSON.stringify(data));
 }
 export function setVersion(data) {
     return localStorage.setItem(versionKey, data)
 }
 export function setTips(data) {
-    return  data === true ? localStorage.setItem(tipsKey, 'on') : localStorage.setItem(tipsKey, 'off')
+    return data === true ? localStorage.setItem(tipsKey, 'on') : localStorage.setItem(tipsKey, 'off')
 }
 export function setAutotracker(data) {
     return localStorage.setItem(autotrackerKey, data)

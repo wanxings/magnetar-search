@@ -1,18 +1,21 @@
 <template>
   <div  id="resultStats">
     {{ translateTitle("找到约") }} {{ total }} {{ translateTitle("条结果") }}
-    <nobr>( {{ time }} {{ translateTitle("秒") }})&nbsp;</nobr>
+    <nobr>( {{ timeCost }} {{ translateTitle("秒") }})&nbsp;</nobr>
   </div>
 </template>  
 <script>
 import { translateTitle } from "@/utils/i18n";
-import { mapGetters } from "vuex";
 export default {
-  computed: {
-    ...mapGetters("search",{
-      time: "time",
-      total: "total",
-    }),
+  props: {
+    timeCost: {
+      type: String,
+      default: "0.00",
+    },
+    total: {
+      type: Number,
+      default: 0.00,
+    },
   },
   methods: {
     translateTitle,

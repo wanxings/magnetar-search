@@ -14,7 +14,7 @@
         (<font v-html="data.name_zh" style="font-size: 14px"></font>)</span
       >
     </p>
-    <a v-if="Jump" href="#" slot="extra" @click.prevent="goActress(data.id)">
+    <a v-if="Jump" href="#" slot="extra" @click.prevent="goActressWorks(data.id)">
       <Icon type="ios-loop-strong"></Icon>
       {{ translateTitle("详情") }}
     </a>
@@ -127,9 +127,9 @@ export default {
   computed: {},
   methods: {
     translateTitle,
-    goActress(id) {
+    goActressWorks(id) {
       let routeData = this.$router.resolve({
-        path: `/jav/actress`,
+        path: `/javActress/works`,
         query: { id },
       });
       window.open(routeData.href, "_blank"); //打开新标签

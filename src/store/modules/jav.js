@@ -46,37 +46,6 @@ const actions = {
       })
     })
   },
-  // getAvData({ state }) {
-  //   return new Promise((resolve, reject) => {
-  //     getAvData(state.javparamet).then(data => {
-  //       // commit("SET_TOTAL", response.total)
-  //       resolve(data)
-  //     }).catch(error => {
-  //       reject(error)
-  //     })
-  //   })
-    // return axios.get(API.API_AV_LIST + buildgetAvData(state)).then((response) => {
-    //   return response.data
-    // }).catch((err) => {
-    //   console.log(err)
-    // });
-  // },
-  // getAvSubject({ state }) {
-  //   return new Promise((resolve, reject) => {
-  //     getAvSubject(state.javparamet).then(data => {
-  //       console.log(data)
-  //       // commit("SET_TOTAL", response.total)
-  //       resolve(data)
-  //     }).catch(error => {
-  //       reject(error)
-  //     })
-  //   })
-    // return axios.get(API.API_AV_SUBJECT + "?id=" + id).then((response) => {
-    //   return response.data
-    // }).catch((err) => {
-    //   console.log(err)
-    // });
-  // }
 }
 export default {
   namespaced: true,

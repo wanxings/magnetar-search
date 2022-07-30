@@ -18,6 +18,8 @@ import {
     Table,
     Modal,
     Icon,
+    // Menu,
+    // Submenu,
     MenuItem,
     List,
     Upload,
@@ -49,12 +51,15 @@ import {
     CheckboxGroup,
     Circle,
     InputNumber,
+    AutoComplete,
+    Breadcrumb,
+    BreadcrumbItem,
     
 } from 'view-design'
 Vue.component('Divider', Divider)
 Vue.component('Radio', Radio)
-Vue.component('FormItem', FormItem)
 Vue.component('Form', Form)
+Vue.component('FormItem', FormItem)
 Vue.component('Avatar', Avatar)
 Vue.component('Alert', Alert)
 Vue.component('Option', Option)
@@ -82,6 +87,8 @@ Vue.component('Header', Header)
 Vue.component('Content', Content)
 Vue.component('Footer', Footer)
 Vue.component('Table', Table)
+// Vue.component('Menu', Menu)
+// Vue.component('Submenu', Submenu)
 Vue.component('MenuItem', MenuItem)
 Vue.component('Modal', Modal)
 Vue.component('Icon', Icon)
@@ -97,6 +104,9 @@ Vue.component('CheckboxGroup', CheckboxGroup)
 Vue.component('Checkbox', Checkbox)
 Vue.component('i-circle', Circle)
 Vue.component('InputNumber', InputNumber)
+Vue.component('AutoComplete', AutoComplete)
+Vue.component('Breadcrumb', Breadcrumb)
+Vue.component('BreadcrumbItem', BreadcrumbItem)
 
 import 'view-design/dist/styles/iview.css'
 

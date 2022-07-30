@@ -155,15 +155,6 @@ export default {
       this.selectFrom.page = 1;
       this.fetchData();
     },
-    // nextpage(val){
-    //   this.set_javQuery({
-    //     p: val,
-    //   });
-    //   this.$router.push({
-    //     path: "/search/jav",
-    //     query: {q:this.keyword,...this.javQuery},
-    //   });
-    // },
     async fetchData() {
       scrollTo(0, 0);
       setJavSelectFrom(this.selectFrom); //保存条件

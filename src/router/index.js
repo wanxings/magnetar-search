@@ -10,70 +10,45 @@ const routes = [{
 	path: '/',
 	name: 'Home',
 	meta: {
-		requireAuth: false,
+		requireAuth: true,
 		title: 'Magnetar - Search torrents and magnet from Magnetar'
 	},
 	component: Home
 },
 {
-	path: '/search',
+	path: '/bt',
 	component: Layout,
+	redirect: '/bt/list',
 	children: [
 		{
-			path: '',
-			name: "searchIndex",
+			path: 'search',
+			name: "btSearch",
 			meta: {
 				title: '磁力搜索 - Magnetar Search',
-				parentPath: 'search',
-				requireAuth: false,
+				parentPath: 'bt',
+				requireAuth: true,
 			},
-			component: () => import('@/views/search/index'),
+			component: () => import('@/views/bt/search'),
 			beforeEnter: (to, from, next) => {
-				if (to.query.q) {
-					router.app.$options.store.commit("search/set_keyword", to.query.q);
-					console.log(to.query)
-					router.app.$options.store.commit("search/set_btQuery", {
-						m: to.query.m ? to.query.m : "correla",
-						t: to.query.t ? to.query.t : "all",
-						p: Number(to.query.p) ? Number(to.query.p) : 1,
-					})
-					next()
-				} else {
+				if (!to.query.q) {
 					router.push('/')
 					next()
 				}
+				next()
 
 			}
 		},
-	],
-},
-{
-	path: '/search',
-	component: Layout,
-	children: [
 		{
-			path: '',
-			name: "searchIndex",
+			path: 'list',
+			name: "btList",
 			meta: {
-				title: '磁力搜索 - Magnetar Search',
-				parentPath: 'search',
-				requireAuth: false,
+				title: '磁力管理 - Magnetar Search',
+				parentPath: 'bt',
+				requireAuth: true,
 			},
-			component: () => import('@/views/search/index'),
+			component: () => import('@/views/bt/list'),
 			beforeEnter: (to, from, next) => {
-				if (to.query.q) {
-					router.app.$options.store.commit("search/set_keyword", to.query.q);
-					console.log(to.query)
-					router.app.$options.store.commit("search/set_btQuery", {
-						m: to.query.m ? to.query.m : "correla",
-						t: to.query.t ? to.query.t : "all",
-						p: Number(to.query.p) ? Number(to.query.p) : 1,
-					})
-					next()
-				} else {
-					router.push('/')
-					next()
-				}
+				next()
 
 			}
 		},
@@ -84,6 +59,19 @@ const routes = [{
 	component: Layout,
 	redirect: '/jav/list',
 	children: [
+		{
+			path: 'search',
+			name: "javSearch",
+			meta: {
+				title: '番号搜索 - Magnetar Search',
+				parentPath: 'jav',
+				requireAuth: true,
+			},
+			component: () => import('@/views/jav/search'),
+			beforeEnter: (to, from, next) => {
+				next()
+			}
+		},
 		{
 			path: 'list',
 			name: "javList",
@@ -133,15 +121,100 @@ const routes = [{
 				}
 			}
 		},
+
+	],
+},
+{
+	path: '/javActress',
+	component: Layout,
+	redirect: '/javActress/list',
+	children: [
 		{
-			path: 'actress',
-			name: "javActress",
+			path: 'search',
+			name: "actressSearch",
 			meta: {
-				title: '女优作品 - Magnetar Search',
-				parentPath: 'jav',
+				title: '女优搜索 - Magnetar Search',
+				parentPath: 'javActress',
 				requireAuth: true,
 			},
-			component: () => import('@/views/jav/actress'),
+			component: () => import('@/views/javActress/search'),
+			beforeEnter: (to, from, next) => {
+				next()
+			}
+		},
+		{
+			path: 'list',
+			name: "actressList",
+			meta: {
+				title: '女优列表 - Magnetar Search',
+				parentPath: 'javActress',
+				requireAuth: true,
+			},
+			component: () => import('@/views/javActress/list'),
+			beforeEnter: (to, from, next) => {
+				next()
+			}
+		},
+		{
+			path: 'works',
+			name: "actressWorks",
+			meta: {
+				title: '女优作品 - Magnetar Search',
+				parentPath: 'javActress',
+				requireAuth: true,
+			},
+			component: () => import('@/views/javActress/works'),
+			beforeEnter: (to, from, next) => {
+				if (to.query.id) {
+					next()
+				} else {
+					router.push('/')
+					next()
+				}
+			}
+		},
+	]
+},
+{
+	path: '/movie',
+	component: Layout,
+	redirect: '/movie/list',
+	children: [
+		{
+			path: 'search',
+			name: "movieSearch",
+			meta: {
+				title: '影视搜索 - Magnetar Search',
+				parentPath: 'movie',
+				requireAuth: true,
+			},
+			component: () => import('@/views/movie/search'),
+			beforeEnter: (to, from, next) => {
+				next()
+			}
+		},
+		{
+			path: 'list',
+			name: "movieList",
+			meta: {
+				title: '影视库 - Magnetar Search',
+				parentPath: 'movie',
+				requireAuth: true,
+			},
+			component: () => import('@/views/movie/list'),
+			beforeEnter: (to, from, next) => {
+				next()
+			}
+		},
+		{
+			path: 'subject',
+			name: "javSubject",
+			meta: {
+				title: '影视详情 - Magnetar Search',
+				parentPath: 'movie',
+				requireAuth: true,
+			},
+			component: () => import('@/views/movie/subject'),
 			beforeEnter: (to, from, next) => {
 				if (to.query.id) {
 					next()
@@ -194,29 +267,39 @@ const routes = [{
 {
 	path: '/image',
 	component: Layout,
-	redirect: '/image/search',
+	redirect: '/image/upload',
 	children: [
 		{
 			path: 'search',
-			name: "imageIndex",
+			name: "imageSearch",
 			meta: {
 				title: '图像搜索 - Magnetar Search',
 				parentPath: 'image',
 				requireAuth: true,
 			},
-			component: () => import('@/views/image/index'),
+			component: () => import('@/views/image/search'),
 			beforeEnter: (to, from, next) => {
-				if (to.query.id) {
-					router.app.$options.store.commit("search/set_imageQuery", {
-						id: to.query.id,
-					})
+				if (to.query.imageId) {
+					// router.app.$options.store.commit("search/set_imageQuery", {
+					// 	id: to.query.id,
+					// })
 					next()
 				} else {
-					router.app.$options.store.commit("search/set_uploadImageModalStatus", true)
+					router.push('/image/upload')
 					next()
 				}
 
 			}
+		},
+		{
+			path: 'upload',
+			name: "imageUpload",
+			meta: {
+				title: '图像上传 - Magnetar Search',
+				parentPath: 'image',
+				requireAuth: true,
+			},
+			component: () => import('@/views/image/upload'),
 		},
 	],
 },
@@ -328,6 +411,15 @@ router.beforeEach((to, from, next) => {
 	// 		path: '/'//已经登录就跳转到首页
 	// 	})
 	// }
+	//更新搜索参数到store-start
+	if (to.query.q) {
+		router.app.$options.store.commit("search/set_keyword", to.query.q);
+	}
+	//更新图像搜索参数到store-start
+	if (to.query.imageId) {
+		router.app.$options.store.commit("search/set_imageId", to.query.imageId);
+	}
+	//更新搜索参数到store-end
 	if (to.meta.title) {
 		document.title = to.meta.title;
 	}

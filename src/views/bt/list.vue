@@ -6,12 +6,17 @@
           <RadioGroup
             @on-change="changeFilterForm"
             style="padding: 10px"
-            v-model="filterForm.category"
+            v-model="filterForm.type"
             size="small"
           >
-            <Radio label="censored">有码</Radio>
-            <Radio label="uncensored">无码</Radio>
-            <Radio label="fc2">FC2</Radio>
+            <Radio label="all">所有</Radio>
+            <Radio label="video">视频</Radio>
+            <Radio label="img">图片</Radio>
+            <Radio label="compress">压缩</Radio>
+            <Radio label="music">音乐</Radio>
+            <Radio label="program">程序</Radio>
+            <Radio label="document">文档</Radio>
+            <Radio label="other">其他</Radio>
           </RadioGroup>
           <br />
           <RadioGroup
@@ -20,31 +25,15 @@
             v-model="filterForm.sort"
             size="small"
           >
-            <Radio label="magnetic">磁链更新时间</Radio>
-            <Radio label="rdate">发布日期</Radio>
-            <Radio label="comment">最近评论</Radio>
-            <Radio label="score">评分</Radio>
+            <Radio label="time">更新时间</Radio>
+            <Radio label="seeders">做种数</Radio>
+            <Radio label="leechers">水蛭数</Radio>
+            <Radio label="ratio">健康度</Radio>
           </RadioGroup>
-          <CheckboxGroup
-            style="padding: 10px"
-            v-model="filterForm.include"
-            @on-change="changeFilterForm"
-            size="small"
-          >
-            <Checkbox label="magnetic"> 含磁力</Checkbox>
-            <Checkbox label="comment"> 含评论</Checkbox>
-          </CheckboxGroup>
         </Row>
-        <Row type="flex" justify="space-between" class="code-row-bg">
-          <i-col
-            :xs="{ span: 12 }"
-            :lg="{ span: 6 }"
-            v-for="item in list"
-            :key="item.id"
-          >
-          <JavSTab :data="item" />
-          </i-col>
-        </Row>
+        <div v-for="item in list" :key="item.id">
+          <BtTab :infodata="item" />
+        </div>
         <Row class="code-row-bg">
           <i-col
             :xs="{ span: 24 }"
@@ -75,16 +64,16 @@
 import { mapActions, mapGetters } from "vuex";
 import { translateTitle } from "@/utils/i18n";
 import { Message } from "view-design";
-import JavSTab from "@/components/JavSTab.vue";
+import BtTab from "@/components/BtTab.vue";
 import Page from "@/components/Page.vue";
-import { setJavFilterForm, getJavFilterForm } from "@/utils/app";
+import { setBtListFilterForm, getBtListFilterForm } from "@/utils/app";
 import { formatTime } from "@/utils/format";
 
 export default {
   name: "Home",
   components: {
     Page,
-    JavSTab,
+    BtTab,
   },
   data() {
     return {
@@ -107,14 +96,13 @@ export default {
     }),
   },
   created() {
-    if (!getJavFilterForm())
-      setJavFilterForm({
-        category: "censored",
-        sort: "rdate",
-        include: ["magnetic"],
+    if (!getBtListFilterForm())
+      setBtListFilterForm({
         page: 1,
+        type: "all",
+        sort: "seeders",
       });
-    this.filterForm = getJavFilterForm();
+    this.filterForm = getBtListFilterForm();
     this.filterForm.page = 1;
     this.fetchData();
   },
@@ -122,7 +110,7 @@ export default {
     translateTitle,
     formatTime,
     ...mapActions("search", {
-      getJav: "getJav",
+      getBt: "getBt",
     }),
     goJavsubject(id) {
       let routeData = this.$router.resolve({
@@ -141,13 +129,13 @@ export default {
     },
     async fetchData() {
       scrollTo(0, 0);
-      setJavFilterForm(this.filterForm); //保存条件
+      setBtListFilterForm(this.filterForm); //保存条件
       Message.destroy(); //清空全部提示
       const loadingMsg = Message.loading({
         content: this.loadingtext,
         duration: 0,
       });
-      const { list, total } = await this.getJav(this.filterForm);
+      const { list, total } = await this.getBt(this.filterForm);
       this.list = list;
       this.total = total;
       loadingMsg();

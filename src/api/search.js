@@ -11,9 +11,49 @@ export function btSearch(params) {
         // data: stringify(parameter)
     })
 }
+export function getBt(params) {
+    return request({
+        url: `/search/${version}/bt/getBt`,
+        method: 'get',
+        params
+        // data: stringify(parameter)
+    })
+}
+export function movieSearch(params) {
+    return request({
+        url: `/search/${version}/movie/movieSearch`,
+        method: 'get',
+        params
+        // data: stringify(parameter)
+    })
+}
+export function getMovie(params) {
+    return request({
+        url: `/search/${version}/movie/getMovie`,
+        method: 'get',
+        params
+        // data: stringify(parameter)
+    })
+}
+export function getMovieSubject(params) {
+    return request({
+        url: `/search/${version}/movie/getMovieSubject`,
+        method: 'get',
+        params
+        // data: stringify(parameter)
+    })
+}
 export function javSearch(params) {
     return request({
-        url: `/search/${version}/jav/javsearch`,
+        url: `/search/${version}/jav/javSearch`,
+        method: 'get',
+        params
+        // data: stringify(parameter)
+    })
+}
+export function javActressSearch(params) {
+    return request({
+        url: `/search/${version}/jav/javActressSearch`,
         method: 'get',
         params
         // data: stringify(parameter)
@@ -22,6 +62,14 @@ export function javSearch(params) {
 export function getJav(params) {
     return request({
         url: `/search/${version}/jav/getJav`,
+        method: 'get',
+        params
+        // data: stringify(parameter)
+    })
+}
+export function getJavActress(params) {
+    return request({
+        url: `/search/${version}/jav/getJavActress`,
         method: 'get',
         params
         // data: stringify(parameter)
@@ -98,13 +146,6 @@ export function getBtFileList(params) {
 export function getScrapelink(params) {
     return request({
         url: `/search/${version}/bt/getScrapelink`,
-        method: 'get',
-        params
-    })
-}
-export function submitPolyTask(params) {
-    return request({
-        url: `/search/${version}/bt/submitPolyTask`,
         method: 'get',
         params
     })

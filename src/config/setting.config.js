@@ -3,7 +3,7 @@
  */
 module.exports = {
   // 接口版本号
-  version: 'v3',
+  version: 'v4',
   // 标题，
   title: 'Magnetar',
   // 标题分隔符

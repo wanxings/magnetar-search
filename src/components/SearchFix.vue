@@ -1,32 +1,4 @@
 <style>
-.imageEngineblock {
-  background: none;
-  display: flex;
-  flex: 0 0 auto;
-}
-.searchThumbnail {
-  background: #d9e7fe;
-  border: 1px solid #9cb0d8;
-  border-radius: 24px;
-  color: #444;
-  display: flex;
-  margin: 1px;
-  outline: none;
-  overflow: hidden;
-  padding-left: 14px;
-}
-.searchThumbnail img {
-  flex: 0 0 auto;
-  align-self: center;
-  object-fit: cover;
-}
-.file_text {
-  font-size: 13px;
-  font-weight: bold;
-  margin: auto;
-  padding-left: 4px;
-  padding-right: 21px;
-}
 .deleteImage {
   flex: 1;
   align-self: center;
@@ -56,6 +28,15 @@
 .minidiv .slogo img {
   margin: 12px auto !important;
 }
+.minidiv .z-select {
+  padding: 6px 0px 0px 10px;
+}
+.z-select {
+  padding: 13px 0px 0px 10px;
+}
+.z-select i {
+  font-size: 14px !important;
+}
 </style>
 <template>
   <div id="searchfix">
@@ -64,88 +45,60 @@
       size="large"
       class="gLFyf gsfi"
       v-model="inputKeyword"
-      :disabled="imageEngine"
-      :placeholder="imageSearchTip"
       @on-enter="search"
     >
-      <div
-        v-if="imageEngine && imageQuery.id"
+      <Select
         slot="prefix"
-        class="imageEngineblock"
+        style=""
+        class="z-select"
+        size="small"
+        v-model="searchCategories"
       >
-        <a class="searchThumbnail"
-          ><img
-            :alt="imageQuery.file"
-            height="42"
-            :src="imageQuery.src"
-            width="auto"
-            data-atf="1"
-            data-frt="0"
-          />
-          <div class="file_text">{{ imageQuery.file }}</div>
-        </a>
+        <Option
+          v-for="item in searchCategoriesList"
+          :value="item.value"
+          :key="item.value"
+          >{{ item.label }}</Option
+        >
+      </Select>
+      <div id="zicon" slot="suffix">
+        <Icon title="图像搜索" @click="showUploadpane" type="md-qr-scanner" />
+        <Icon title="搜索" @click="search" type="ios-search" />
       </div>
-
-      <Icon
-        title="上传图片"
-        @click="showUploadpane"
-        type="md-qr-scanner"
-        slot="suffix"
-      />
-      <Icon title="搜索" @click="search" type="ios-search" slot="suffix" />
     </i-input>
-    <Modal v-model="modalstatus" width="360" id="uploadpane">
-      <div class="sbitit">{{ translateTitle("图像搜索") }}</div>
-      <div class="sbisubtit">
-        {{ translateTitle("使用图像进行搜索，识别女优或者番号") }}
-      </div>
-      <Upload
-        type="drag"
-        :action="UploadImageAction"
-        :headers="headers"
-        :show-upload-list="true"
-        :format="UploadImageFormatList"
-        accept="image/png, image/jpeg"
-        :max-size="5120"
-        :on-error="uploaderror"
-        :on-success="uploadsuccess"
-        :on-format-error="formaterror"
-        :on-exceeded-size="exceedederror"
-      >
-        <div style="padding: 20px 0">
-          <Icon type="ios-cloud-upload" size="30" style="color: #3399ff"></Icon>
-          <p>
-            {{ translateTitle("点击选择或拖拽图片到此处") }}
-          </p>
-          <p>
-            {{ translateTitle("— 或 —") }}
-          </p>
-        </div>
-      </Upload>
-      <i-input
-        search
-        disabled
-        :enter-button="translateTitle('搜索')"
-        :placeholder="translateTitle('远程图片链接')"
-        @on-search="remotedownload"
-      />
-      <div slot="footer"></div>
-    </Modal>
   </div>
 </template>
 
 <script>
 import { translateTitle } from "@/utils/i18n";
-import { mapActions, mapGetters, mapMutations } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 import { Message } from "view-design";
-import { baseURL, version } from "@/config";
+
 export default {
   name: "SearchFix",
   components: {},
   data() {
     return {
-      UploadImageFormatList: ["png", "jpg", "jpeg"],
-      UploadImageAction: `${baseURL}/search/${version}/image/uploadSearchimg`,
+      searchCategories: "",
+      searchCategoriesList: [
+        {
+          value: "bt",
+          label: "磁力",
+        },
+        {
+          value: "jav",
+          label: "番号",
+        },
+        {
+          value: "javActress",
+          label: "女优",
+        },
+        {
+          value: "movie",
+          label: "影视",
+        },
+      ],
+      uploadImageModalStatus: false,
     };
   },
   computed: {
@@ -158,53 +111,35 @@ export default {
     }),
     ...mapGetters("search", {
       keyword: "keyword",
-      imageQuery: "imageQuery",
-      uploadImageModalStatus: "uploadImageModalStatus",
     }),
-    modalstatus: {
-      get() {
-        return this.uploadImageModalStatus;
-      },
-      set(val) {
-        this.set_uploadImageModalStatus(val);
-      },
-    },
-    headers() {
-      return { token: this.token };
-    },
-    imageEngine() {
-      return this.$route.meta.parentPath == "image" ? true : false;
-    },
-    imageSearchTip() {
-      return !this.imageQuery.id && this.$route.name == "image"
-        ? this.translateTitle("上传图片进行搜索")
-        : "";
-    },
     inputKeyword: {
       get() {
-        // return this.$route.name == "image" ? "" : this.keyword;
         return this.keyword;
       },
       set(val) {
-        // this.$route.name == "image" ? true : this.set_keyword(val);
         this.set_keyword(val);
       },
     },
   },
   mounted() {
+    let CategoriesItem =
+      this.searchCategoriesList.find(
+        (item) => item.value === this.$route.meta.parentPath
+      ) || this.searchCategoriesList[0];
+    this.searchCategories = CategoriesItem.value;
     this.$refs.searchInput.focus({
       cursor: "end",
     });
+    // this.searchCategories = this.$route.meta.parentPath || "bt"; //根据路由设置初始搜索类型
+    console.log(this.searchCategories);
     window.addEventListener("scroll", this.handleScroll);
   },
   methods: {
-    ...mapActions("search", {
-      sugrec: "sugrec",
-    }),
+    // ...mapActions("search", {
+    //   sugrec: "sugrec",
+    // }),
     ...mapMutations("search", {
       set_keyword: "set_keyword",
-      set_imageQuery: "set_imageQuery",
-      set_uploadImageModalStatus: "set_uploadImageModalStatus",
     }),
     translateTitle,
     handleScroll() {
@@ -222,48 +157,6 @@ export default {
         document.getElementById("searchTop").classList.remove("minidiv");
       }
     },
-    uploadsuccess(response, file) {
-      console.log("imageUploadsuccess:%o", file);
-      switch (response.code) {
-        case 0:
-          this.set_imageQuery({
-            id: response.data.id,
-            src: response.data.src,
-            file: response.data.file,
-          });
-          this.set_uploadImageModalStatus(false);
-          this.$emit("searchImage");
-          break;
-        case 500:
-          Message.error({
-            content: response.msg,
-            duration: 5,
-          });
-          break;
-      }
-
-      console.log(response);
-    },
-    uploaderror() {
-      Message.error({
-        content: this.translateTitle("服务器异常"),
-        duration: 5,
-      });
-    },
-    formaterror(file) {
-      console.log(file);
-      Message.error({
-        content: translateTitle("仅支持后缀为jpg、png格式的图片"),
-        duration: 5,
-      });
-    },
-    exceedederror(file) {
-      console.log(file);
-      Message.error({
-        content: translateTitle("图片不能大于5MB"),
-        duration: 5,
-      });
-    },
     showUploadpane() {
       if (!this.token) {
         Message.error({
@@ -271,17 +164,21 @@ export default {
           duration: 5,
         });
       } else {
-        this.set_uploadImageModalStatus(true);
+        this.$router.push({
+          path: "/image/upload",
+        });
       }
     },
-    remotedownload(value) {
-      console.log(value);
-    },
+
     entersearch() {
       this.search();
     },
     search() {
-      this.$emit("search");
+      // this.$emit("search");
+      this.$router.push({
+        path: `/${this.searchCategories}/search`,
+        query: { q: this.keyword },
+      });
     },
   },
 };
@@ -294,7 +191,16 @@ export default {
 .ivu-input-suffix {
   width: auto;
 }
-#searchfix .ivu-icon {
+/* #searchfix .ivu-icon {
+  cursor: pointer;
+  font-size: 23px;
+  height: 43px;
+  line-height: 46px;
+  padding: 0 4px;
+  right: 6px;
+  color: var(--theme-color);
+} */
+#zicon .ivu-icon {
   cursor: pointer;
   font-size: 23px;
   height: 43px;
@@ -303,26 +209,10 @@ export default {
   right: 6px;
   color: var(--theme-color);
 }
-#uploadpane .ivu-modal-footer {
-  border: none;
-}
-#uploadpane .ivu-modal-body {
-  padding: 20px;
-}
-#uploadpane {
-  text-align: center;
-}
-#uploadpane .sbitit {
-  font-size: 16px;
-  margin-bottom: 4px;
-}
-#uploadpane .sbisubtit {
-  margin-bottom: 4px;
-}
 
 #searchfix .ivu-input-large {
   font-size: 16px;
-  padding: 6px 95px 6px 18px;
+  padding: 6px 95px 6px 63px;
   height: 46px;
   border-radius: 22px;
 }

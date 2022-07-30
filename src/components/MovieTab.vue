@@ -29,12 +29,18 @@
       </i-col>
       <i-col :xs="24" :sm="18" :md="18" :lg="18" class="dbmovieinfo" style="">
         <p>
+          <span>
+            <Tag color="cyan" v-if="data.magnetic">含磁链</Tag>
+            <Tag color="cyan" v-if="data.cloud">含云盘</Tag>
+          </span>
+        </p>
+        <p>
           <span>{{ data.year }}</span> | <span>{{ data.style }}</span>
           <a
             target="_blank"
             :href="
               'https://www.douyin.com/search/' +
-              data.subject_title_source +
+              data.subject_title +
               '?publish_time=0&sort_type=0&source=switch_tab&type=video'
             "
           >
@@ -124,20 +130,29 @@
     </Row>
     <Collapse simple>
       <Panel name="list"
-        >{{ translateTitle("网盘列表") }} [ 0 ]
+        >{{ translateTitle("网盘资源") }}
         <div slot="content">
-          <div style="text-align: center; margin-bottom: 10px">
+          <!-- <div style="text-align: center; margin-bottom: 10px">
             <Button size="small" type="primary" icon="ios-add"
               >分享此资源</Button
             >
-          </div>
-          <div style="text-align: center; margin-bottom: 10px">
-            <span v-if="!testList">暂无分享</span>
+          </div> -->
+          <div v-if="!testList" style="text-align: center; margin-bottom: 10px">
+            <span >暂无分享</span>
           </div>
 
           <!-- <div v-for="item in data.netDiskList" :key="item.hash"> -->
           <div v-for="item in testList" :key="item.url">
-            <NetdiskTab :data="item" />
+            <Collapse simple>
+              <Panel :name="item.url">
+                  <Tag style="background: var(--theme-color)" color="primary">
+                    阿里云盘
+                  </Tag>
+                  <font v-html="item.name" class="btname"></font>
+      
+                <NetdiskTab slot="content" :data="item" />
+              </Panel>
+            </Collapse>
           </div>
         </div>
       </Panel>
@@ -211,14 +226,21 @@ export default {
         content: value,
       });
     },
-    playvideo(e, video) {
-      e.stopPropagation(); //阻止冒泡
-      this.$refs.playVideo.play(video);
-      // this.$emit("showplayvideo", video);
-    },
-    showJavDetail() {
-      this.$refs.javDetail.show(this.data);
-    },
+    // goMoviesubject(id) {
+    //   let routeData = this.$router.resolve({
+    //     path: `/movie/subject`,
+    //     query: { id },
+    //   });
+    //   window.open(routeData.href, "_blank"); //打开新标签
+    // },
+    // playvideo(e, video) {
+    //   e.stopPropagation(); //阻止冒泡
+    //   this.$refs.playVideo.play(video);
+    //   // this.$emit("showplayvideo", video);
+    // },
+    // showJavDetail() {
+    //   this.$refs.javDetail.show(this.data);
+    // },
   },
 };
 </script>
