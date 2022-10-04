@@ -15,7 +15,7 @@
                 <ListItem v-for="(item, index) in list" :key="index">
                   <ListItemMeta
                     :title="item.name"
-                    :description="'创建于' + item.create_time"
+                    :description="'创建于' + formatDate(item.create_time)"
                   />
                   <template slot="action">
                     <li>
@@ -40,7 +40,7 @@
               <div style="float: right">
                 <Page
                   :total="total"
-                  :current="queryForm.pageNo"
+                  :current="queryForm.page"
                   :page-size="20"
                   @on-change="handleCurrentChange"
                 ></Page>
@@ -54,10 +54,11 @@
 </template>
 
 <script>
-import { getJavFavorites, deleteFavorites } from "@/api/user";
+import { getFavoritesJavList, deleteFavorites } from "@/api/user";
 import { Message, Modal } from "view-design";
 import { translateTitle } from "@/utils/i18n";
 import UserTab from "./components/UserTab.vue";
+import { formatDate } from "@/utils/format";
 import UserInfo from "./components/UserInfo.vue";
 export default {
   name: "userSearch",
@@ -71,7 +72,7 @@ export default {
       total: 0,
       loadingtext: this.translateTitle("加载中"),
       queryForm: {
-        pageNo: 1,
+        page: 1,
       },
       list: [],
     };
@@ -80,8 +81,9 @@ export default {
   filters: {},
   methods: {
     translateTitle,
+    formatDate,
     handleCurrentChange(val) {
-      this.queryForm.pageNo = val;
+      this.queryForm.page = val;
       this.fetchData();
     },
     viewFavorites(id) {
@@ -115,9 +117,9 @@ export default {
         content: this.loadingtext,
         duration: 0,
       });
-      const { list, total } = await getJavFavorites(this.queryForm);
+      const { list, pager } = await getFavoritesJavList(this.queryForm);
       this.list = list;
-      this.total = total;
+      this.total = pager.total_rows;
       loadingMsg();
     },
   },

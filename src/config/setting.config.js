@@ -3,16 +3,17 @@
  */
 module.exports = {
   // 接口版本号
-  version: 'v4',
+  version: 'v1',
   // 标题，
   title: 'Magnetar',
   // 标题分隔符
   titleSeparator: ' - ',
   // pro版本copyright可随意修改
-  copyright: '磁星',
+  copyright: '磁星v2.0-Beta',
   // logo，
   logo: '',
-  baseURL: 'https://api.cixing.io',
+  baseURL: 'https://test.api.cixing.io/',
+  // baseURL: 'http://127.0.0.1:1314/',
   // 消息框消失时间
   messageDuration: 4000,
   // 分页条数

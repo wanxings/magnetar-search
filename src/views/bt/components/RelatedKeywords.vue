@@ -8,8 +8,8 @@
         v-for="(item, index) in keywordList"
         :key="index"
       >
-        <Tag color="default" size="medium" @click.native="search(item.keyword)">{{
-          item.keyword
+        <Tag color="default" size="medium" @click.native="search(item.text)">{{
+          item.text
         }}</Tag>
       </a>
     </div>

@@ -25,7 +25,7 @@ export default {
   props: {
     sortValue: {
       type: String,
-      default: 'correla'
+      default: 'correlation'
     }
   },
   data() {
@@ -35,19 +35,19 @@ export default {
     selectType() {
       return [
         {
-          value: "correla",
+          value: "correlation",
           label: this.translateTitle("相关程度"),
         },
         {
           value: "time",
-          label: this.translateTitle("更新时间"),
+          label: this.translateTitle("收录时间"),
         },
         {
-          value: "size",
+          value: "length",
           label: this.translateTitle("文件大小"),
         },
         {
-          value: "repeat",
+          value: "weights",
           label: this.translateTitle("文件热度"),
         },
       ];

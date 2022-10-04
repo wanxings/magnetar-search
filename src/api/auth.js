@@ -1,11 +1,8 @@
 import request from '@/utils/request'
 import { stringify } from 'qs'
-import {
-    version
-} from '@/config'
 export function login(email, password) {
     return request({
-        url: `/user/${version}/auth/login`,
+        url: `/auth/login`,
         method: 'post',
         data: stringify({
             email,
@@ -16,29 +13,22 @@ export function login(email, password) {
 
 export function logout() {
     return request({
-        url: `/user/${version}/auth/logout`,
+        url: `/auth/register`,
         method: 'post'
     })
 }
 
-export function register(email, username,password) {
+export function register(params) {
     return request({
-        url: `/user/${version}/auth/register`,
+        url: `/auth/register`,
         method: 'post',
-        data: stringify({
-            email,
-            username,
-            password
-        })
+        params,
     })
 }
-export function resetPassword(email, password) {
+export function resetPwd(params) {
     return request({
-        url: `/user/${version}/auth/resetPassword`,
+        url: `/auth/resetPwd`,
         method: 'post',
-        data: stringify({
-            email,
-            password
-        })
+        params,
     })
 }

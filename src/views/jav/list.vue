@@ -1,48 +1,139 @@
+
+<style scoped>
+.ivu-form-item {
+  margin-bottom: 10px;
+}
+</style>
 <template>
   <div class="Search" id="Jav" style="">
     <Row>
       <i-col :xs="{ span: 24 }" :lg="{ span: 12 }" class="marleft" id="dhtcard">
         <Row>
-          <RadioGroup
-            @on-change="changeFilterForm"
-            style="padding: 10px"
-            v-model="filterForm.category"
-            size="small"
-          >
-            <Radio label="censored">有码</Radio>
-            <Radio label="uncensored">无码</Radio>
-            <Radio label="fc2">FC2</Radio>
-          </RadioGroup>
-          <br />
-          <RadioGroup
-            @on-change="changeFilterForm"
-            style="padding: 10px"
-            v-model="filterForm.sort"
-            size="small"
-          >
-            <Radio label="magnetic">磁链更新时间</Radio>
-            <Radio label="rdate">发布日期</Radio>
-            <Radio label="comment">最近评论</Radio>
-            <Radio label="score">评分</Radio>
-          </RadioGroup>
-          <CheckboxGroup
-            style="padding: 10px"
-            v-model="filterForm.include"
-            @on-change="changeFilterForm"
-            size="small"
-          >
-            <Checkbox label="magnetic"> 含磁力</Checkbox>
-            <Checkbox label="comment"> 含评论</Checkbox>
-          </CheckboxGroup>
+          <div style="padding-top: 10px">
+            <Form :model="filterForm" :label-width="50" label-position="right">
+              <FormItem label="类型:">
+                <RadioGroup
+                  @on-change="changeFilterForm"
+                  v-model="filterForm.category"
+                  size="small"
+                >
+                  <Radio label="all">不限</Radio>
+                  <Radio label="censored">有码</Radio>
+                  <Radio label="uncensored">无码</Radio>
+                  <Radio label="fc2">FC2</Radio>
+                </RadioGroup>
+              </FormItem>
+              <FormItem label="排序:">
+                <RadioGroup
+                  @on-change="changeFilterForm"
+                  v-model="filterForm.sort"
+                  size="small"
+                >
+                  <Radio label="magnetic">磁链更新时间</Radio>
+                  <Radio label="rdate">发布日期</Radio>
+                  <Radio label="comment">最近评论</Radio>
+                  <Radio label="score">评分</Radio>
+                </RadioGroup>
+              </FormItem>
+              <FormItem label="附加:">
+                <CheckboxGroup
+                  v-model="filterForm.include"
+                  @on-change="changeFilterForm"
+                  size="small"
+                >
+                  <Checkbox label="magnetic"> 含磁力 </Checkbox>
+                  <Checkbox label="comment"> 含评论 </Checkbox>
+                </CheckboxGroup>
+              </FormItem>
+              <FormItem label="年份:">
+                <DatePicker
+                  type="year"
+                  size="small"
+                  :value="Number(filterForm.year).toString() || ''"
+                  @on-change="setYear"
+                  placeholder="不限年份"
+                  style="width: 120px"
+                >
+                </DatePicker>
+              </FormItem>
+              <FormItem label="时长:">
+                <RadioGroup
+                  v-model="filterForm.length"
+                  type="button"
+                  size="small"
+                  @on-change="changeFilterForm"
+                >
+                  <Radio label="0">不限</Radio>
+                  <Radio label="0-45">45分钟以下</Radio>
+                  <Radio label="45-90">45-90分钟</Radio>
+                  <Radio label="90-120">90-120分钟</Radio>
+                  <Radio label="120">120分钟以上</Radio>
+                </RadioGroup>
+              </FormItem>
+              <FormItem label="分类:">
+                <Select
+                  v-model="filterForm.genre"
+                  multiple
+                  placeholder="不限分类"
+                  filterable
+                  @on-change="changeFilterForm"
+                >
+                  <OptionGroup label="场景">
+                    <Option
+                      v-for="item in genreList"
+                      :value="item.id"
+                      :key="item.id"
+                    >
+                      {{ item.label }}
+                    </Option>
+                  </OptionGroup>
+                  <OptionGroup label="服装">
+                    <Option
+                      v-for="item in genreList"
+                      :value="item.id"
+                      :key="item.id"
+                    >
+                      {{ item.label }}
+                    </Option>
+                  </OptionGroup>
+                  <OptionGroup label="动作">
+                    <Option
+                      v-for="item in genreList"
+                      :value="item.id"
+                      :key="item.id"
+                    >
+                      {{ item.label }}
+                    </Option>
+                  </OptionGroup>
+                </Select>
+              </FormItem>
+              <FormItem label="大图:">
+                <i-switch v-model="filterForm.previewMode" size="large">
+                  <span slot="open">开启</span>
+                  <span slot="close">关闭</span>
+                </i-switch>
+              </FormItem>
+            </Form>
+          </div>
         </Row>
-        <Row type="flex" justify="space-between" class="code-row-bg">
+        <Row v-if="!filterForm.previewMode" type="flex" justify="space-between">
           <i-col
             :xs="{ span: 12 }"
             :lg="{ span: 6 }"
             v-for="item in list"
             :key="item.id"
           >
-          <JavSTab :data="item" />
+            <JavSTab :data="item" />
+          </i-col>
+        </Row>
+        <Row v-else type="flex" justify="space-between">
+          <i-col
+            :xs="{ span: 24 }"
+            :lg="{ span: 12 }"
+            v-for="item in list"
+            :key="item.id"
+          >
+            <JavBTab :data="item" />
           </i-col>
         </Row>
         <Row class="code-row-bg">
@@ -72,23 +163,40 @@
 </template>
 <script>
 // @ is an alias to /src
-import { mapActions, mapGetters } from "vuex";
+import { mapGetters } from "vuex";
 import { translateTitle } from "@/utils/i18n";
 import { Message } from "view-design";
 import JavSTab from "@/components/JavSTab.vue";
+import JavBTab from "@/components/JavBTab.vue";
 import Page from "@/components/Page.vue";
 import { setJavFilterForm, getJavFilterForm } from "@/utils/app";
 import { formatTime } from "@/utils/format";
-
+import { getList } from "@/api/jav";
 export default {
   name: "Home",
   components: {
     Page,
     JavSTab,
+    JavBTab,
   },
   data() {
     return {
-      filterForm: {},
+      filterForm: {
+        category: "all",
+        sort: "magnetic",
+        include: ["magnetic"],
+        length: "0",
+        genre: [],
+        year: "",
+        previewMode:false,
+        page: 1,
+      },
+      genreList: [
+        {
+          id: 1,
+          label: "开发中",
+        },
+      ],
       searchDone: false,
       loadingtext: this.translateTitle("加载中"),
       loadingmsg: {},
@@ -121,9 +229,6 @@ export default {
   methods: {
     translateTitle,
     formatTime,
-    ...mapActions("search", {
-      getJav: "getJav",
-    }),
     goJavsubject(id) {
       let routeData = this.$router.resolve({
         path: `/jav/subject`,
@@ -139,6 +244,10 @@ export default {
       this.filterForm.page = 1;
       this.fetchData();
     },
+    setYear(format) {
+      this.filterForm.year = Number(format);
+      this.changeFilterForm();
+    },
     async fetchData() {
       scrollTo(0, 0);
       setJavFilterForm(this.filterForm); //保存条件
@@ -147,9 +256,9 @@ export default {
         content: this.loadingtext,
         duration: 0,
       });
-      const { list, total } = await this.getJav(this.filterForm);
+      const { list, pager } = await getList(this.filterForm);
       this.list = list;
-      this.total = total;
+      this.total = pager.total_rows;
       loadingMsg();
     },
   },

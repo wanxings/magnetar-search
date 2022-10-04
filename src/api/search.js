@@ -3,14 +3,7 @@ import request from '@/utils/request'
 import {
     version
 } from '@/config'
-export function btSearch(params) {
-    return request({
-        url: `/search/${version}/bt/btsearch`,
-        method: 'get',
-        params
-        // data: stringify(parameter)
-    })
-}
+
 export function getBt(params) {
     return request({
         url: `/search/${version}/bt/getBt`,
@@ -43,14 +36,7 @@ export function getMovieSubject(params) {
         // data: stringify(parameter)
     })
 }
-export function javSearch(params) {
-    return request({
-        url: `/search/${version}/jav/javSearch`,
-        method: 'get',
-        params
-        // data: stringify(parameter)
-    })
-}
+
 export function javActressSearch(params) {
     return request({
         url: `/search/${version}/jav/javActressSearch`,
@@ -59,14 +45,7 @@ export function javActressSearch(params) {
         // data: stringify(parameter)
     })
 }
-export function getJav(params) {
-    return request({
-        url: `/search/${version}/jav/getJav`,
-        method: 'get',
-        params
-        // data: stringify(parameter)
-    })
-}
+
 export function getJavActress(params) {
     return request({
         url: `/search/${version}/jav/getJavActress`,
@@ -136,13 +115,6 @@ export function searchHistory(params) {
         params
     })
 }
-export function getBtFileList(params) {
-    return request({
-        url: `/search/${version}/bt/getFileList`,
-        method: 'get',
-        params
-    })
-}
 export function getScrapelink(params) {
     return request({
         url: `/search/${version}/bt/getScrapelink`,
@@ -151,13 +123,7 @@ export function getScrapelink(params) {
     })
 }
 
-export function getPolySearchData(params) {
-    return request({
-        url: `/search/${version}/bt/polySearch`,
-        method: 'get',
-        params
-    })
-}
+
 // export function getPolySearchData(params) {
 //     return request({
 //         url: `/search/${version}/bt/getPolySearchData`,

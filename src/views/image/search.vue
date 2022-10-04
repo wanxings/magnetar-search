@@ -1,9 +1,7 @@
 <template>
   <div class="Search" id="Search" style="">
     <Row>
-      <i-col :xs="{ span: 24 }" :lg="{ span: 12 }" class="marleft">
-        <SearchStatistics :timeCost="timeCost" :total="total" />
-      </i-col>
+
     </Row>
 
     <Row>
@@ -14,12 +12,26 @@
           :keyword="noKeyword"
           :image="true"
         />
-        <div v-for="(item, index) in acList" :key="'actress' + index">
-          <ActressTab :data="item" Tagvalue="相似女优" :Jump="true" />
-        </div>
-        <div v-for="(item, index) in javList" :key="'javMovie' + index">
-          <JavTab :data="item" Tagvalue="相似影片" />
-        </div>
+        <Row type="flex" justify="space-between">
+          <i-col
+            :xs="{ span: 12 }"
+            :lg="{ span: 6 }"
+            v-for="item in acList"
+            :key="item.id"
+          >
+            <ActressSTab :data="item" />
+          </i-col>
+        </Row>
+        <Row type="flex" justify="space-between">
+          <i-col
+            :xs="{ span: 24 }"
+            :lg="{ span: 12 }"
+            v-for="item in javList"
+            :key="item.id"
+          >
+            <JavBTab :data="item" />
+          </i-col>
+        </Row>
         <Row class="code-row-bg">
           <i-col
             v-if="total > 20"
@@ -39,21 +51,19 @@
 </template>
 <script>
 // @ is an alias to /src
-import { mapActions, mapGetters } from "vuex";
+import { mapGetters } from "vuex";
 import { translateTitle } from "@/utils/i18n";
 import { Message } from "view-design";
 import Page from "@/components/Page.vue";
-import SearchStatistics from "@/components/SearchStatistics.vue";
-import JavTab from "@/components/JavTab.vue";
-import ActressTab from "@/components/ActressTab.vue";
-
+import JavBTab from "@/components/JavBTab.vue";
+import ActressSTab from "@/components/ActressSTab.vue";
+import { search } from "@/api/visual";
 export default {
   name: "imageIndex",
   components: {
     Page,
-    SearchStatistics,
-    JavTab,
-    ActressTab,
+    JavBTab,
+    ActressSTab,
   },
   data() {
     return {
@@ -78,39 +88,29 @@ export default {
   },
   watch: {},
   created() {
-    // if(){
-
-    // }
-    this.getImageSearch();
+    if (this.$route.query.id) {
+      this.getImageSearch(this.$route.query.id);
+    } else {
+      this.$router.push({
+        path: `/image/upload`,
+      });
+    }
   },
   methods: {
     translateTitle,
-    ...mapActions("search", {
-      imageSearch: "imageSearch",
-    }),
-    searchImage() {
-      this.$router.push({
-        path: "/search/image",
-        query: this.searchparamet,
-      });
-      console.log(1);
-    },
-    async getImageSearch() {
+    async getImageSearch(id) {
       scrollTo(0, 0);
       Message.destroy(); //清空全部提示
       this.searchDone = false; //初始化搜索进度
-
       const imageSearchMsg = Message.loading({
         content: this.translateTitle("搜索中"),
         duration: 0,
       });
-      const { acList, javList, total, timeCost,file } = await this.imageSearch();
+      const { actressList, javList } = await search({ id });
       imageSearchMsg();
-      this.total = total;
-      this.timeCost = timeCost;
       this.searchDone = true; //搜索完成
-      this.noKeyword = file; //初始化无结果组件关键词
-      this.acList = acList;
+      this.noKeyword = "该图像"; //初始化无结果组件关键词
+      this.acList = actressList;
       this.javList = javList;
       console.log("图像搜索完成");
     },

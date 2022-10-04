@@ -1,3 +1,30 @@
+<style scoped>
+.logo span{
+  color: #5CA1FF;
+  animation: identifierLogo 1s ease-in-out infinite alternate;
+}
+.logo span:nth-child(n+1){
+  animation-delay: 0.2s;
+}
+.logo span:nth-child(n+2){
+  animation-delay: 0.4s;
+}
+.logo span:nth-child(n+3){
+  animation-delay: 0.6s;
+}
+.logo span:nth-child(n+4){
+  animation-delay: 0.8s;
+}
+.logo span:nth-child(n+5){
+  animation-delay: 1s;
+}
+@keyframes identifierLogo {
+  to{
+    color: #00C1FF;
+    text-shadow: 1px 0 2px #00C1FF;
+  }
+}
+</style>
 <template>
   <div class="layout" id="indexlayout">
     <Layout>
@@ -22,6 +49,17 @@
                     data-frt="0"
                   />
                 </a>
+                <!-- <br> -->
+                <!-- <a>
+                  <span>M</span>
+                  <span>a</span>
+                  <span>g</span>
+                  <span>n</span>
+                  <span>e</span>
+                  <span>t</span>
+                  <span>a</span>
+                  <span>r</span>
+                </a> -->
               </div>
             </i-col>
           </Row>
@@ -51,9 +89,9 @@
               <ButtonGroup>
                 <Button to="/bt" type="text">磁力</Button>
                 <Button to="/jav" type="text">番号</Button>
-                <Button to="/javActress" type="text">女优</Button>
-                <Button to="/movie" type="text">影视</Button>
-                <Button to="/user" type="text" style="margin-left:10px;">个人中心</Button>
+                <!-- <Button to="/javActress" type="text">女优</Button> -->
+                <!-- <Button to="/movie" type="text">影视</Button> -->
+                <Button to="/user" type="text" >个人中心</Button>
               </ButtonGroup>
             </i-col>
           </Row>

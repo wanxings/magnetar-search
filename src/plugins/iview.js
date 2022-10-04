@@ -40,6 +40,7 @@ import {
     Collapse,
     Select,
     Option,
+    OptionGroup,
     Avatar,
     Form,
     FormItem,
@@ -54,6 +55,7 @@ import {
     AutoComplete,
     Breadcrumb,
     BreadcrumbItem,
+    DatePicker,
     
 } from 'view-design'
 Vue.component('Divider', Divider)
@@ -63,6 +65,7 @@ Vue.component('FormItem', FormItem)
 Vue.component('Avatar', Avatar)
 Vue.component('Alert', Alert)
 Vue.component('Option', Option)
+Vue.component('OptionGroup', OptionGroup)
 Vue.component('Select', Select)
 Vue.component('Collapse', Collapse)
 Vue.component('Panel', Panel)
@@ -107,6 +110,6 @@ Vue.component('InputNumber', InputNumber)
 Vue.component('AutoComplete', AutoComplete)
 Vue.component('Breadcrumb', Breadcrumb)
 Vue.component('BreadcrumbItem', BreadcrumbItem)
-
+Vue.component('DatePicker', DatePicker)
 import 'view-design/dist/styles/iview.css'
 

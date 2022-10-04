@@ -3,11 +3,11 @@ import { Message, Notice, Spin } from 'view-design';
 import store from '../store/index.js';
 import { getToken } from '@/utils/auth'
 import {
-    baseURL,
+    baseURL, version,
 } from '@/config'
 // 创建axios实例
 const service = axios.create({
-    baseURL, // api 的 base_url
+    baseURL: baseURL + version, // api 的 base_url
     timeout: 20000 // 请求超时时间
 })
 
@@ -15,7 +15,7 @@ const service = axios.create({
 service.interceptors.request.use(
     config => {
         if (getToken()) {
-            config.headers['token'] = getToken() // 让每个请求携带自定义token
+            config.headers['authorization'] = "Bearer " + getToken() // 让每个请求携带自定义token
         }
         return config
     },
@@ -41,15 +41,13 @@ service.interceptors.response.use(
             console.log("token过期或不合法")
             Notice.warning({
                 title: '温馨提示',
-                desc: '登陆状态已过期,请前往扩展程序或登陆页面重新登陆',
-                duration: 10,
+                desc: '登陆状态已过期,请前往扩展程序或登陆页面重新登陆,5s后自动跳转至登陆页',
+                duration: 5,
             });
+            store.dispatch('user/FedLogOut')
             setTimeout(() => {
-                store.dispatch('user/FedLogOut').then(() => {
-                    location.href = '/login'
-                    //location.reload() // 为了重新实例化vue-router对象 避免bug
-                })
-            }, 10000)
+                location.href = '/login'
+            }, 5000)
         }
         Spin.hide();
         Message.destroy();
@@ -70,13 +68,36 @@ service.interceptors.response.use(
         console.log(error);
         console.log(error.response);
         if (error.response && error.response.status == 403) {
-            Message.warning({
+            Message.error({
                 content: "请求参数含非法字符"
             })
+        } else if (error.response && error.response.status == 401) {
+            console.log(error.response.data.code)
+            console.log(error.response.data)
+            if (error.response.data.code !== 10005) {
+                Message.error({
+                    content: error.response.data.msg || '请求失败'
+                })
+
+            } else {
+                console.log("token过期或不合法")
+                Notice.warning({
+                    title: '温馨提示',
+                    desc: '登陆状态已过期,请前往扩展程序或登陆页面重新登陆',
+                    duration: 10,
+                });
+                setTimeout(() => {
+                    store.dispatch('user/FedLogOut').then(() => {
+                        location.href = '/login'
+                        //location.reload() // 为了重新实例化vue-router对象 避免bug
+                    })
+                }, 10000)
+            }
+
         } else {
             console.log('interceptorsERROR:%o', error) // for debug
-            Message.warning({
-                content: "接口异常"
+            Message.error({
+                content: error.response.data.msg || "接口异常"
             })
         }
 

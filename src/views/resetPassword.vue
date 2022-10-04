@@ -16,26 +16,52 @@
       <div style="width: 300px; display: block">
         <Form
           ref="ResetItem"
-          :model="ResetItem"
+          :model="ResetFrom"
           label-position="top"
           :rules="rules"
         >
           <FormItem prop="email"
-            ><i-input
-              :placeholder="translateTitle('邮箱')"
-              v-model="ResetItem.email"
-              prefix="ios-mail-outline"
-            ></i-input
-          ></FormItem>
-          <FormItem prop="password"
-            ><i-input
-              :placeholder="translateTitle('新密码')"
-              v-model="ResetItem.password"
-              prefix="ios-lock-outline"
-              type="password"
-              password
-            ></i-input
-          ></FormItem>
+                ><i-input
+                  :placeholder="translateTitle('注册时的邮箱')"
+                  v-model="ResetFrom.email"
+                ></i-input
+              ></FormItem>
+              <FormItem prop="password"
+                ><i-input
+                  :placeholder="translateTitle('新密码')"
+                  v-model="ResetFrom.password"
+                  type="password"
+                  password
+                ></i-input
+              ></FormItem>
+              <FormItem prop="img_captcha">
+                <Row>
+                  <i-col span="17">
+                    <i-input
+                      :placeholder="translateTitle('图形验证码')"
+                      v-model="ResetFrom.img_captcha"
+                    ></i-input>
+                  </i-col>
+                  <i-col span="6" offset="1">
+                    <img
+                      style="width: 100%; vertical-align: middle"
+                      v-if="captchaData"
+                      :src="captchaData"
+                      @click="loadCaptcha"
+                    />
+                  </i-col>
+                </Row>
+              </FormItem>
+              <FormItem prop="email_captcha">
+                <i-input
+                  :placeholder="translateTitle('邮箱验证码')"
+                  v-model="ResetFrom.email_captcha"
+                >
+                  <Button slot="append" @click="sendEmailCaptcha"
+                    >发送验证码</Button
+                  >
+                </i-input>
+              </FormItem>
           <FormItem style="text-align: center; margin-left: 0px">
             <Button type="success" @click="resetSubmit('ResetItem')" long>{{
               translateTitle("重置密码")
@@ -51,13 +77,20 @@
 import { Message } from "view-design";
 import { mapActions, mapGetters } from "vuex";
 import { translateTitle } from "@/utils/i18n";
+import { getCaptcha, sendEmailCaptcha } from "@/api/app";
+import { resetPwd } from "@/api/auth";
 export default {
   data() {
     return {
-      ResetItem: {
+      ResetFrom: {
         email: "",
+        img_captcha: "",
+        email_captcha: "",
+        username: "",
         password: "",
+        img_captcha_id: "",
       },
+      captchaData: "",
       remember: false,
       Accountdata: null,
       rules: {
@@ -87,10 +120,27 @@ export default {
             trigger: "blur",
           },
         ],
+        img_captcha: [
+          {
+            required: true,
+            message: this.translateTitle("图片验证码不能为空"),
+            trigger: "blur",
+          },
+          { type: "string", max: 10, message: "???", trigger: "blur" },
+        ],
+        email_captcha: [
+          {
+            required: true,
+            message: this.translateTitle("邮箱验证码不能为空"),
+            trigger: "blur",
+          },
+          { type: "string", max: 10, message: "???", trigger: "blur" },
+        ],
       },
     };
   },
   created() {
+    this.loadCaptcha();
   },
   computed: {
     ...mapGetters("app", {
@@ -102,6 +152,28 @@ export default {
     ...mapActions("user", {
       ResetPassword: "ResetPassword",
     }),
+    async loadCaptcha() {
+      let { b64s, id } = await getCaptcha();
+      this.captchaData = b64s;
+      this.ResetFrom.img_captcha_id = id;
+    },
+    async sendEmailCaptcha() {
+      if (this.ResetFrom.img_captcha == "") {
+        Message.error(this.translateTitle("请填写图片验证码"));
+      } else {
+        let { email, img_captcha, img_captcha_id } = this.ResetFrom;
+        await sendEmailCaptcha({
+          email,
+          img_captcha,
+          img_captcha_id,
+        });
+        Message.success(
+          this.translateTitle(
+            "验证码发送成功，请前往邮箱查看(有可能在垃圾箱里面)"
+          )
+        );
+      }
+    },
     resetSubmit(name) {
       this.$refs[name].validate(async (valid) => {
         if (valid) {
@@ -109,9 +181,9 @@ export default {
             content: this.translateTitle("提交中"),
             duration: 0,
           });
-          await this.ResetPassword(this.ResetItem);
+          await resetPwd(this.ResetFrom);
           logInMsg();
-          Message.success(this.translateTitle("前往邮箱查看密码重置链接"));
+          Message.success(this.translateTitle("重置成功"));
           this.$router.push({ path: "/login" });
         } else {
           Message.error({

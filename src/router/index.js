@@ -49,9 +49,47 @@ const routes = [{
 			component: () => import('@/views/bt/list'),
 			beforeEnter: (to, from, next) => {
 				next()
+			}
+		},
+	],
+},
+{
+	path: '/netdisc',
+	component: Layout,
+	redirect: '/netdisc/search',
+	children: [
+		{
+			path: 'search',
+			name: "netdiscSearch",
+			meta: {
+				title: '网盘搜索 - Magnetar Search',
+				parentPath: 'netdisc',
+				requireAuth: true,
+			},
+			component: () => import('@/views/netdisc/search'),
+			beforeEnter: (to, from, next) => {
+				if (!to.query.q) {
+					router.push('/')
+					next()
+				}
+				next() 
 
 			}
 		},
+		// {
+		// 	path: 'list',
+		// 	name: "btList",
+		// 	meta: {
+		// 		title: '磁力管理 - Magnetar Search',
+		// 		parentPath: 'bt',
+		// 		requireAuth: true,
+		// 	},
+		// 	component: () => import('@/views/bt/list'),
+		// 	beforeEnter: (to, from, next) => {
+		// 		next()
+
+		// 	}
+		// },
 	],
 },
 {
@@ -279,7 +317,7 @@ const routes = [{
 			},
 			component: () => import('@/views/image/search'),
 			beforeEnter: (to, from, next) => {
-				if (to.query.imageId) {
+				if (to.query.id) {
 					// router.app.$options.store.commit("search/set_imageQuery", {
 					// 	id: to.query.id,
 					// })
@@ -306,7 +344,7 @@ const routes = [{
 {
 	path: '/user',
 	component: Layout,
-	redirect: '/user/search',
+	redirect: '/user/favorites',
 	children: [
 		{
 			path: 'search',
@@ -378,6 +416,16 @@ const routes = [{
 		title: '重置密码 - Magnetar Search'
 	},
 	component: resolve => require(['@/views/resetPassword.vue'], resolve)
+},
+{
+	path: '/activateAccount',
+	name: 'ActivateAccount',
+	meta: {
+		requireAuth: false,
+		islogin: true,
+		title: '激活账号 - Magnetar Search'
+	},
+	component: resolve => require(['@/views/activateAccount.vue'], resolve)
 },
 {
 	path: '/404',

@@ -1,7 +1,7 @@
 <template>
   <div  id="resultStats">
     {{ translateTitle("找到约") }} {{ total }} {{ translateTitle("条结果") }}
-    <nobr>( {{ timeCost }} {{ translateTitle("秒") }})&nbsp;</nobr>
+    <nobr>( {{ timeCost/1000 }} {{ translateTitle("秒") }})&nbsp;</nobr>
   </div>
 </template>  
 <script>
@@ -9,8 +9,8 @@ import { translateTitle } from "@/utils/i18n";
 export default {
   props: {
     timeCost: {
-      type: String,
-      default: "0.00",
+      type: Number ,
+      default: 0,
     },
     total: {
       type: Number,

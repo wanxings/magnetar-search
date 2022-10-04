@@ -12,9 +12,9 @@
                 <div class="b_img_div">
                   <div class="detailheadimgdiv">
                     <img
-                      v-if="javData.headimg"
+                      v-if="javData.covers"
                       class="detailheadimg"
-                      :src="javData.headimg.bimg"
+                      :src="javData.covers.b_pic"
                     />
                   </div>
                 </div>
@@ -48,14 +48,59 @@
                     {{ javData.length }} {{ translateTitle("分钟") }}
                   </div>
                 </ListItem>
+                <ListItem v-if="javData.director && javData.director.name">
+                  <div>
+                    <span style="font-weight: 700"
+                      >{{ translateTitle("导演") }}:
+                    </span>
+                    <a>
+                      <Tag color="primary">
+                        {{ javData.director.name }}
+                      </Tag>
+                    </a>
+                  </div>
+                </ListItem>
+                <ListItem v-if="javData.studio">
+                  <div>
+                    <span style="font-weight: 700"
+                      >{{ translateTitle("发行商") }}:
+                    </span>
+                    <a>
+                      <Tag
+                        color="primary"
+                        @click.native="goStudioWorks(javData.studio.id)"
+                      >
+                        {{ javData.studio.name }}
+                      </Tag>
+                    </a>
+                  </div>
+                </ListItem>
+
                 <ListItem>
                   <div>
                     <span style="font-weight: 700"
-                      >{{ translateTitle("所处分类") }}:
+                      >{{ translateTitle("评分") }}:
+                    </span>
+                    <Rate
+                      disabled
+                      show-text
+                      allow-half
+                      :value="javData.score / 2"
+                    >
+                      <span style="color: #f5a623"
+                        >{{ javData.score?javData.score.toFixed(1):0.0 }}分</span
+                      >
+                    </Rate>
+                  </div>
+                </ListItem>
+                <ListItem>
+                  <div>
+                    <span style="font-weight: 700"
+                      >{{ translateTitle("所属分类") }}:
                     </span>
                     <Tag
-                      v-for="(item, genreindex) in javData.avgenre"
-                      :key="genreindex"
+                      v-for="item in javData.genre"
+                      :key="item.id"
                       color="primary"
                     >
                       {{ item.name }}
@@ -67,13 +112,18 @@
                     <span style="font-weight: 700"
                       >{{ translateTitle("相关演员") }}:
                     </span>
-                    <a
-                      v-for="(item, avactressindex) in javData.avactress"
-                      :key="avactressindex"
-                    >
-                      <Tag @click.native="goActress(item.id)" color="primary">{{
-                        item.actname
-                      }}</Tag>
+                    <a v-for="item in javData.actress" :key="item.id">
+                      <Tag
+                        @click.native="goActressWorks(item.id)"
+                        color="magenta"
+                      >
+                        {{ item.actname }}
+                      </Tag>
+                    </a>
+                    <a v-for="item in javData.histrion" :key="item.id">
+                      <Tag color="blue">
+                        {{ item.actname }}
+                      </Tag>
                     </a>
                   </div>
                 </ListItem>
@@ -102,10 +152,10 @@
                   >
                     <Option
                       v-for="item in favoritesData"
-                      :value="item.value"
-                      :key="item.value"
+                      :value="item.id"
+                      :key="item.id"
                     >
-                      {{ item.label }}
+                      {{ item.name }}
                     </Option>
                   </Select>
                   <Button @click="handleSelectFavorites">加入收藏夹</Button>
@@ -117,7 +167,7 @@
       </Row>
       <Row id="simgid" type="flex" justify="center" :gutter="12">
         <i-col
-          v-for="(item, index) in javData.detailimg"
+          v-for="(item, index) in javData.samples"
           :key="index"
           style="margin-bottom: 10px"
         >
@@ -129,7 +179,7 @@
               preview="1"
               :preview-text="detail.orginal_title"
             /> -->
-              <img :src="item.simg" :large="item.bimg" />
+              <img :src="item.s_pic" :large="item.b_pic" />
             </div>
           </div>
         </i-col>
@@ -138,7 +188,7 @@
         <i-col span="24">
           <Tabs :animated="false">
             <TabPane label="磁链">
-              <div v-for="item in btSearchData" :key="item.hash">
+              <div v-for="item in javData.magnetic_list" :key="item.hash">
                 <BtTab :infodata="item" />
               </div>
             </TabPane>
@@ -217,18 +267,22 @@
 
 <script>
 import { formatTime } from "@/utils/format";
-import { mapActions } from "vuex";
 import { Spin, Message, Modal } from "view-design";
 import { translateTitle } from "@/utils/i18n";
 import BtTab from "@/components/BtTab.vue";
+import {
+  getSubject,
+  getFavorites,
+  getComment,
+  createFavorites,
+  addJavToFavorites,
+} from "@/api/jav";
 export default {
   name: "MovieDetail",
   components: {
     BtTab,
   },
-  props: {
-    // moviedetailstatus: Boolean,
-  },
+  props: {},
   data() {
     return {
       status: false,
@@ -240,31 +294,40 @@ export default {
         score: 0,
         content: "",
       },
+      filterForm: {
+        mode: "precise",
+        sortBy: "correlation",
+        style: "video",
+        page: 1,
+      },
       addFavorites: true,
       favoritesselectId: null,
       favoritesData: [],
     };
   },
-  computed: {},
+  computed: {}, 
   created() {
     this.fetchData(this.$route.query.id);
+    this.fetchComment(this.$route.query.id);
+    this.fetchFavorites();
+    
   },
   methods: {
     formatTime,
     translateTitle,
-    ...mapActions("search", {
-      getJavSubject: "getJavSubject",
-      submitComments: "submitComments",
-      reportComment: "reportComment",
-      likesComment: "likesComment",
-    }),
-    ...mapActions("jav", {
-      addJavToFavorites: "addJavToFavorites",
-      createFavorites: "createFavorites",
-    }),
-    goActress(id) {
+    // ...mapActions("search", {
+    //   getJavSubject: "getJavSubject",
+    //   submitComments: "submitComments",
+    //   reportComment: "reportComment",
+    //   likesComment: "likesComment",
+    // }),
+    // ...mapActions("jav", {
+    //   addJavToFavorites: "addJavToFavorites",
+    //   createFavorites: "createFavorites",
+    // }),
+    goActressWorks(id) {
       let routeData = this.$router.resolve({
-        path: `/jav/actress`,
+        path: `/javActress/works`,
         query: { id },
       });
       window.open(routeData.href, "_blank"); //打开新标签
@@ -284,15 +347,21 @@ export default {
           ]);
         },
       });
-      console.log(id);
-      const { javData, btSearchData, commentData, favoritesData } =
-        await this.getJavSubject(id);
-      this.javData = javData;
-      this.btSearchData = btSearchData;
-      this.commentData = commentData;
-      this.favoritesData = favoritesData;
+      const data = await getSubject({ id });
+      this.javData = data;
+      // this.btSearchData = btSearchData;
+      //
+      // this.favoritesData = favoritesData;
       Spin.hide();
-      if (javData) document.title = `${this.javData.code}`;
+      if (data) document.title = `${this.javData.code}`;
+    },
+    async fetchFavorites() {
+      let { list } = await getFavorites();
+      this.favoritesData = list;
+    },
+    async fetchComment(id) {
+      let list = await getComment({ id });
+      this.commentData = list;
     },
     commentSubmit(name) {
       this.$refs[name].validate(async (valid) => {
@@ -322,15 +391,18 @@ export default {
       msg();
       Message.success(this.translateTitle("点赞成功"));
     },
-    async handleCreateFavorites(val) {
+    async handleCreateFavorites(name) {
       const msg = Message.loading({
         content: "创建中...",
         duration: 0,
       });
-      console.log("handleCreateFavorites", val);
-      const { favoritesData } = await this.createFavorites(val);
+      console.log("handleCreateFavorites", name);
+      let data = await createFavorites({ name });
       msg();
-      this.favoritesData = favoritesData;
+      this.favoritesData.push({
+        id: data.id,
+        name: data.name,
+      });
       this.favoritesselectId = null;
       Message.success(this.translateTitle("创建成功"));
     },
@@ -343,8 +415,8 @@ export default {
         content: "收藏中...",
         duration: 0,
       });
-      await this.addJavToFavorites({
-        javid: this.javData.id,
+      await addJavToFavorites({
+        wid: this.javData.id,
         fid: this.favoritesselectId,
       });
       msg();
@@ -370,9 +442,9 @@ export default {
     },
     previewImg(index) {
       console.log(index);
-      var urlData = this.javData.detailimg
+      var urlData = this.javData.samples
         .map((item) => {
-          return item.bimg;
+          return item.b_pic;
         })
         .join(",")
         .split(",");

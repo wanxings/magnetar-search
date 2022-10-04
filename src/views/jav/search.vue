@@ -26,12 +26,19 @@
             <Checkbox label="comment"> 含评论</Checkbox>
           </CheckboxGroup>
         </Row>
-        <div v-for="item in list" :key="item.id">
-          <JavTab :data="item" />
-        </div>
+        <Row type="flex" justify="space-between" class="code-row-bg">
+          <i-col
+            :xs="{ span: 12 }"
+            :lg="{ span: 6 }"
+            v-for="item in list"
+            :key="item.id"
+          >
+          <JavSTab :data="item" />
+          </i-col>
+        </Row>
         <Row class="code-row-bg">
           <i-col
-            v-if="searchDone && total > 20 "
+            v-if="searchDone && total > 20"
             :xs="{ span: 24 }"
             :lg="{ span: 12 }"
             class="marleft"
@@ -53,18 +60,19 @@
 </template>
 <script>
 // @ is an alias to /src
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters } from "vuex";
 import { translateTitle } from "@/utils/i18n";
 import { Message } from "view-design";
-import JavTab from "@/components/JavTab.vue";
+import JavSTab from "@/components/JavSTab.vue";
 import Page from "@/components/Page.vue";
 import Backtop from "@/components/Backtop.vue";
 import SearchStatistics from "@/components/SearchStatistics.vue";
 import { setJavSearchFilterForm, getJavSearchFilterForm } from "@/utils/app";
+import { search } from "@/api/jav";
 export default {
   name: "Home",
   components: {
-    JavTab,
+    JavSTab,
     Page,
     Backtop,
     SearchStatistics,
@@ -78,13 +86,17 @@ export default {
       noKeyword: "",
       list: [],
       total: 0,
-      timeCost: "0.00",
+      timeCost: 0,
     };
   },
   computed: {
     ...mapGetters("app", {
       title: "title",
       language: "language",
+      keyword: "keyword",
+    }),
+    ...mapGetters("search", {
+      keyword: "keyword",
     }),
   },
   // mounted: function () {
@@ -102,9 +114,6 @@ export default {
   },
   methods: {
     translateTitle,
-    ...mapActions("search", {
-      javSearch: "javSearch",
-    }),
     nextpage(val) {
       this.filterForm.page = val;
       this.fetchData();
@@ -122,10 +131,13 @@ export default {
         content: this.loadingtext,
         duration: 0,
       });
-      const { list, total, timeCost } = await this.javSearch(this.filterForm);
+      const { list, pager, took } = await search({
+        query: this.keyword,
+        ...this.filterForm,
+      });
       this.list = list;
-      this.total = total;
-      this.timeCost = timeCost;
+      this.total = pager.total_rows;
+      this.timeCost = took;
       this.searchDone = true;
       loadingMsg();
     },

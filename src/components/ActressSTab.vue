@@ -1,24 +1,16 @@
 <template>
   <Card v-if="data" class="javitem TabCard Card-theme-dark">
     <div class="previewcard">
-      <div class="cover" @click="goJavsubject(data.id)">
-        <img v-lazy="data.cover.s_pic" alt />
+      <div class="cover" @click="goActressWork(data.id)">
+        <img v-lazy="data.avatar" alt />
         <div
           style="position: fixed; bottom: 80px; right: 10px; z-index: 8"
         ></div>
       </div>
       <dl>
         <p> 
-          {{ data.code }}
+          {{ data.actname }}({{ data.acname_zh }})
         </p>
-        <dt>
-          <strong>{{ data.score }}</strong>
-        </dt>
-        <dt>{{ formatDate(data.rdate) }}</dt>
-        <dt><Tag v-if="data.magnetic_time" color="blue">含磁链</Tag></dt>
-        <dt v-if="isdelete">
-          <Button type="error" @click="deleteAction" ghost long>删除</Button>
-        </dt>
       </dl>
     </div> 
   </Card>
@@ -26,39 +18,22 @@
 
 <script>
 import { translateTitle } from "@/utils/i18n";
-import { Modal } from "view-design";
 import { formatDate } from "@/utils/format";
 export default {
   props: {
     data: Object,
-    isdelete: {
-      type: Boolean,
-      default: false,
-    },
   },
   components: {},
   computed: {},
   methods: {
     translateTitle,
     formatDate,
-    goJavsubject(id) {
+    goActressWork(id) {
       let routeData = this.$router.resolve({
-        path: `/jav/subject`,
+        path: `/javActress/works`,
         query: { id },
       });
       window.open(routeData.href, "_blank"); //打开新标签
-    },
-    deleteAction() {
-      Modal.confirm({
-        title: "确认删除",
-        content: "<p>确定从收藏夹移除此番号吗？</p>",
-        onOk: () => {
-          this.$emit("deleteAction");
-        },
-        onCancel: () => {
-          return;
-        },
-      });
     },
   },
 };

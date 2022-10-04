@@ -7,7 +7,6 @@ import {
     getSearchEngine,
     getSearchPageComponent,
 
-    setVersion,
     setLanguage,
     setDarkmode,
     setAutotracker,
@@ -82,10 +81,10 @@ const actions = {
         return new Promise((resolve, reject) => {
             getConfig().then(data => {
                 // commit('SET_NOTIC', response.data.notic)
-                commit('SET_SEARCHRANKINGDATA', data.searchRankingData)
-                commit('SET_POLYSTATUSDATA', data.polyStatusData)
-                commit('SET_TRACKERLIST', data.trackerList)
-                setVersion(data.version)
+                // commit('SET_SEARCHRANKINGDATA', data.searchRankingData)
+                commit('SET_POLYSTATUSDATA', data)
+                // commit('SET_TRACKERLIST', data.trackerList)
+                // setVersion(data.version)
                 resolve()
             }).catch(error => {
                 reject(error)

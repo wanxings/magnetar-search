@@ -41,8 +41,8 @@ export default {
   methods: {
     translateTitle,
     ...mapActions({
-      getConfig: "app/getConfig",
-      GetInfo: "user/GetInfo",
+      getConfig: "app/getConfig", 
+      GetUserInfo: "user/GetUserInfo",
     }),
     search() {
       this.$router.push({
@@ -51,46 +51,22 @@ export default {
           q: this.keyword,
         },
       });
-    },
+    }, 
     async initInfo() {
-      await this.getConfig();
       if (getToken()) {
         const asyncUserMsg = Message.loading({
           content: this.translateTitle("同步用户信息"),
           duration: 0,
         });
         //有token，获取用户信息
+        // await this.getConfig();
         asyncUserMsg();
-        await this.GetInfo();
+        await this.GetUserInfo();
+        await this.getConfig();
       }
     },
   },
   mounted: function () {
-    // this.getConfig()
-    //   .then(() => {
-    //     console.log("获取网络配置成功");
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //     console.log(this.language);
-    //     Message.error({
-    //       content: error[this.language],
-    //       duration: 5,
-    //     });
-    //   });
-    // console.log(this.$route);
-    // if (getToken()) {
-    //   //有token，获取用户信息
-    //   this.GetInfo()
-    //     .then(() => {})
-    //     .catch((error) => {
-    //       Message.error({
-    //         content: error[this.language],
-    //         duration: 5,
-    //       });
-    //     });
-    // }
-    // this.darkmode === "off" || document.body.classList.add("dark");
   },
 };
 </script>

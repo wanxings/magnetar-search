@@ -1,7 +1,7 @@
 // import API from '@/api/api_list'
 // import axios from "axios";
-import { getInfo } from '@/api/user'
-import { login, logout, register,resetPassword } from '@/api/auth'
+import { getUserInfo } from '@/api/user'
+import { login, logout } from '@/api/auth'
 import { saveUser, setPassword } from '@/api/user'
 import {
     getToken,
@@ -9,7 +9,6 @@ import {
     removeToken,
     setUserInfo,
 } from '@/utils/auth'
-import md5 from "js-md5";
 
 
 
@@ -61,7 +60,7 @@ const actions = {
     // 登录
     Login({ dispatch }, formdata) {
         const email = formdata.email.trim()
-        const password = md5(formdata.password)
+        const password = formdata.password
         return new Promise((resolve, reject) => {
             login(email, password).then( data=> {
                 dispatch('SetUserData', data)
@@ -71,38 +70,16 @@ const actions = {
             })
         })
     },
-    // 注册
-    Register(context, formdata) {
-        const email = formdata.email.trim().toLowerCase()
-        const username = formdata.username.trim()
-        return new Promise((resolve, reject) => {
-            register(email, username, formdata.password).then(() => {
-                resolve()
-            }).catch(error => {
-                reject(error)
-            })
-        })
-    },
-    //重置密码
-    ResetPassword(context, formdata) {
-        const email = formdata.email.trim()
-        const password = formdata.password
-        return new Promise((resolve) => {
-            resetPassword(email, password).then(()=> {
-                resolve()
-            })
-        })
-    },
     // 获取用户信息
-    GetInfo({ commit }) {
+    GetUserInfo({ commit }) {
         return new Promise((resolve, reject) => {
-            getInfo().then(data => {
+            getUserInfo().then(data => {
                 console.log(data)
                 commit('SET_TOKEN', getToken())
-                commit('SET_NAME', data.name)
+                commit('SET_NAME', data.username)
                 commit('SET_EMAIL', data.email)
                 commit('SET_AVATAR', data.avatar)
-                commit('SET_LEAVE', data.leave)
+                commit('SET_LEAVE', data.is_admin)
                 commit('SET_CREDITS', data.credits)
                 resolve()
             }).catch(error => {

@@ -1,6 +1,5 @@
 import {
   btSearch,
-  getBt,
   javSearch,
   movieSearch,
   getMovie,
@@ -60,16 +59,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       // let searchEngine = getSearchEngine()
       let { relatedSearch } = getSearchPageComponent()
-      btSearch({ q: state.keyword, ...filterForm, relatedSearch }).then(data => {
-        resolve(data)
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  },
-  getBt(context, selectFrom) {
-    return new Promise((resolve, reject) => {
-      getBt(selectFrom).then(data => {
+      btSearch({ query: state.keyword, ...filterForm, relatedSearch }).then(data => {
         resolve(data)
       }).catch(error => {
         reject(error)
@@ -78,7 +68,7 @@ const actions = {
   },
   movieSearch({ state }, filterForm) {
     return new Promise((resolve, reject) => {
-      movieSearch({ q: state.keyword, ...filterForm }).then(data => {
+      movieSearch({ query: state.keyword, ...filterForm }).then(data => {
         resolve(data)
       }).catch(error => {
         reject(error)
@@ -103,7 +93,7 @@ const actions = {
   },
   javSearch({ state }, filterForm) {
     return new Promise((resolve, reject) => {
-      javSearch({ q: state.keyword, ...filterForm }).then(data => {
+      javSearch({ query: state.keyword, ...filterForm }).then(data => {
         resolve(data)
       }).catch(error => {
         reject(error)
@@ -112,7 +102,7 @@ const actions = {
   },
   javActressSearch({ state }, filterForm) {
     return new Promise((resolve, reject) => {
-      javActressSearch({ q: state.keyword, ...filterForm }).then(data => {
+      javActressSearch({ query: state.keyword, ...filterForm }).then(data => {
         resolve(data)
       }).catch(error => {
         reject(error)
@@ -146,7 +136,7 @@ const actions = {
   },
   actressSearch({ state }) {
     return new Promise((resolve, reject) => {
-      actressSearch({ q: state.keyword, ...state.acQuery }).then(data => {
+      actressSearch({ query: state.keyword, ...state.acQuery }).then(data => {
         resolve(data)
       }).catch(error => {
         reject(error)
@@ -209,8 +199,8 @@ const actions = {
   },
   getPolySearchData(context, pid) {
     return new Promise((resolve, reject) => {
-      let polyLicenseId = pid
-      getPolySearchData({ polyLicenseId }).then(data => {
+      let licenseId = pid
+      getPolySearchData({ licenseId }).then(data => {
         resolve(data)
       }).catch(error => {
         reject(error)

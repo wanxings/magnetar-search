@@ -63,6 +63,7 @@
           :action="UploadImageAction"
           :headers="headers"
           :show-upload-list="true"
+          name="image"
           :format="UploadImageFormatList"
           accept="image/png, image/jpeg"
           :max-size="5120"
@@ -108,7 +109,7 @@ export default {
   data() {
     return {
       UploadImageFormatList: ["png", "jpg", "jpeg"],
-      UploadImageAction: `${baseURL}/search/${version}/image/uploadSearchimg`,
+      UploadImageAction: `${baseURL}${version}/visual/upload`,
     };
   },
   computed: {
@@ -116,7 +117,7 @@ export default {
       token: "token",
     }),
     headers() {
-      return { token: this.token };
+      return { authorization: "Bearer " + this.token };
     },
   },
   filters: {},
@@ -124,21 +125,17 @@ export default {
     translateTitle,
     uploadsuccess(response, file) {
       console.log("imageUploadsuccess:%o", file);
-      switch (response.code) {
-        case 0:
-          this.$router.push({
-            path: "/image/search",
-            query: { imageId: response.data.id },
-          });
-          break;
-        case 500:
-          Message.error({
-            content: response.msg,
-            duration: 5,
-          });
-          break;
+      if (response.code == 0) {
+        this.$router.push({
+          path: "/image/search",
+          query: { id: response.data.id },
+        });
+      } else {
+        Message.error({
+          content: response.msg,
+          duration: 5,
+        });
       }
-
       console.log(response);
     },
     uploaderror() {

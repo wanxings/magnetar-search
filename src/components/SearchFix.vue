@@ -86,16 +86,16 @@ export default {
           label: "磁力",
         },
         {
+          value: "netdisc",
+          label: "网盘",
+        },
+        {
           value: "jav",
           label: "番号",
         },
         {
           value: "javActress",
           label: "女优",
-        },
-        {
-          value: "movie",
-          label: "影视",
         },
       ],
       uploadImageModalStatus: false,

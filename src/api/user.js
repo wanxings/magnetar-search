@@ -3,12 +3,35 @@ import request from '@/utils/request'
 import {
   version
 } from '@/config'
-export function getInfo() {
+export function getUserInfo() {
   return request({
-    url: `/user/${version}/user/info`,
+    url: `/user/info`,
     method: 'get',
   })
 }
+
+
+
+export function getFavoritesJavList(params) {
+  return request({
+    url: `/user/favorites/list`,
+    method: 'get',
+    params,
+  })
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 export function getSearchHistory(params) {
   return request({
     url: `/user/${version}/manage/SearchHistory`,
@@ -16,13 +39,9 @@ export function getSearchHistory(params) {
     params,
   })
 }
-export function getJavFavorites(params) {
-  return request({
-    url: `/user/${version}/manage/JavFavorites`,
-    method: 'get',
-    params,
-  })
-}
+
+
+
 export function deleteFavorites(params) {
   return request({
     url: `/user/${version}/manage/deleteFavorites`,

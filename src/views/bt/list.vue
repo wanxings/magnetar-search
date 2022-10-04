@@ -6,7 +6,7 @@
           <RadioGroup
             @on-change="changeFilterForm"
             style="padding: 10px"
-            v-model="filterForm.type"
+            v-model="filterForm.style"
             size="small"
           >
             <Radio label="all">所有</Radio>
@@ -61,14 +61,14 @@
 </template>
 <script>
 // @ is an alias to /src
-import { mapActions, mapGetters } from "vuex";
+import { mapGetters } from "vuex";
 import { translateTitle } from "@/utils/i18n";
 import { Message } from "view-design";
 import BtTab from "@/components/BtTab.vue";
 import Page from "@/components/Page.vue";
 import { setBtListFilterForm, getBtListFilterForm } from "@/utils/app";
 import { formatTime } from "@/utils/format";
-
+import { getList } from "@/api/magnetic";
 export default {
   name: "Home",
   components: {
@@ -99,7 +99,7 @@ export default {
     if (!getBtListFilterForm())
       setBtListFilterForm({
         page: 1,
-        type: "all",
+        style: "all",
         sort: "seeders",
       });
     this.filterForm = getBtListFilterForm();
@@ -109,9 +109,6 @@ export default {
   methods: {
     translateTitle,
     formatTime,
-    ...mapActions("search", {
-      getBt: "getBt",
-    }),
     goJavsubject(id) {
       let routeData = this.$router.resolve({
         path: `/jav/subject`,
@@ -135,9 +132,8 @@ export default {
         content: this.loadingtext,
         duration: 0,
       });
-      const { list, total } = await this.getBt(this.filterForm);
+      const list = await getList(this.filterForm);
       this.list = list;
-      this.total = total;
       loadingMsg();
     },
   },

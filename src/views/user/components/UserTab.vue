@@ -1,6 +1,6 @@
 <template>
   <Tabs @on-click="changeTab" :value="routename" size="small" :animated="false">
-    <TabPane :label="translateTitle('搜索历史')" name="Search"> </TabPane>
+    <!-- <TabPane :label="translateTitle('搜索历史')" name="Search"> </TabPane> -->
     <TabPane :label="translateTitle('我的收藏')" name="Favorites"> </TabPane>
     <!-- <TabPane :label="translateTitle('个人资料')" name="Material"> </TabPane> -->
   </Tabs>

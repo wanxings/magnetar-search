@@ -25,13 +25,15 @@ export default {
       polyStatusData: "polyStatusData",
     }),
   },
+  created() {
+  },
   filters: {
     statusType: function (value) {
       return value == 1 ? "success" : "error";
     },
   },
   methods: {
-    translateTitle,
+    translateTitle
   },
 };
 </script>

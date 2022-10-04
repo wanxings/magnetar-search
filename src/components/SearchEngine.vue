@@ -7,12 +7,13 @@
       :animated="false"
     >
       <TabPane :label="translateTitle('磁力')" name="bt"></TabPane>
+      <TabPane :label="translateTitle('网盘(Beta)')" name="netdisc"></TabPane>
       <!-- <TabPane
         icon="md-cloud"
         :label="translateTitle('云盘')"
         name="cloud"
       ></TabPane> -->
-      <TabPane :label="translateTitle('影视')" name="movie"></TabPane>
+      <!-- <TabPane :label="translateTitle('影视')" name="movie"></TabPane> -->
       <TabPane :label="translateTitle('番号')" name="jav"></TabPane>
       <TabPane :label="translateTitle('女优')" name="javActress"></TabPane>
       <!-- <TabPane

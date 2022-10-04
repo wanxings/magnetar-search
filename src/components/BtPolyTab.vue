@@ -14,10 +14,10 @@
   font-weight: normal;
   font-style: normal;
 }
-.hideO{
+.hideO {
   overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>
 <template>
@@ -31,9 +31,11 @@
       >
     </p>
     <div v-for="i in infodata.results" :key="i.hash" style="padding: 0 10px">
-      <p v-html="i.name" class="btname" style="height: 24px; padding: 7px 10px">
-        
-      </p>
+      <p
+        v-html="i.name"
+        class="btname"
+        style="height: 24px; padding: 7px 10px"
+      ></p>
       <Row
         type="flex"
         justify="space-between"
@@ -55,11 +57,11 @@
             v-if="i.detailsLink"
             placement="top"
             theme="light"
-            :content="translateTitle('该网站需要二次抓取磁力链')"
+            :content="translateTitle('该网站搜索页面没有展现磁链，需要第二次进入详情页面抓取')"
           >
             <Icon color="var(--theme-color)" type="ios-link" size="18" />
             <a v-on:click="scrapelink(i.detailsLink)" href="javascript:;">
-              {{ translateTitle("抓取磁力") }}
+              {{ translateTitle("抓取磁链") }}
             </a>
           </Tooltip>
         </i-col>
@@ -98,10 +100,11 @@
   </Card>
 </template>
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters } from "vuex";
 import { translateTitle } from "@/utils/i18n";
 import { Message, Modal } from "view-design";
 import { delHtml } from "@/utils/format";
+import { polySearchScrape } from "@/api/magnetic";
 // import common from "@/components/Common.vue";
 export default {
   props: {
@@ -122,9 +125,6 @@ export default {
   methods: {
     translateTitle,
     delHtml,
-    ...mapActions("search", {
-      getScrapelink: "getScrapelink",
-    }),
     copylink(val) {
       if (this.autotracker === "on") {
         let data = this.trackerList;
@@ -153,47 +153,32 @@ export default {
               "复制失败，可能浏览器不支持该功能，请手动复制"
             )}${message}`,
             background: true,
-            duration:10,
+            duration: 10,
           });
         }
       );
     },
-    scrapelink(val) {
+    async scrapelink(id) {
       const msg = Message.loading({
         content: this.translateTitle("抓取中"),
         duration: 0,
       });
-      this.getScrapelink(val)
-        .then((data) => {
-          msg();
-          if (data.code == 0) {
-            let modalContent = "";
-            data.results.forEach((elem, index) => {
-              modalContent =
-                modalContent + "<p>magnet:?xt=urn:btih:" + elem + "</p>";
-              console.log(elem, index);
-            });
-            Modal.success({
-              title: data.errorMsg,
-              content: modalContent,
-              width: "500",
-            });
-          } else {
-            Modal.error({
-              title: "错误代码：" + data.code,
-              content: data.errorMsg,
-            });
-          }
 
-          // Message.success(data.errorMsg);
-        })
-        .catch((error) => {
-          msg();
-          Message.error({
-            content: error[this.language],
-            duration: 5,
-          });
-        });
+      let data = await polySearchScrape({
+        id,
+      });
+      msg();
+      let modalContent = "";
+      data.forEach((value, index) => {
+        modalContent =
+          modalContent + "<p>magnet:?xt=urn:btih:" + value + "</p>";
+        console.log(value, index);
+      });
+      Modal.success({
+        title: "抓取成功",
+        content: modalContent,
+        width: "500",
+      });
     },
   },
 };

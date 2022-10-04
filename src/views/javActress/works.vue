@@ -27,35 +27,14 @@
             <Checkbox label="comment"> 含评论</Checkbox>
           </CheckboxGroup>
         </Row>
-        <Row type="flex" justify="space-between" class="code-row-bg">
+        <Row type="flex" justify="space-between">
           <i-col
             :xs="{ span: 12 }"
             :lg="{ span: 6 }"
             v-for="item in list"
             :key="item.id"
           >
-            <Card class="javitem">
-              <div class="previewcard" @click="goJavsubject(item.id)">
-                <div class="cover">
-                  <img v-lazy="item.pic" alt />
-                  <div
-                    style="
-                      position: fixed;
-                      bottom: 80px;
-                      right: 10px;
-                      z-index: 8;
-                    "
-                  ></div>
-                </div>
-                <dl>
-                  <p>
-                    {{ item.code }} <strong>{{ item.score }}</strong>
-                  </p>
-                  <dt>{{ formatTime(item.rdate, "yyyy-MM-dd") }}</dt>
-                  <dt><Tag v-if="item.magnetic" color="blue">磁链</Tag></dt>
-                </dl>
-              </div>
-            </Card>
+            <JavSTab :data="item" />
           </i-col>
         </Row>
         <Row class="code-row-bg">
@@ -66,7 +45,7 @@
             style="text-align: center; max-width: 652px"
             ><Page
               v-if="total > 0"
-              :page="queryForm.pageNo"
+              :page="queryForm.page"
               :total="total"
               @nextpage="nextpage"
             />
@@ -74,11 +53,7 @@
         </Row>
         <div style="width: 100%; height: 10px"></div>
       </i-col>
-      <i-col id="right-panl" :xs="{ span: 24 }" :lg="{ span: 6 }">
-        <!-- <Notice /> -->
-        <!-- <Polytab v-if="token" />
-        <SearchRank v-if="token" /> -->
-      </i-col>
+      <i-col id="right-panl" :xs="{ span: 24 }" :lg="{ span: 6 }"> </i-col>
     </Row>
     <div style="width: 100%; height: 150px" />
   </div>
@@ -86,24 +61,26 @@
 <script>
 // @ is an alias to /src
 import { mapGetters } from "vuex";
-import { getActressJavList } from "@/api/jav";
 import { translateTitle } from "@/utils/i18n";
 import { Message } from "view-design";
 import Page from "@/components/Page.vue";
+import JavSTab from "@/components/JavSTab.vue";
 import ActressTab from "@/components/ActressTab.vue";
 import { formatTime } from "@/utils/format";
-
+import { getActressInfo, getList } from "@/api/jav";
 export default {
   name: "JavActerss",
   components: {
     Page,
     ActressTab,
+    JavSTab,
   },
   data() {
     return {
       queryForm: {
-        id: "",
-        pageNo: 1,
+        actressID: "",
+        category:"all",
+        page: 1,
         sort: "rdate",
         include: ["magnetic"],
       },
@@ -126,13 +103,14 @@ export default {
   watch: {},
   created() {
     if (this.$route.query.id) {
-      this.queryForm.id = this.$route.query.id;
+      this.queryForm.actressID = this.$route.query.id;
     } else {
       this.$router.push({
         path: `/`,
       });
     }
-    this.queryForm.pageNo = 1;
+    this.queryForm.page = 1;
+    this.fetchActress(this.$route.query.id);
     this.fetchData();
   },
   methods: {
@@ -146,12 +124,16 @@ export default {
       window.open(routeData.href, "_blank"); //打开新标签
     },
     nextpage(val) {
-      this.queryForm.pageNo = val;
+      this.queryForm.page = val;
       this.fetchData();
     },
     changeSelectFrom() {
-      this.queryForm.pageNo = 1;
+      this.queryForm.page = 1;
       this.fetchData();
+    },
+    async fetchActress(id) {
+      let data = await getActressInfo({ id });
+      this.actressInfo = data;
     },
     async fetchData() {
       scrollTo(0, 0);
@@ -160,12 +142,10 @@ export default {
         content: this.loadingtext,
         duration: 0,
       });
-      const { actressInfo, list, total } = await getActressJavList(
-        this.queryForm
-      );
+      const { list, pager } = await getList(this.queryForm);
       this.list = list;
-      this.total = total;
-      this.actressInfo = actressInfo;
+      this.total = pager.total_rows;
+      this.queryForm.page = pager.page;
       loadingMsg();
     },
   },

@@ -2,7 +2,6 @@
   <div class="Search" id="Jav" style="">
     <Row>
       <i-col :xs="{ span: 24 }" :lg="{ span: 12 }" class="marleft" id="dhtcard">
-       
         <Row type="flex" justify="space-between" class="code-row-bg">
           <i-col
             :xs="{ span: 12 }"
@@ -10,7 +9,11 @@
             v-for="item in list"
             :key="item.id"
           >
-            <JavSTab :data="item" :isdelete="true" @deleteAction="deleteFromFavorites(item.id)"/>
+            <JavSTab
+              :data="item"
+              :isdelete="true"
+              @deleteAction="deleteFromFavorites(item.id)"
+            />
           </i-col>
         </Row>
         <Row class="code-row-bg">
@@ -21,7 +24,7 @@
             style="text-align: center; max-width: 652px"
             ><Page
               v-if="total > 0"
-              :page="queryForm.pageNo"
+              :page="queryForm.page"
               :total="total"
               @nextpage="nextpage"
             />
@@ -29,11 +32,7 @@
         </Row>
         <div style="width: 100%; height: 10px"></div>
       </i-col>
-      <i-col id="right-panl" :xs="{ span: 24 }" :lg="{ span: 6 }">
-        <!-- <Notice /> -->
-        <!-- <Polytab v-if="token" />
-        <SearchRank v-if="token" /> -->
-      </i-col>
+      <i-col id="right-panl" :xs="{ span: 24 }" :lg="{ span: 6 }"> </i-col>
     </Row>
     <div style="width: 100%; height: 150px" />
   </div>
@@ -41,13 +40,12 @@
 <script>
 // @ is an alias to /src
 import { mapGetters } from "vuex";
-import { getFavoritesJavList } from "@/api/jav";
-import { deleteJavFromFavorites } from "@/api/jav";
+import { getList, deleteJavFromFavorites } from "@/api/jav";
 import { translateTitle } from "@/utils/i18n";
 import { Message } from "view-design";
 import Page from "@/components/Page.vue";
 import JavSTab from "@/components/JavSTab.vue";
-import { formatTime } from "@/utils/format";
+// import { formatDate } from "@/utils/format";
 
 export default {
   name: "JavFavorites",
@@ -58,8 +56,10 @@ export default {
   data() {
     return {
       queryForm: {
-        id: "",
-        pageNo: 1,
+        favoritesID: "",
+        category:"all",
+        sort:"rdate",
+        page: 1,
       },
       searchDone: false,
       loadingtext: this.translateTitle("加载中"),
@@ -81,18 +81,17 @@ export default {
   watch: {},
   created() {
     if (this.$route.query.id) {
-      this.queryForm.id = this.$route.query.id;
+      this.queryForm.favoritesID = this.$route.query.id;
     } else {
       this.$router.push({
         path: `/`,
       });
     }
-    this.queryForm.pageNo = 1;
+    this.queryForm.page = 1;
     this.fetchData();
   },
   methods: {
     translateTitle,
-    formatTime,
     goJavsubject(id) {
       let routeData = this.$router.resolve({
         path: `/jav/subject`,
@@ -109,14 +108,14 @@ export default {
       });
       let deleteForm = {
         javid: javaId,
-        fid: this.queryForm.id,
+        fid: this.queryForm.favoritesID,
       };
       await deleteJavFromFavorites(deleteForm);
       loadingMsg();
       this.fetchData();
     },
     nextpage(val) {
-      this.queryForm.pageNo = val;
+      this.queryForm.page = val;
       this.fetchData();
     },
     async fetchData() {
@@ -126,7 +125,7 @@ export default {
         content: this.loadingtext,
         duration: 0,
       });
-      const { list, total } = await getFavoritesJavList(this.queryForm);
+      const { list, total } = await getList(this.queryForm);
       this.list = list;
       this.total = total;
       loadingMsg();

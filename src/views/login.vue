@@ -174,7 +174,7 @@ export default {
       this.remember
         ? setRememberAccount({ ...this.Accountdata, avatar: data.avatar })
         : removeRememberAccount();
-      await this.getConfig();
+      // await this.getConfig();
       this.$router.push({ path: this.$route.query.redirect || "/" });
     },
     loginSubmit(name) {
@@ -186,11 +186,12 @@ export default {
           });
           const data = await this.Login(this.loginItem);
           logInMsg();
+          console.log(data)
           Message.success(this.translateTitle("登录成功"));
           this.remember
             ? setRememberAccount({ ...this.loginItem, avatar: data.avatar })
             : removeRememberAccount();
-          await this.getConfig();
+          // await this.getConfig();
           this.$router.push({ path: this.$route.query.redirect || "/" });
         } else {
           Message.error({

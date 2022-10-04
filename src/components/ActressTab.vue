@@ -9,9 +9,9 @@
       <Tag style="background: var(--theme-color)" color="primary">{{
         translateTitle(Tagvalue)
       }}</Tag>
-      <font v-html="data.name" style="font-size: 14px"></font>
-      <span v-if="data.name_zh">
-        (<font v-html="data.name_zh" style="font-size: 14px"></font>)</span
+      <font v-html="data.actname" style="font-size: 14px"></font>
+      <span v-if="data.acname_zh">
+        (<font v-html="data.acname_zh" style="font-size: 14px"></font>)</span
       >
     </p>
     <a v-if="Jump" href="#" slot="extra" @click.prevent="goActressWorks(data.id)">
@@ -28,7 +28,7 @@
           <div style="overflow: hidden; text-align: center; margin-top: 12px">
             <img
               style="width: auto; border-radius: 4px; max-width: 158px"
-              :src="data.img"
+              :src="data.avatar"
             />
             <div
               style="position: absolute; bottom: 10px; right: 10px; z-index: 8"
@@ -39,7 +39,7 @@
 
       <i-col :xs="24" :sm="18" :md="18" :lg="18">
         <List style="padding: 0 10px 10px 10px" :split="false" size="small">
-          <ListItem v-if="data.otherName.length > 0">
+          <ListItem v-if="data.otherName && data.otherName.length >0">
             <div>
               <span >
                 {{ translateTitle("别名") }}:
@@ -56,7 +56,7 @@
           <ListItem>
             <div>
               <span> {{ translateTitle("出生日期") }}: </span>
-              {{ data.birthday | formatTime("yyyy-MM-dd") }}
+              {{ formatDate(data.birthday) }}
             </div>
           </ListItem>
           <ListItem>
@@ -111,7 +111,7 @@
 
 <script>
 import { translateTitle } from "@/utils/i18n";
-
+import { formatDate } from "@/utils/format";
 export default {
   props: {
     data: Object,
@@ -127,41 +127,13 @@ export default {
   computed: {},
   methods: {
     translateTitle,
+    formatDate,
     goActressWorks(id) {
       let routeData = this.$router.resolve({
         path: `/javActress/works`,
         query: { id },
       });
       window.open(routeData.href, "_blank"); //打开新标签
-    },
-  },
-  filters: {
-    formatTime: function (dates, fmt) {
-      if (!dates) return "未知";
-      var date = new Date(dates);
-      if (/(y+)/.test(fmt)) {
-        fmt = fmt.replace(
-          RegExp.$1,
-          (date.getFullYear() + "").substr(4 - RegExp.$1.length)
-        );
-      }
-      var o = {
-        "M+": date.getMonth() + 1,
-        "d+": date.getDate(),
-        "h+": date.getHours(),
-        "m+": date.getMinutes(),
-        "s+": date.getSeconds(),
-      };
-      for (var k in o) {
-        if (new RegExp("(" + k + ")").test(fmt)) {
-          var str = o[k] + "";
-          fmt = fmt.replace(
-            RegExp.$1,
-            RegExp.$1.length === 1 ? str : ("00" + str).substr(str.length)
-          );
-        }
-      }
-      return fmt;
     },
   },
 };
