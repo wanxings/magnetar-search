@@ -1,6 +1,7 @@
 const versionKey = 'version'
 const languageKey = 'language'
 const darkmodeKey = 'darkmode'
+const safeModeKey = 'safeMode'
 const autotrackerKey = 'autotracker'
 const searchEngineKey = 'searchEngine'
 const searchPageComponentKey = 'searchPageComponent'
@@ -18,6 +19,9 @@ const movieListFilterFormKey = 'movieListFilterForm'
 
 export function getDarkmode() {
     return localStorage.getItem(darkmodeKey)
+}
+export function getSafeMode() {
+    return localStorage.getItem(safeModeKey)
 }
 
 export function getJavFilterForm() {
@@ -72,6 +76,9 @@ export function getLanguage() {
 
 export function setDarkmode(data) {
     return localStorage.setItem(darkmodeKey, data)
+}
+export function setSafeMode(data) {
+    return localStorage.setItem(safeModeKey, data)
 }
 export function setJavFilterForm(data) {
     return localStorage.setItem(javFilterFormKey, JSON.stringify(data));

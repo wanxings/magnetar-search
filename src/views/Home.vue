@@ -88,7 +88,7 @@
             >
               <ButtonGroup>
                 <Button to="/bt" type="text">磁力</Button>
-                <Button to="/jav" type="text">番号</Button>
+                <Button v-if="safeMode==='off'" to="/jav" type="text">番号</Button>
                 <!-- <Button to="/javActress" type="text">女优</Button> -->
                 <!-- <Button to="/movie" type="text">影视</Button> -->
                 <Button to="/user" type="text" >个人中心</Button>
@@ -116,6 +116,9 @@ export default {
     ...mapGetters("search", {
       keyword: "keyword",
       imageQuery: "imageQuery",
+    }),
+    ...mapGetters("app", {
+      safeMode: "safeMode",
     }),
     ...mapGetters("user", {
       token: "token",

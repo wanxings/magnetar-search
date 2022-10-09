@@ -3,10 +3,13 @@ import VueRouter from 'vue-router'
 import Layout from "@/components/layouts.vue";
 import Home from '../views/Home.vue'
 import { getToken } from '@/utils/auth'
-
+import {
+	getSafeMode,
+} from '@/utils/app'
 import { LoadingBar } from 'view-design';
 Vue.use(VueRouter)
-const routes = [{
+
+var initRoutes = [{
 	path: '/',
 	name: 'Home',
 	meta: {
@@ -42,7 +45,7 @@ const routes = [{
 			path: 'list',
 			name: "btList",
 			meta: {
-				title: '磁力管理 - Magnetar Search',
+				title: '最新收录 - Magnetar Search',
 				parentPath: 'bt',
 				requireAuth: true,
 			},
@@ -72,7 +75,7 @@ const routes = [{
 					router.push('/')
 					next()
 				}
-				next() 
+				next()
 
 			}
 		},
@@ -92,7 +95,112 @@ const routes = [{
 		// },
 	],
 },
+
 {
+	path: '/user',
+	component: Layout,
+	redirect: '/user/favorites',
+	children: [
+		{
+			path: 'search',
+			name: "Search",
+			meta: {
+				title: '搜索历史 - Magnetar Search',
+				parentPath: 'user',
+				requireAuth: true,
+			},
+			component: () => import('@/views/user/search'),
+			beforeEnter: (to, from, next) => {
+				next()
+			}
+		},
+		{
+			path: 'favorites',
+			name: "Favorites",
+			meta: {
+				title: '我的收藏 - Magnetar Search',
+				parentPath: 'user',
+				requireAuth: true,
+			},
+			component: () => import('@/views/user/favorites'),
+			beforeEnter: (to, from, next) => {
+				next()
+			}
+		},
+		{
+			path: 'material',
+			name: "Material",
+			meta: {
+				title: '个人资料 - Magnetar Search',
+				parentPath: 'user',
+				requireAuth: true,
+			},
+			component: () => import('@/views/user/search'),
+			beforeEnter: (to, from, next) => {
+				next()
+			}
+		},
+	],
+},
+{
+	path: '/login',
+	name: 'Login',
+	meta: {
+		requireAuth: false,
+		islogin: true,
+		title: '登录 - Magnetar Search'
+	},
+	component: resolve => require(['@/views/login.vue'], resolve)
+},
+{
+	path: '/register',
+	name: 'Registe',
+	meta: {
+		requireAuth: false,
+		islogin: true,
+		title: '注册 - Magnetar Search'
+	},
+	component: resolve => require(['@/views/register.vue'], resolve)
+},
+{
+	path: '/resetpwd',
+	name: 'ResetPassword',
+	meta: {
+		requireAuth: false,
+		islogin: true,
+		title: '重置密码 - Magnetar Search'
+	},
+	component: resolve => require(['@/views/resetPassword.vue'], resolve)
+},
+{
+	path: '/activateAccount',
+	name: 'ActivateAccount',
+	meta: {
+		requireAuth: false,
+		islogin: true,
+		title: '激活账号 - Magnetar Search'
+	},
+	component: resolve => require(['@/views/activateAccount.vue'], resolve)
+},
+{
+	path: '/404',
+	name: '404',
+	component: () => import('@/views/404'),
+	meta: {
+		requireAuth: false,
+		title: '找不到页面 - Magnetar Search'
+	},
+},
+{
+	path: '*',
+	redirect: '/404',
+	meta: {
+		requireAuth: false,
+	},
+},
+]
+
+var sensitiveRoutes = [{
 	path: '/jav',
 	component: Layout,
 	redirect: '/jav/list',
@@ -213,95 +321,95 @@ const routes = [{
 		},
 	]
 },
-{
-	path: '/movie',
-	component: Layout,
-	redirect: '/movie/list',
-	children: [
-		{
-			path: 'search',
-			name: "movieSearch",
-			meta: {
-				title: '影视搜索 - Magnetar Search',
-				parentPath: 'movie',
-				requireAuth: true,
-			},
-			component: () => import('@/views/movie/search'),
-			beforeEnter: (to, from, next) => {
-				next()
-			}
-		},
-		{
-			path: 'list',
-			name: "movieList",
-			meta: {
-				title: '影视库 - Magnetar Search',
-				parentPath: 'movie',
-				requireAuth: true,
-			},
-			component: () => import('@/views/movie/list'),
-			beforeEnter: (to, from, next) => {
-				next()
-			}
-		},
-		{
-			path: 'subject',
-			name: "javSubject",
-			meta: {
-				title: '影视详情 - Magnetar Search',
-				parentPath: 'movie',
-				requireAuth: true,
-			},
-			component: () => import('@/views/movie/subject'),
-			beforeEnter: (to, from, next) => {
-				if (to.query.id) {
-					next()
-				} else {
-					router.push('/')
-					next()
-				}
-			}
-		},
-	],
-},
-{
-	path: '/pornhub',
-	component: Layout,
-	redirect: '/pornhub/list',
-	children: [
-		{
-			path: 'list',
-			name: "pornhubList",
-			meta: {
-				title: 'Pornhub - Magnetar Search',
-				parentPath: 'pornhub',
-				requireAuth: true,
-			},
-			component: () => import('@/views/pornhub/list'),
-			beforeEnter: (to, from, next) => {
-				next()
-			}
-		},
-		{
-			path: 'subject',
-			name: "pornhubSubject",
-			meta: {
-				title: '视频详情 - Magnetar Search',
-				parentPath: 'pornhub',
-				requireAuth: true,
-			},
-			component: () => import('@/views/pornhub/subject'),
-			beforeEnter: (to, from, next) => {
-				if (to.query.id) {
-					next()
-				} else {
-					router.push('/')
-					next()
-				}
-			}
-		},
-	],
-},
+// {
+// 	path: '/movie',
+// 	component: Layout,
+// 	redirect: '/movie/list',
+// 	children: [
+// 		{
+// 			path: 'search',
+// 			name: "movieSearch",
+// 			meta: {
+// 				title: '影视搜索 - Magnetar Search',
+// 				parentPath: 'movie',
+// 				requireAuth: true,
+// 			},
+// 			component: () => import('@/views/movie/search'),
+// 			beforeEnter: (to, from, next) => {
+// 				next()
+// 			}
+// 		},
+// 		{
+// 			path: 'list',
+// 			name: "movieList",
+// 			meta: {
+// 				title: '影视库 - Magnetar Search',
+// 				parentPath: 'movie',
+// 				requireAuth: true,
+// 			},
+// 			component: () => import('@/views/movie/list'),
+// 			beforeEnter: (to, from, next) => {
+// 				next()
+// 			}
+// 		},
+// 		{
+// 			path: 'subject',
+// 			name: "javSubject",
+// 			meta: {
+// 				title: '影视详情 - Magnetar Search',
+// 				parentPath: 'movie',
+// 				requireAuth: true,
+// 			},
+// 			component: () => import('@/views/movie/subject'),
+// 			beforeEnter: (to, from, next) => {
+// 				if (to.query.id) {
+// 					next()
+// 				} else {
+// 					router.push('/')
+// 					next()
+// 				}
+// 			}
+// 		},
+// 	],
+// },
+// {
+// 	path: '/pornhub',
+// 	component: Layout,
+// 	redirect: '/pornhub/list',
+// 	children: [
+// 		{
+// 			path: 'list',
+// 			name: "pornhubList",
+// 			meta: {
+// 				title: 'Pornhub - Magnetar Search',
+// 				parentPath: 'pornhub',
+// 				requireAuth: true,
+// 			},
+// 			component: () => import('@/views/pornhub/list'),
+// 			beforeEnter: (to, from, next) => {
+// 				next()
+// 			}
+// 		},
+// 		{
+// 			path: 'subject',
+// 			name: "pornhubSubject",
+// 			meta: {
+// 				title: '视频详情 - Magnetar Search',
+// 				parentPath: 'pornhub',
+// 				requireAuth: true,
+// 			},
+// 			component: () => import('@/views/pornhub/subject'),
+// 			beforeEnter: (to, from, next) => {
+// 				if (to.query.id) {
+// 					next()
+// 				} else {
+// 					router.push('/')
+// 					next()
+// 				}
+// 			}
+// 		},
+// 	],
+// },
 {
 	path: '/image',
 	component: Layout,
@@ -340,110 +448,11 @@ const routes = [{
 			component: () => import('@/views/image/upload'),
 		},
 	],
-},
-{
-	path: '/user',
-	component: Layout,
-	redirect: '/user/favorites',
-	children: [
-		{
-			path: 'search',
-			name: "Search",
-			meta: {
-				title: '搜索历史 - Magnetar Search',
-				parentPath: 'user',
-				requireAuth: true,
-			},
-			component: () => import('@/views/user/search'),
-			beforeEnter: (to, from, next) => {
-				next()
-			}
-		},
-		{
-			path: 'favorites',
-			name: "Favorites",
-			meta: {
-				title: '我的收藏 - Magnetar Search',
-				parentPath: 'user',
-				requireAuth: true,
-			},
-			component: () => import('@/views/user/favorites'),
-			beforeEnter: (to, from, next) => {
-				next()
-			}
-		},
-		{
-			path: 'material',
-			name: "Material",
-			meta: {
-				title: '个人资料 - Magnetar Search',
-				parentPath: 'user',
-				requireAuth: true,
-			},
-			component: () => import('@/views/user/search'),
-			beforeEnter: (to, from, next) => {
-				next()
-			}
-		},
-	],
-},
-{
-	path: '/login',
-	name: 'Login',
-	meta: {
-		requireAuth: false,
-		islogin: true,
-		title: '登录 - Magnetar Search'
-	},
-	component: resolve => require(['@/views/login.vue'], resolve)
-},
-{
-	path: '/register',
-	name: 'Registe',
-	meta: {
-		requireAuth: false,
-		islogin: true,
-		title: '注册 - Magnetar Search'
-	},
-	component: resolve => require(['@/views/register.vue'], resolve)
-},
-{
-	path: '/resetpwd',
-	name: 'ResetPassword',
-	meta: {
-		requireAuth: false,
-		islogin: true,
-		title: '重置密码 - Magnetar Search'
-	},
-	component: resolve => require(['@/views/resetPassword.vue'], resolve)
-},
-{
-	path: '/activateAccount',
-	name: 'ActivateAccount',
-	meta: {
-		requireAuth: false,
-		islogin: true,
-		title: '激活账号 - Magnetar Search'
-	},
-	component: resolve => require(['@/views/activateAccount.vue'], resolve)
-},
-{
-	path: '/404',
-	name: '404',
-	component: () => import('@/views/404'),
-	meta: {
-		requireAuth: false,
-		title: '找不到页面 - Magnetar Search'
-	},
-},
-{
-	path: '*',
-	redirect: '/404',
-	meta: {
-		requireAuth: false,
-	},
-},
-]
+},];
+var routes = initRoutes
+if (getSafeMode() === "off") {
+	routes.push(...sensitiveRoutes)
+}
 const router = new VueRouter({// 网页配置路由
 	mode: 'history',
 	routes

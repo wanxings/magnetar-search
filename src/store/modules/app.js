@@ -3,12 +3,14 @@ import {
     getVersion,
     getLanguage,
     getDarkmode,
+    getSafeMode,
     getAutotracker,
     getSearchEngine,
     getSearchPageComponent,
 
     setLanguage,
     setDarkmode,
+    setSafeMode,
     setAutotracker,
     setSearchEngine,
     setSearchPageComponent,
@@ -31,6 +33,7 @@ const state = () => ({
     version: getVersion() || null,
     language: getLanguage() || 'zh',
     darkmode: getDarkmode() || 'off',
+    safeMode: getSafeMode() || 'on',
     autotracker: getAutotracker() || 'off',
     searchEngine: getSearchEngine(),
     searchPageComponent: getSearchPageComponent(),
@@ -58,6 +61,9 @@ const mutations = {
     SET_DARKMODE: (state, data) => {
         state.darkmode = data
     },
+    SET_SAFEMODE: (state, data) => {
+        state.safeMode = data
+    },
     SET_AUTOTRACKER: (state, data) => {
         state.autotracker = data
     },
@@ -68,6 +74,7 @@ const getters = {
     version: (state) => state.version,
     language: (state) => state.language,
     darkmode: (state) => state.darkmode,
+    safeMode: (state) => state.safeMode,
     trackerList: (state) => state.trackerList,
     autotracker: (state) => state.autotracker,
     polyStatusData: (state) => state.polyStatusData,
@@ -98,6 +105,10 @@ const actions = {
     changeDarkmode({ commit }, data) {
         setDarkmode(data)
         commit("SET_DARKMODE", data)
+    },
+    changeSafeMode({ commit }, data) {
+        setSafeMode(data)
+        commit("SET_SAFEMODE", data)
     },
     changeAutotracker({ commit }, data) {
         setAutotracker(data)

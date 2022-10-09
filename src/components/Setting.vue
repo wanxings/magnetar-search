@@ -54,6 +54,18 @@
             />
           </ListItem>
           <ListItem>
+            {{ translateTitle("安全模式") }}
+            <i-switch
+              true-color="var(--theme-color)"
+              true-value="on"
+              false-value="off"
+              v-model="safeModeValue"
+              style="float: right"
+              class="slider"
+              :before-change="safeModechange"
+            />
+          </ListItem>
+          <!-- <ListItem>
             {{ translateTitle("磁力链追加Tracker") }}
             <i-switch
               :value="autotracker == 'on' ? true : false"
@@ -62,7 +74,7 @@
               style="float: right"
               class="slider"
             />
-          </ListItem>
+          </ListItem> -->
         </List>
       </div>
       <span style="color: var(--txt-b-pure); font-size: 15px">搜索页组件</span>
@@ -114,7 +126,7 @@
         </List>
       </div>
 
-      <span style="color: var(--txt-b-pure); font-size: 15px">搜索引擎</span>
+      <!-- <span style="color: var(--txt-b-pure); font-size: 15px">搜索引擎</span>
       <div
         style="
           margin: 10px 0;
@@ -161,12 +173,13 @@
             />
           </ListItem>
         </List>
-      </div>
+      </div> -->
       <div slot="footer"></div>
     </Modal>
   </span>
 </template>
 <script>
+import { Modal } from "view-design";
 import { translateTitle } from "@/utils/i18n";
 import { mapGetters, mapActions, mapState } from "vuex";
 export default {
@@ -180,6 +193,7 @@ export default {
   computed: {
     ...mapState("app", {
       darkmode: "darkmode",
+      safeMode: "safeMode",
       language: "language",
       autotracker: "autotracker",
       searchEngine: "searchEngine",
@@ -188,6 +202,15 @@ export default {
     ...mapGetters("user", {
       token: "token",
     }),
+    safeModeValue: {
+      get() {
+        return this.safeMode;
+      },
+      set(value) {
+        this.changeSafeMode(value);
+        return 1;
+      },
+    },
     languageitem() {
       return [
         {
@@ -206,6 +229,7 @@ export default {
     ...mapActions("app", {
       changeLanguage: "changeLanguage",
       changeDarkmode: "changeDarkmode",
+      changeSafeMode: "changeSafeMode",
       changeAutotracker: "changeAutotracker",
       changeSearchEngine: "changeSearchEngine",
       changeSearchPageComponent: "changeSearchPageComponent",
@@ -226,6 +250,28 @@ export default {
         ? document.body.classList.add("dark")
         : document.body.classList.remove("dark");
       this.changeDarkmode(status ? "on" : "off");
+    },
+    safeModechange() {
+      return new Promise((resolve) => {
+        if (this.safeMode === "on") {
+          Modal.confirm({
+            title: "关闭安全模式",
+            content: `
+          <p>安全模式处于开启状态时，可以最大限度的帮助隐藏系统中含有露骨内容的搜索结果和功能模块。</p>
+<p>安全搜索功能处于关闭状态时，系统会提供更多功能模块与所有相匹配的搜索结果，其中可能会包含露骨内容。</p>
+<p>状态更改后需要刷新页面生效</p>
+<p>关闭安全搜索前确认您已年满18岁</p>
+`,
+            okText: "确认关闭",
+            cancelText: "取消",
+            onOk: () => {
+              resolve();
+            },
+          });
+        }else{
+          resolve();
+        }
+      });
     },
     AutoTrackerChange(status) {
       this.changeAutotracker(status ? "on" : "off");

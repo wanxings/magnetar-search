@@ -14,14 +14,14 @@
         name="cloud"
       ></TabPane> -->
       <!-- <TabPane :label="translateTitle('影视')" name="movie"></TabPane> -->
-      <TabPane :label="translateTitle('番号')" name="jav"></TabPane>
-      <TabPane :label="translateTitle('女优')" name="javActress"></TabPane>
+      <TabPane v-if="safeMode==='off'" :label="translateTitle('番号')" name="jav"></TabPane>
+      <TabPane v-if="safeMode==='off'" :label="translateTitle('女优')" name="javActress"></TabPane>
       <!-- <TabPane
         icon="md-videocam"
         :label="translateTitle('P站')"
         name="pornhub"
       ></TabPane> -->
-      <TabPane :label="translateTitle('识图')" name="image"></TabPane>
+      <TabPane v-if="safeMode==='off'" :label="translateTitle('识图')" name="image"></TabPane>
       <TabPane :label="translateTitle('个人中心')" name="user"></TabPane>
       <!-- <TabPane
         icon="md-analytics"
@@ -37,8 +37,7 @@ import { mapGetters, mapMutations } from "vuex";
 export default {
   computed: {
     ...mapGetters("app", {
-      // title: "title",
-      // language: "language",
+      safeMode: "safeMode",
     }),
     ...mapGetters("user", {
       token: "token",

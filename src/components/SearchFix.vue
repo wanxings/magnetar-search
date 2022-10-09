@@ -80,31 +80,12 @@ export default {
   data() {
     return {
       searchCategories: "",
-      searchCategoriesList: [
-        {
-          value: "bt",
-          label: "磁力",
-        },
-        {
-          value: "netdisc",
-          label: "网盘",
-        },
-        {
-          value: "jav",
-          label: "番号",
-        },
-        {
-          value: "javActress",
-          label: "女优",
-        },
-      ],
       uploadImageModalStatus: false,
     };
   },
   computed: {
     ...mapGetters("app", {
-      // title: "title",
-      language: "language",
+      safeMode: "safeMode",
     }),
     ...mapGetters("user", {
       token: "token",
@@ -112,6 +93,35 @@ export default {
     ...mapGetters("search", {
       keyword: "keyword",
     }),
+    searchCategoriesList: {
+      get() {
+        let initList = [
+          {
+            value: "bt",
+            label: "磁力",
+          },
+          {
+            value: "netdisc",
+            label: "网盘",
+          },
+        ];
+        if (this.safeMode === "off") {
+          initList.push(
+            ...[
+              {
+                value: "jav",
+                label: "番号",
+              },
+              {
+                value: "javActress",
+                label: "女优",
+              },
+            ]
+          );
+        }
+        return initList;
+      },
+    },
     inputKeyword: {
       get() {
         return this.keyword;
@@ -158,11 +168,19 @@ export default {
       }
     },
     showUploadpane() {
+      console.log(this.safeMode);
       if (!this.token) {
         Message.error({
           content: this.translateTitle("请先登录"),
           duration: 5,
         });
+        return
+      } else if (this.safeMode === "on") {
+        Message.error({
+          content: this.translateTitle("安全模式下无法使用此功能"),
+          duration: 5,
+        });
+        return
       } else {
         this.$router.push({
           path: "/image/upload",

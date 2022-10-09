@@ -46,7 +46,7 @@
       >
         <div class="n-result-header">
           <div class="n-result-header__title">404 资源不存在</div>
-          <div class="n-result-header__description">页面升级或者访问了不存在的链接</div>
+          <div class="n-result-header__description">可能问题：页面已升级、访问了不存在的链接、安全模式限制</div>
         </div>
         <!---->
         <div class="n-result-footer">
