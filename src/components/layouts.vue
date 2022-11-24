@@ -188,6 +188,7 @@ export default {
 }
 
 .ivu-tree-title {
+  width: 100%;
   color: var(--txt-b-tip);
 }
 .ivu-tree-title:hover {

@@ -45,7 +45,11 @@
       <br />
       <span v-if="token" class="footerBox">
         <a href="https://cixing.io" target="_blank">{{
-          translateTitle("浏览器扩展")
+          translateTitle("磁星官网")
+        }}</a>
+        -
+        <a href="https://blog.cixing.io/archives/85" target="_blank">{{
+          translateTitle("常见问题")
         }}</a>
         -
         <a

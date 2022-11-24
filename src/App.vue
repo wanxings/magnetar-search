@@ -183,7 +183,16 @@ body {
   border: none;
 }
 .TabCard .ivu-collapse-content {
+  padding: 0 10px;
   background-color: transparent;
+}
+.TabCard .ivu-tree-arrow {
+    width: 14px;
+    height: 12px;
+    vertical-align: middle;
+}
+.TabCard  .ivu-tree-arrow  i {
+    font-size: 19px;
 }
 .TabCard .ivu-spin-fix {
   background-color: transparent;

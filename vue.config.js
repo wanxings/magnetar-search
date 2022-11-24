@@ -6,7 +6,7 @@ module.exports = {
   // publicPath: "https://cilixing-static.oss-cn-shanghai.aliyuncs.com/magnetarpwa/",
   //  publicPath: "./",
   // assetsPublicPath: "./", //
-  productionSourceMap: false,
+  // productionSourceMap: false,
 
   // something else codes
   configureWebpack: (config) => {
@@ -19,7 +19,7 @@ module.exports = {
             pure_funcs: ['console.log'] // 移除console
           },
         },
-        sourceMap: true, // 去除打包后生成的.map文件
+        sourceMap: false, // 去除打包后生成的.map文件
         parallel: true,
       }),
       new CompressionWebpackPlugin({

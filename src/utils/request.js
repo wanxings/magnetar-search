@@ -41,13 +41,13 @@ service.interceptors.response.use(
             console.log("token过期或不合法")
             Notice.warning({
                 title: '温馨提示',
-                desc: '登陆状态已过期,请前往扩展程序或登陆页面重新登陆,5s后自动跳转至登陆页',
+                desc: '登陆状态已过期,请前往扩展程序或登陆页面重新登陆,3s后自动跳转至登陆页',
                 duration: 5,
             });
             store.dispatch('user/FedLogOut')
             setTimeout(() => {
                 location.href = '/login'
-            }, 5000)
+            }, 3000)
         }
         Spin.hide();
         Message.destroy();
@@ -83,15 +83,13 @@ service.interceptors.response.use(
                 console.log("token过期或不合法")
                 Notice.warning({
                     title: '温馨提示',
-                    desc: '登陆状态已过期,请前往扩展程序或登陆页面重新登陆',
-                    duration: 10,
+                    desc: '登陆状态已过期,请前往扩展程序或登陆页面重新登陆,3s后自动跳转至登陆页',
+                    duration: 5,
                 });
+                store.dispatch('user/FedLogOut')
                 setTimeout(() => {
-                    store.dispatch('user/FedLogOut').then(() => {
-                        location.href = '/login'
-                        //location.reload() // 为了重新实例化vue-router对象 避免bug
-                    })
-                }, 10000)
+                    location.href = '/login'
+                }, 3000)
             }
 
         } else {

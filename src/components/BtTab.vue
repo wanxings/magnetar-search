@@ -67,7 +67,9 @@
     >
       <Panel name="1"
         >{{ translateTitle("文件列表") }} [ {{ infodata.files }} ]
-        <p slot="content"><Tree empty-text=" " :data="treedata"></Tree></p>
+        <p slot="content">
+          <Tree empty-text=" " :data="treedata" :render="renderFileList"></Tree>
+        </p>
       </Panel>
     </Collapse>
   </Card>
@@ -76,6 +78,7 @@
 import { mapGetters } from "vuex";
 import { Message } from "view-design";
 import { translateTitle } from "@/utils/i18n";
+import { getFileIcon,getFileIconByName } from "@/utils/file";
 import { fileSize, formatDate } from "@/utils/format";
 import { getFileList } from "@/api/magnetic";
 export default {
@@ -134,6 +137,7 @@ export default {
           break;
       }
     },
+
     copylink(val) {
       if (this.autotracker === "on") {
         let data = this.trackerList;
@@ -189,6 +193,7 @@ export default {
       if (Array.isArray(arr)) {
         for (var i = 0; i < arr.length; ++i) {
           var path = arr[i]["path"];
+          var lengths = arr[i]["length"];
           var _ret = ret;
           for (var j = 0; j < path.length; ++j) {
             var name = path[j];
@@ -196,6 +201,7 @@ export default {
             for (var k = 0; k < _ret.length; ++k) {
               var _obj = _ret[k];
               if (_obj.title === name) {
+                delete _obj.lengths;
                 obj = _obj;
                 break;
               }
@@ -203,6 +209,7 @@ export default {
             if (!obj) {
               obj = {
                 title: name,
+                lengths,
               };
               if (name.indexOf(".") < 0) {
                 obj.children = [];
@@ -216,6 +223,105 @@ export default {
         }
       }
       return ret;
+    },
+    renderFileList(h, { data }) {
+      if (data.lengths) {
+        return this.renderFile(h, data);
+      } else {
+        return this.renderFolder(h, data);
+      }
+    },
+    renderFile(h, data) {
+      return h(
+        "span",
+        {
+          style: {
+            display: "inline-block",
+            width: "100%",
+          },
+        },
+        [
+          h("span", [
+            h("img", {
+              attrs: {
+                src: getFileIcon(data.title), //title显⽰内容
+              },
+              style: {
+                marginRight: "8px",
+                width: "32px",
+                height: "32px",
+                "margin-right": "8px",
+                "line-height": 1,
+                position: "relative",
+                "vertical-align": "middle",
+              },
+            }),
+            h(
+              "span",
+              {
+                attrs: {
+                  title: data.title, //title显⽰内容
+                },
+                style: {
+                  display: "inline-block",
+                  width: "60%",
+                  "vertical-align": "middle",
+                  overflow: "hidden",
+                  "text-overflow": "ellipsis",
+                  "white-space": "nowrap",
+                  "line-height": "40px",
+                  "max-width": "calc(100% - 60px)",
+                },
+              },
+              data.title
+            ),
+          ]),
+          h(
+            "span",
+            {
+              style: {
+                display: "inline-block",
+                float: "right",
+                marginRight: "32px",
+                "vertical-align": "middle",
+                "line-height": "40px",
+                  "max-width": "calc(100% - 60px)",
+              },
+            },
+            [h("span", fileSize(data.lengths))]
+          ),
+        ]
+      );
+    },
+    renderFolder(h, data) {
+      return h(
+        "span",
+        {
+          style: {
+            display: "inline-block",
+            width: "100%",
+          },
+        },
+        [
+          h("span", [
+            h("img", {
+            attrs: {
+              src: getFileIconByName("folder"), //title显⽰内容
+            },
+            style: {
+              marginRight: "8px",
+              width: "32px",
+              height: "32px",
+              "margin-right": "8px",
+              "line-height": 1,
+              position: "relative",
+              "vertical-align": "middle",
+            },
+          }),
+            h("span", data.title),
+          ]),
+        ]
+      );
     },
   },
 };

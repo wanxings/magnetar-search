@@ -32,7 +32,7 @@ export function fileSize(val) {
     var k = 1024;
     var sizes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
     var i = Math.floor(Math.log(val) / Math.log(k));
-    return (val / Math.pow(k, i)).toPrecision(3) + " " + sizes[i];
+    return (val / Math.pow(k, i)).toPrecision(4) + " " + sizes[i];
 }
 export function fileTime(val) {
     var now = new Date(val),

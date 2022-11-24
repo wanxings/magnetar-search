@@ -126,7 +126,7 @@
         </List>
       </div>
 
-      <!-- <span style="color: var(--txt-b-pure); font-size: 15px">搜索引擎</span>
+      <span style="color: var(--txt-b-pure); font-size: 15px">磁力搜索</span>
       <div
         style="
           margin: 10px 0;
@@ -137,19 +137,7 @@
       >
         <List :split="false">
           <ListItem>
-            {{ translateTitle("女优") }}
-            <i-switch
-              true-color="var(--theme-color)"
-              v-model="searchEngine.actress"
-              true-value="on"
-              false-value="off"
-              style="float: right"
-              class="slider"
-              @on-change="handleSearchEngineChange"
-            />
-          </ListItem>
-          <ListItem>
-            {{ translateTitle("番号") }}
+            {{ translateTitle("同步搜索番号") }}
             <i-switch
               true-color="var(--theme-color)"
               v-model="searchEngine.jav"
@@ -161,19 +149,25 @@
             />
           </ListItem>
           <ListItem>
-            {{ translateTitle("影视") }}
-            <i-switch
-              v-model="searchEngine.douban"
-              true-value="on"
-              false-value="off"
-              @on-change="handleSearchEngineChange"
-              true-color="var(--theme-color)"
-              style="float: right"
+            {{ translateTitle("搜索模式") }}
+            <Select
+              style="float: right; width: auto"
+              @on-select="changeLangFn"
+              size="small"
+              v-model="magneticSearchMode"
               class="slider"
-            />
+            >
+              <Option
+                v-for="item in magneticSearchModeitem"
+                :value="item.value"
+                :key="item.value"
+                >
+                {{ item.label }}
+                </Option>
+            </Select>
           </ListItem>
         </List>
-      </div> -->
+      </div>
       <div slot="footer"></div>
     </Modal>
   </span>
@@ -182,6 +176,7 @@
 import { Modal } from "view-design";
 import { translateTitle } from "@/utils/i18n";
 import { mapGetters, mapActions, mapState } from "vuex";
+import { getMagneticSearchMode, setMagneticSearchMode } from "@/utils/app";
 export default {
   props: [""],
   components: {},
@@ -202,14 +197,33 @@ export default {
     ...mapGetters("user", {
       token: "token",
     }),
+    magneticSearchMode: {
+      get() {
+        return getMagneticSearchMode();
+      },
+      set(value) {
+        setMagneticSearchMode(value);
+      },
+    },
     safeModeValue: {
       get() {
         return this.safeMode;
       },
       set(value) {
         this.changeSafeMode(value);
-        return 1;
       },
+    },
+    magneticSearchModeitem() {
+      return [
+        {
+          value: "fuzzy",
+          label: "模糊搜索",
+        },
+        {
+          value: "precise",
+          label: "精准搜索",
+        },
+      ];
     },
     languageitem() {
       return [
@@ -268,7 +282,7 @@ export default {
               resolve();
             },
           });
-        }else{
+        } else {
           resolve();
         }
       });

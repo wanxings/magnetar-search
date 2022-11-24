@@ -15,6 +15,7 @@ const btListFilterFormKey = 'btListFilterForm'
 const movieSearchFilterFormKey = 'movieSearchFilterForm'
 const movieListFilterFormKey = 'movieListFilterForm'
 
+const magneticSearchModeKey = 'magneticSearchMode'
 // const UserIdKey = 'Admin-UserId'
 
 export function getDarkmode() {
@@ -74,6 +75,12 @@ export function getLanguage() {
     return language
 }
 
+export function getMagneticSearchMode() {
+    return localStorage.getItem(magneticSearchModeKey) || "precise"
+}
+
+
+
 export function setDarkmode(data) {
     return localStorage.setItem(darkmodeKey, data)
 }
@@ -121,4 +128,7 @@ export function setSearchPageComponent(data) {
 }
 export function setLanguage(data) {
     return localStorage.setItem(languageKey, data)
+}
+export function setMagneticSearchMode(data) {
+    return localStorage.setItem(magneticSearchModeKey, data)
 }

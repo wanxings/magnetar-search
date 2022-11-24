@@ -12,7 +12,9 @@ module.exports = {
   copyright: '磁星v2.0-Beta',
   // logo，
   logo: '',
-  baseURL: 'https://test.api.cixing.io/',
+  // baseURL: 'https://test.api.cixing.io/',
+  // baseURL: 'https://api.btcute.com/',
+  baseURL: 'https://api.cixing.io/',
   // baseURL: 'http://127.0.0.1:1314/',
   // 消息框消失时间
   messageDuration: 4000,

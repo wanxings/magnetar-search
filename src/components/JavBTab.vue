@@ -3,7 +3,7 @@
   font-size: 13px;
 }
 .ivu-tooltip {
-    width: 100%;
+  width: 100%;
 }
 </style>
 <template>
@@ -17,7 +17,7 @@
       </div>
       <dl>
         <p class="j_B_Tab_Title">
-          <Tooltip max-width="320"  :content="data.title">
+          <Tooltip max-width="320" :content="data.title">
             {{ data.title }}
           </Tooltip>
         </p>
@@ -104,6 +104,7 @@ export default {
 
 .cover_b {
   margin: 0 auto;
-  height: auto;
+  height: 207px;
+  max-width: 308px;
 }
 </style>

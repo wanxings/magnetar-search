@@ -29,7 +29,7 @@
                     </span>
                     <font v-html="javData.code" style="font-size: 14px">
                       无
-                    </font>
+                    </font> 
                   </div>
                 </ListItem>
                 <ListItem>
@@ -37,7 +37,7 @@
                     <span style="font-weight: 700"
                       >{{ translateTitle("发布日期") }}:
                     </span>
-                    {{ formatTime(javData.rdate, "yyyy-MM-dd") }}
+                    {{ formatDate(javData.rdate) }}
                   </div>
                 </ListItem>
                 <ListItem>
@@ -266,9 +266,9 @@
 </template>
 
 <script>
-import { formatTime } from "@/utils/format";
 import { Spin, Message, Modal } from "view-design";
 import { translateTitle } from "@/utils/i18n";
+import { formatDate } from "@/utils/format";
 import BtTab from "@/components/BtTab.vue";
 import {
   getSubject,
@@ -313,7 +313,7 @@ export default {
     
   },
   methods: {
-    formatTime,
+    formatDate,
     translateTitle,
     // ...mapActions("search", {
     //   getJavSubject: "getJavSubject",
